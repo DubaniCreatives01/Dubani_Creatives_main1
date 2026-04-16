@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start a Project - Dubani Creatives</title>
+    <meta name="description" content="Tell us about your project. Fill in this brief so we can understand your needs, budget, and timeline — and get back to you with a tailored proposal.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        /* Brief Form Styles */
+        .brief-section {
+            padding-top: 150px;
+            padding-bottom: 80px;
+        }
+        .brief-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 60px;
+            align-items: start;
+        }
+        .brief-sidebar {
+            position: sticky;
+            top: 120px;
+        }
+        .brief-sidebar .section-subtitle { margin-bottom: 12px; }
+        .brief-sidebar .section-title { font-size: 42px; margin-bottom: 20px; }
+        .brief-sidebar p { color: var(--text-muted); line-height: 1.7; font-size: 16px; margin-bottom: 24px; }
+
+        .brief-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .brief-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.3s ease;
+        }
+        .brief-step.active {
+            border-color: var(--primary-color);
+            background: rgba(255, 94, 0, 0.08);
+        }
+        .brief-step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .brief-step.active .brief-step-num {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .brief-step-label {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .brief-step.active .brief-step-label { color: var(--light); }
+
+        /* Form Card */
+        .brief-form-card {
+            background: var(--secondary-color);
+            border-radius: 28px;
+            padding: 48px 44px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .brief-form-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            color: var(--light);
+            margin-bottom: 8px;
+        }
+        .brief-form-card .step-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .brief-field {
+            margin-bottom: 24px;
+        }
+        .brief-field label {
+            display: block;
+            color: var(--light);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .brief-field label .optional {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 12px;
+        }
+        .brief-field input,
+        .brief-field textarea,
+        .brief-field select {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--light);
+            font-size: 15px;
+            font-family: var(--font-text);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .brief-field input:focus,
+        .brief-field textarea:focus,
+        .brief-field select:focus {
+            border-color: var(--primary-color);
+        }
+        .brief-field textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .brief-field select option {
+            background: #1a1a1a;
+            color: var(--light);
+        }
+        .brief-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Service Selection Chips */
+        .service-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .service-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .service-chip:hover {
+            border-color: rgba(255, 94, 0, 0.4);
+            color: var(--light);
+        }
+        .service-chip.selected {
+            background: rgba(255, 94, 0, 0.15);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .service-chip.selected::before {
+            content: '✓';
+            font-size: 12px;
+        }
+
+        /* Budget Cards */
+        .budget-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .budget-card {
+            padding: 18px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .budget-card:hover {
+            border-color: rgba(255, 94, 0, 0.3);
+        }
+        .budget-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(255, 94, 0, 0.1);
+        }
+        .budget-card .budget-range {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-heading);
+        }
+        .budget-card .budget-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .budget-card.selected .budget-range { color: var(--primary-color); }
+
+        /* Timeline Options */
+        .timeline-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .timeline-opt {
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .timeline-opt:hover { border-color: rgba(255, 94, 0, 0.3); color: var(--light); }
+        .timeline-opt.selected {
+            border-color: var(--primary-color);
+            background: rgba(255, 94, 0, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Form Navigation */
+        .brief-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .brief-back-btn {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--text-muted);
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-text);
+        }
+        .brief-back-btn:hover { border-color: var(--light); color: var(--light); }
+
+        /* Step Panels */
+        .step-panel { display: none; }
+        .step-panel.active { display: block; }
+
+        @media (max-width: 991px) {
+            .brief-layout {
+                grid-template-columns: 1fr;
+            }
+            .brief-sidebar {
+                position: static;
+                text-align: center;
+            }
+            .brief-steps { display: none; }
+        }
+        @media (max-width: 600px) {
+            .brief-form-card { padding: 32px 24px; }
+            .brief-row, .budget-cards { grid-template-columns: 1fr; }
+            .timeline-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container">
+                <div class="header-main-box">
+                    <a href="index.html" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;"></a>
+                    <nav class="header-nav">
+                        <a href="index.html#home" class="nav-link">Home</a>
+                        <a href="projects.html" class="nav-link env-business">Our work</a>
+                        <a href="projects.html" class="nav-link env-personal">Portfolio</a>
+                        <a href="services.html" class="nav-link env-business">Services</a>
+                        <a href="cv.html" class="nav-link env-personal">Resume / CV</a>
+                        <a href="index.html#process" class="nav-link">Process</a>
+                        <a href="promotions.html" class="nav-link env-business">Promotions</a>
+                        <a href="packages.html" class="nav-link env-business">Packages</a>
+                        <a href="skills.html" class="nav-link env-personal">Skills</a>
+                    </nav>
+                    <div class="env-switcher">
+                        <button class="env-switch-btn" data-env="business">Business</button>
+                        <button class="env-switch-btn" data-env="personal">Personal</button>
+                    </div>
+                    <a href="brief.html" class="theme-btn env-business" style="margin-left: 20px;">
+                        <div class="btn-bg orange"></div>
+                        <span class="btn-text text-white">Start a Project</span>
+                    </a>
+                    <a href="contact.html" class="theme-btn env-personal" style="margin-left: 20px;">
+                        <div class="btn-bg"></div>
+                        <span class="btn-text">Get in touch</span>
+                    </a>
+                    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Nav Overlay -->
+        <div class="mobile-nav-overlay" id="mobile-nav">
+            <a href="index.html" class="mobile-nav-link">Home</a>
+            <a href="projects.html" class="mobile-nav-link env-business">Our work</a>
+            <a href="projects.html" class="mobile-nav-link env-personal">Portfolio</a>
+            <a href="services.html" class="mobile-nav-link env-business">Services</a>
+            <a href="cv.html" class="mobile-nav-link env-personal">Resume / CV</a>
+            <a href="index.html#process" class="mobile-nav-link">Process</a>
+            <a href="promotions.html" class="mobile-nav-link env-business">Promotions</a>
+            <a href="packages.html" class="mobile-nav-link env-business">Packages</a>
+            <a href="brief.html" class="mobile-nav-link env-business">Start a Project</a>
+            <a href="skills.html" class="mobile-nav-link env-personal">Skills</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+            <div class="mobile-env-switcher">
+                <button class="env-switch-btn" data-env="business">Business</button>
+                <button class="env-switch-btn" data-env="personal">Personal</button>
+            </div>
+        </div>
+
+        <!-- Brief Section -->
+        <section class="brief-section">
+            <div class="container">
+                <div class="brief-layout">
+
+                    <!-- Left Sidebar -->
+                    <div class="brief-sidebar">
+                        <p class="section-subtitle">Start a Project</p>
+                        <h1 class="section-title">Tell Us About<br>Your Project</h1>
+                        <p>Fill in this quick brief so we can understand your vision, timeline, and budget. The more detail you give us, the faster we can get back to you with a tailored proposal.</p>
+                        <p style="font-size: 14px; opacity: 0.7;">⏱️ Takes about 3 minutes to complete</p>
+
+                        <div class="brief-steps">
+                            <div class="brief-step active" data-step="1">
+                                <div class="brief-step-num">1</div>
+                                <span class="brief-step-label">Your Details</span>
+                            </div>
+                            <div class="brief-step" data-step="2">
+                                <div class="brief-step-num">2</div>
+                                <span class="brief-step-label">Project Info</span>
+                            </div>
+                            <div class="brief-step" data-step="3">
+                                <div class="brief-step-num">3</div>
+                                <span class="brief-step-label">Budget & Timeline</span>
+                            </div>
+                            <div class="brief-step" data-step="4">
+                                <div class="brief-step-num">4</div>
+                                <span class="brief-step-label">Additional Details</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Form Card -->
+                    <div class="brief-form-card">
+                        <form id="brief-form">
+
+                            <!-- Step 1: Your Details -->
+                            <div class="step-panel active" data-panel="1">
+                                <h3>Your Details</h3>
+                                <p class="step-desc">Let's start with your contact info so we can reach you with a proposal.</p>
+
+                                <div class="brief-row">
+                                    <div class="brief-field">
+                                        <label>First Name</label>
+                                        <input type="text" id="brief-fname" placeholder="e.g. John" required>
+                                    </div>
+                                    <div class="brief-field">
+                                        <label>Last Name</label>
+                                        <input type="text" id="brief-lname" placeholder="e.g. Doe" required>
+                                    </div>
+                                </div>
+                                <div class="brief-field">
+                                    <label>Email Address</label>
+                                    <input type="email" id="brief-email" placeholder="you@example.com" required>
+                                </div>
+                                <div class="brief-field">
+                                    <label>WhatsApp / Phone Number</label>
+                                    <input type="tel" id="brief-phone" placeholder="+27 XX XXX XXXX">
+                                </div>
+                                <div class="brief-field">
+                                    <label>Company / Brand Name <span class="optional">(optional)</span></label>
+                                    <input type="text" id="brief-company" placeholder="e.g. Dubani Creatives">
+                                </div>
+
+                                <div class="brief-nav">
+                                    <div></div>
+                                    <a class="theme-btn brief-next-btn" data-next="2">
+                                        <div class="btn-bg orange"></div>
+                                        <span class="btn-text text-white">Next: Project Info →</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Project Info -->
+                            <div class="step-panel" data-panel="2">
+                                <h3>Project Info</h3>
+                                <p class="step-desc">What type of work do you need? Select all that apply.</p>
+
+                                <div class="brief-field">
+                                    <label>Services Needed</label>
+                                    <div class="service-chips">
+                                        <div class="service-chip" data-service="Logo Design">Logo Design</div>
+                                        <div class="service-chip" data-service="Brand Identity">Brand Identity</div>
+                                        <div class="service-chip" data-service="Packaging Design">Packaging Design</div>
+                                        <div class="service-chip" data-service="Social Media Graphics">Social Media Graphics</div>
+                                        <div class="service-chip" data-service="Web Design">Web Design</div>
+                                        <div class="service-chip" data-service="Print Design">Print Design</div>
+                                        <div class="service-chip" data-service="Pitch Deck">Pitch Deck</div>
+                                        <div class="service-chip" data-service="Illustration">Illustration</div>
+                                        <div class="service-chip" data-service="Other">Other</div>
+                                    </div>
+                                </div>
+
+                                <div class="brief-field">
+                                    <label>Brief Description of Your Project</label>
+                                    <textarea id="brief-description" placeholder="Tell us what you need, any inspiration, and what the end goal is..."></textarea>
+                                </div>
+
+                                <div class="brief-field">
+                                    <label>Do you have existing brand assets? <span class="optional">(logo, colours, fonts)</span></label>
+                                    <select id="brief-assets">
+                                        <option value="">Select an option</option>
+                                        <option value="Yes, full brand guide">Yes — I have a full brand guide</option>
+                                        <option value="Yes, just a logo">Yes — just a logo</option>
+                                        <option value="Some bits and pieces">Some bits and pieces</option>
+                                        <option value="No, starting from scratch">No — starting from scratch</option>
+                                    </select>
+                                </div>
+
+                                <div class="brief-nav">
+                                    <button type="button" class="brief-back-btn" data-prev="1">← Back</button>
+                                    <a class="theme-btn brief-next-btn" data-next="3">
+                                        <div class="btn-bg orange"></div>
+                                        <span class="btn-text text-white">Next: Budget →</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Budget & Timeline -->
+                            <div class="step-panel" data-panel="3">
+                                <h3>Budget &amp; Timeline</h3>
+                                <p class="step-desc">Help us understand your budget range and when you need this done.</p>
+
+                                <div class="brief-field">
+                                    <label>Budget Range (ZAR)</label>
+                                    <div class="budget-cards">
+                                        <div class="budget-card" data-budget="R500 – R1,500">
+                                            <div class="budget-range">R500 – R1.5K</div>
+                                            <div class="budget-label">Starter</div>
+                                        </div>
+                                        <div class="budget-card" data-budget="R1,500 – R5,000">
+                                            <div class="budget-range">R1.5K – R5K</div>
+                                            <div class="budget-label">Standard</div>
+                                        </div>
+                                        <div class="budget-card" data-budget="R5,000 – R15,000">
+                                            <div class="budget-range">R5K – R15K</div>
+                                            <div class="budget-label">Premium</div>
+                                        </div>
+                                        <div class="budget-card" data-budget="R15,000+">
+                                            <div class="budget-range">R15K+</div>
+                                            <div class="budget-label">Enterprise</div>
+                                        </div>
+                                        <div class="budget-card" data-budget="Not sure yet">
+                                            <div class="budget-range">🤷</div>
+                                            <div class="budget-label">Not sure yet</div>
+                                        </div>
+                                        <div class="budget-card" data-budget="Let's discuss">
+                                            <div class="budget-range">💬</div>
+                                            <div class="budget-label">Let's discuss</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="brief-field" style="margin-top: 28px;">
+                                    <label>Ideal Timeline</label>
+                                    <div class="timeline-options">
+                                        <div class="timeline-opt" data-timeline="ASAP / Rush">🔥 ASAP / Rush</div>
+                                        <div class="timeline-opt" data-timeline="Within 1 week">Within 1 week</div>
+                                        <div class="timeline-opt" data-timeline="Within 2 weeks">Within 2 weeks</div>
+                                        <div class="timeline-opt" data-timeline="Within a month">Within a month</div>
+                                        <div class="timeline-opt" data-timeline="No rush, flexible">No rush, flexible</div>
+                                        <div class="timeline-opt" data-timeline="Specific date">📅 Specific date</div>
+                                    </div>
+                                </div>
+
+                                <div class="brief-nav">
+                                    <button type="button" class="brief-back-btn" data-prev="2">← Back</button>
+                                    <a class="theme-btn brief-next-btn" data-next="4">
+                                        <div class="btn-bg orange"></div>
+                                        <span class="btn-text text-white">Next: Final Details →</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Additional Details -->
+                            <div class="step-panel" data-panel="4">
+                                <h3>Final Details</h3>
+                                <p class="step-desc">Almost done! Any extra info that will help us prepare your proposal.</p>
+
+                                <div class="brief-field">
+                                    <label>Inspiration or Reference Links <span class="optional">(optional)</span></label>
+                                    <textarea id="brief-inspiration" placeholder="Paste links to designs, websites, or brands you like. Or describe the style you're going for..." style="min-height: 90px;"></textarea>
+                                </div>
+
+                                <div class="brief-field">
+                                    <label>Target Audience <span class="optional">(optional)</span></label>
+                                    <input type="text" id="brief-audience" placeholder="e.g. Young professionals aged 25-35 in Johannesburg">
+                                </div>
+
+                                <div class="brief-field">
+                                    <label>How did you find us?</label>
+                                    <select id="brief-source">
+                                        <option value="">Select an option</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                        <option value="Google Search">Google Search</option>
+                                        <option value="Referral">Referral / Word of mouth</option>
+                                        <option value="TikTok">TikTok</option>
+                                        <option value="Returning client">Returning client</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="brief-field">
+                                    <label>Anything else we should know? <span class="optional">(optional)</span></label>
+                                    <textarea id="brief-notes" placeholder="Special requests, deadlines, important context..." style="min-height: 90px;"></textarea>
+                                </div>
+
+                                <div class="brief-nav">
+                                    <button type="button" class="brief-back-btn" data-prev="3">← Back</button>
+                                    <button type="submit" class="theme-btn" id="brief-submit-btn">
+                                        <div class="btn-bg orange"></div>
+                                        <span class="btn-text text-white">Submit Brief via WhatsApp 💬</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="index.html" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;"></a>
+                        <h3 class="footer-heading mt-4">Let's build something remarkable together!</h3>
+                        <p class="footer-text mt-4">&copy; Copyright Dubani Creatives</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Menu</h4>
+                        <a href="index.html#home">Home</a>
+                        <a href="projects.html">Projects</a>
+                        <a href="services.html">Services</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Pages</h4>
+                        <a href="promotions.html">Promotions</a>
+                        <a href="index.html#process">Process</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Social</h4>
+                        <a href="https://www.linkedin.com/company/dubani-creatives" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.83-48.3 93.97 0 111.28 61.9 111.28 142.3V448z"/></svg> LinkedIn</a>
+                        <a href="https://www.instagram.com/dubanicreatives/" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg> Instagram</a>
+                        <a href="https://www.facebook.com/dubanicreativespage/" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256c0 120 82.7 220.8 194.2 248.5V334.2h-56.6v-78.2h56.6v-61.3c0-56.4 33.5-87.3 84.6-87.3 24.5 0 50.2 4.4 50.2 4.4v55.4h-28.3c-27.8 0-36.5 17.3-36.5 35v42h62.3l-10 78.2h-52.3v170.3C429.3 476.8 512 376 512 256z"/></svg> Facebook</a>
+                        <a href="https://www.tiktok.com/@dubanicreatives" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M448 209.9a210.1 210.1 0 0 1-122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3v89.9a74.6 74.6 0 1 0 52.2 71.2V0h88a121 121 0 0 0 1.9 22.2 122.2 122.2 0 0 0 53.9 80.2 121 121 0 0 0 67 20.1z"/></svg> TikTok</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="main.js"></script>
+
+    <!-- Brief Form Logic -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('brief-form');
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function showStep(step) {
+            currentStep = step;
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector(`.step-panel[data-panel="${step}"]`).classList.add('active');
+            document.querySelectorAll('.brief-step').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.step) <= step);
+            });
+            // Scroll form into view on mobile
+            if (window.innerWidth < 992) {
+                document.querySelector('.brief-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Next buttons
+        document.querySelectorAll('.brief-next-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showStep(parseInt(btn.dataset.next));
+            });
+        });
+
+        // Back buttons
+        document.querySelectorAll('.brief-back-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showStep(parseInt(btn.dataset.prev));
+            });
+        });
+
+        // Service chips toggle
+        document.querySelectorAll('.service-chip').forEach(chip => {
+            chip.addEventListener('click', () => chip.classList.toggle('selected'));
+        });
+
+        // Budget card selection
+        document.querySelectorAll('.budget-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.budget-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+            });
+        });
+
+        // Timeline selection
+        document.querySelectorAll('.timeline-opt').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.timeline-opt').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const services = Array.from(document.querySelectorAll('.service-chip.selected'))
+                .map(c => c.dataset.service).join(', ') || 'Not specified';
+            const budget = document.querySelector('.budget-card.selected')?.dataset.budget || 'Not specified';
+            const timeline = document.querySelector('.timeline-opt.selected')?.dataset.timeline || 'Not specified';
+
+            const message = `📋 *NEW PROJECT BRIEF*\n\n` +
+                `👤 *Client:* ${document.getElementById('brief-fname').value} ${document.getElementById('brief-lname').value}\n` +
+                `📧 *Email:* ${document.getElementById('brief-email').value}\n` +
+                `📱 *Phone:* ${document.getElementById('brief-phone').value || 'Not provided'}\n` +
+                `🏢 *Company:* ${document.getElementById('brief-company').value || 'Not provided'}\n\n` +
+                `🎨 *Services:* ${services}\n` +
+                `📝 *Description:* ${document.getElementById('brief-description')?.value || 'Not provided'}\n` +
+                `📦 *Brand Assets:* ${document.getElementById('brief-assets')?.value || 'Not specified'}\n\n` +
+                `💰 *Budget:* ${budget}\n` +
+                `⏰ *Timeline:* ${timeline}\n\n` +
+                `🔗 *Inspiration:* ${document.getElementById('brief-inspiration')?.value || 'None'}\n` +
+                `🎯 *Target Audience:* ${document.getElementById('brief-audience')?.value || 'Not specified'}\n` +
+                `📣 *Found via:* ${document.getElementById('brief-source')?.value || 'Not specified'}\n` +
+                `📌 *Notes:* ${document.getElementById('brief-notes')?.value || 'None'}`;
+
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/27?text=${encoded}`, '_blank');
+
+            // Show success
+            const btn = document.getElementById('brief-submit-btn');
+            btn.querySelector('.btn-text').textContent = '✓ Brief Sent! Opening WhatsApp...';
+            setTimeout(() => {
+                btn.querySelector('.btn-text').textContent = 'Submit Brief via WhatsApp 💬';
+            }, 4000);
+        });
+    });
+    </script>
+
+    <!-- WhatsApp Chat Widget -->
+    <div class="wa-widget-container">
+        <div class="wa-tooltip">Chat with me on WhatsApp 💬</div>
+        <div class="wa-bot-and-btn">
+            <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
+                <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
+                <circle cx="28" cy="20" r="2.5" fill="#fff"/>
+                <circle cx="36" cy="20" r="2.5" fill="#fff"/>
+                <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
+                <circle cx="32" cy="6" r="3" fill="#25D366"/>
+                <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
+                <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+                <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+            </svg>
+            <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

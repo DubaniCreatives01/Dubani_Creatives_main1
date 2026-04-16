@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dubani Creatives | Brand &amp; Graphic Designer</title>
+    <meta name="description" content="Dubani is a versatile brand and graphic designer based in Cape Town, South Africa. Specializing in logo design, branding, and packaging.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container">
+                <div class="header-main-box">
+                    <a href="#home" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;"></a>
+                    <nav class="header-nav">
+                        <a href="#home" class="nav-link">Home</a>
+                        <a href="projects.html" class="nav-link env-business">Our work</a>
+                        <a href="projects.html" class="nav-link env-personal">Portfolio</a>
+                        <a href="services.html" class="nav-link env-business">Services</a>
+                        <a href="cv.html" class="nav-link env-personal">Resume / CV</a>
+                        <a href="#process" class="nav-link">Process</a>
+                        <a href="promotions.html" class="nav-link env-business">Promotions</a>
+                        <a href="packages.html" class="nav-link env-business">Packages</a>
+                        <a href="skills.html" class="nav-link env-personal">Skills</a>
+                    </nav>
+                    <div class="env-switcher">
+                        <button class="env-switch-btn" data-env="business">Business</button>
+                        <button class="env-switch-btn" data-env="personal">Personal</button>
+                    </div>
+                    <a href="brief.html" class="theme-btn env-business" style="margin-left: 20px;">
+                        <div class="btn-bg orange"></div>
+                        <span class="btn-text text-white">Start a Project</span>
+                    </a>
+                    <a href="contact.html" class="theme-btn env-personal" style="margin-left: 20px;">
+                        <div class="btn-bg"></div>
+                        <span class="btn-text">Get in touch</span>
+                    </a>
+                    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Nav Overlay -->
+        <div class="mobile-nav-overlay" id="mobile-nav">
+            <a href="#home" class="mobile-nav-link">Home</a>
+            <a href="projects.html" class="mobile-nav-link env-business">Our work</a>
+            <a href="projects.html" class="mobile-nav-link env-personal">Portfolio</a>
+            <a href="services.html" class="mobile-nav-link env-business">Services</a>
+            <a href="cv.html" class="mobile-nav-link env-personal">Resume / CV</a>
+            <a href="#process" class="mobile-nav-link">Process</a>
+            <a href="promotions.html" class="mobile-nav-link env-business">Promotions</a>
+            <a href="packages.html" class="mobile-nav-link env-business">Packages</a>
+            <a href="brief.html" class="mobile-nav-link env-business">Start a Project</a>
+            <a href="skills.html" class="mobile-nav-link env-personal">Skills</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+            <div class="mobile-env-switcher">
+                <button class="env-switch-btn" data-env="business">Business</button>
+                <button class="env-switch-btn" data-env="personal">Personal</button>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero-section" id="home">
+            <div class="hero-bg-img bg-business env-business"></div>
+            <div class="hero-bg-img bg-personal env-personal"></div>
+            <div class="hero-bg-overlay"></div>
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <!-- Business Hero (Centered) -->
+                    <div class="hero-center env-business" style="width:100%; text-align:center; display:flex; flex-direction:column; align-items:center;">
+                        <p class="hero-subtitle">Welcome to Dubani Creatives</p>
+                        <div class="hero-title-wrapper" style="position: relative; overflow: hidden;">
+                            <div class="biz-title-1" style="opacity:0; transform: translateY(100%);">
+                                <h1 class="hero-title" style="font-size: clamp(60px, 8vw, 120px); color: var(--light); white-space: nowrap;">Strategic Brand</h1>
+                            </div>
+                            <div class="biz-title-2" style="position: absolute; top: 0; left: 0; width: 100%; opacity:0; transform: translateY(100%);">
+                                <h1 class="hero-title" style="font-size: clamp(60px, 8vw, 120px); color: var(--light); white-space: nowrap;">Identity Agency</h1>
+                            </div>
+                        </div>
+                        <h2 class="hero-heading-two" style="margin-top: 30px; text-align: center;">Elevating Brand<br>Identities.</h2>
+                        <p class="hero-text" style="max-width: 650px; margin-top: 16px; font-size: 18px;">We help businesses stand out with strategic brand identity and compelling visuals. We craft powerful marketing assets that build lasting connections.</p>
+                    </div>
+
+                    <!-- Personal Hero -->
+                    <div class="hero-left env-personal">
+                        <p class="hero-subtitle">Hey, I'm Dubani</p>
+                        <div class="hero-title-wrapper">
+                            <div class="title-mask title-one">
+                                <h1 class="hero-title">Brand &amp; Graphic</h1>
+                            </div>
+                            <div class="title-mask title-two">
+                                <h1 class="hero-title">Visual Designer</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-right env-personal">
+                        <h2 class="hero-heading-two">Crafting Exceptional<br>Visual Assets.</h2>
+                        <p class="hero-text">I help businesses stand out with strategic brand identity and compelling visuals. With over five years of experience, I craft marketing assets that bring brands to life.</p>
+                    </div>
+                </div>
+                <!-- Bottom Banner List -->
+                <div class="banner-list-container">
+                    <div class="banner-item">
+                        <p class="banner-number"><span>#</span>01</p>
+                        <p class="banner-text">Logo Design</p>
+                    </div>
+                    <div class="banner-item">
+                        <p class="banner-number"><span>#</span>02</p>
+                        <p class="banner-text">Brand Design</p>
+                    </div>
+                    <div class="banner-item">
+                        <p class="banner-number"><span>#</span>03</p>
+                        <p class="banner-text">Packaging Design</p>
+                    </div>
+                    <div class="banner-item">
+                        <p class="banner-number"><span>#</span>04</p>
+                        <p class="banner-text">Print Design</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Client Marquee Section -->
+        <section class="client-section">
+            <div class="client-box">
+                <div class="marquee-gradient left"></div>
+                <div class="marquee-gradient right"></div>
+                <div class="marquee-wrapper">
+                    <div class="marquee-track">
+                        <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client">
+                        <!-- Duplicate for smooth looping -->
+                        <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client">
+                        <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery / About Section -->
+        <section class="gallery-section">
+            <div class="container">
+                <div class="section-top env-business">
+                    <!-- Business About -->
+                    <div class="section-title-wrap env-business">
+                        <p class="section-subtitle">About Dubani Creatives</p>
+                        <h2 class="section-title">Beyond just design,<br>we build brands</h2>
+                    </div>
+                    <div class="section-desc-wrap env-business">
+                        <h3 class="section-heading-two">We are a specialized creative studio dedicated to helping businesses craft meaningful identities. Our team believes in strategic thinking, bold design, and flawless execution to give your brand a competitive edge.</h3>
+                        <div class="section-btn-box mt-4">
+                            <a href="contact.html" class="theme-btn">
+                                <div class="btn-bg"></div>
+                                <span class="btn-text">Get in touch</span>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="gallery-grid mt-24 env-business">
+                    <div class="gallery-item"><img loading="lazy" src="images/Portfolio/Branding/INGELOSI/INGELOSI%20Employment%20Law_1771003275581.webp" alt="INGELOSI Branding 1"></div>
+                    <div class="gallery-item"><img loading="lazy" src="images/Portfolio/Branding/INGELOSI/INGELOSI%20Employment%20Law_1771003275551.webp" alt="INGELOSI Branding 2"></div>
+                    <div class="gallery-item"><img loading="lazy" src="images/Portfolio/Branding/INGELOSI/INGELOSI%20Employment%20Law_1771003276924.webp" alt="INGELOSI Branding 3"></div>
+                </div>
+                <!-- Custom Personal About Layout -->
+                <div class="personal-about-wrapper env-personal" style="padding-top: 50px; padding-bottom: 50px;">
+                    <div class="personal-about-grid">
+                        <div class="personal-about-text">
+                            <p class="section-subtitle">A Little About Me</p>
+                            <h2 class="section-title">Beyond just design,<br>I build from scratch</h2>
+                            <h3 style="font-size: 24px; line-height: 1.6; color: rgba(255,255,255,0.85); font-weight: 400; margin-top: 30px; margin-bottom: 40px;">
+                                I've been creative for as long as I can remember. I love designing and building things from scratch. Beyond design, I'm a music lover, a book enthusiast, and a foodie. My faith as a Christian guides me.
+                            </h3>
+                            <div class="section-btn-box">
+                                <a href="contact.html" class="theme-btn">
+                                    <div class="btn-bg orange"></div>
+                                    <span class="btn-text text-white">Get in touch</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="personal-about-image-container">
+                            <img loading="lazy" src="images/about img.png" alt="Silulamele Dubani Portrait" class="personal-portrait-img">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="project-section env-business" id="projects">
+            <div class="container">
+                <div class="section-top">
+                    <!-- Business Projects -->
+                    <div class="section-title-wrap env-business">
+                        <p class="section-subtitle">Our Portfolio</p>
+                        <h2 class="section-title">Crafting Strategic<br>Brand Experiences</h2>
+                    </div>
+                    <div class="section-desc-wrap env-business">
+                        <h3 class="section-heading-two">With a passion for clarity and aesthetics, our agency partners with founders and teams to create visual identities that drive growth and connect globally.</h3>
+                    </div>
+
+                    <!-- Personal Projects -->
+                    <div class="section-title-wrap env-personal">
+                        <p class="section-subtitle">Some of My Best Work</p>
+                        <h2 class="section-title">Crafting Exceptional<br>Visual Assets</h2>
+                    </div>
+                    <div class="section-desc-wrap env-personal">
+                        <h3 class="section-heading-two">With a passion for clarity, aesthetics, and emotion-driven design, I partner with founders and teams to create visual identities that truly connect.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Portfolio Slider -->
+            <div class="portfolio-slider-wrapper env-business mt-12">
+                <div class="slider-nav">
+                    <button class="slider-btn prev-btn" aria-label="Previous">
+                        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                    </button>
+                    <button class="slider-btn next-btn" aria-label="Next">
+                        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </button>
+                </div>
+                <div class="portfolio-slider-track">
+
+                    <!-- Slide 1 -->
+                    <div class="portfolio-slide">
+                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
+                        <div class="portfolio-slide-content">
+                            <span class="slide-category">Branding</span>
+                            <h3 class="slide-title">LUZANA Consulting</h3>
+                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="portfolio-slide">
+                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/499250828_1276640887802752_4351659506504074361_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
+                        <div class="portfolio-slide-content">
+                            <span class="slide-category">Logo Design</span>
+                            <h3 class="slide-title">LUZANA Consulting</h3>
+                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="portfolio-slide">
+                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/500274309_1276640737802767_761438347564289657_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
+                        <div class="portfolio-slide-content">
+                            <span class="slide-category">Print / Merch</span>
+                            <h3 class="slide-title">LUZANA Consulting</h3>
+                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+                        </div>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="portfolio-slide">
+                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/501049846_1276640871136087_1276473322365407417_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
+                        <div class="portfolio-slide-content">
+                            <span class="slide-category">Social Media</span>
+                            <h3 class="slide-title">LUZANA Consulting</h3>
+                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+                        </div>
+                    </div>
+                    <!-- Slide 5 -->
+                    <div class="portfolio-slide">
+                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/506526281_1276640541136120_2738207331665993664_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
+                        <div class="portfolio-slide-content">
+                            <span class="slide-category">Web Design</span>
+                            <h3 class="slide-title">LUZANA Consulting</h3>
+                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Portfolio List -->
+            <div class="container env-personal mt-12">
+                <!-- Project Item 1 -->
+                <div class="project-block mt-24">
+                    <div class="project-image-box">
+                        <img loading="lazy" src="images/imgi_13_68bd341e34845d434f3fb083_1.png" alt="Dream Area" class="project-image">
+                    </div>
+                    <div class="project-content-box">
+                        <div class="project-line"></div>
+                        <h3 class="project-title">Dream Area</h3>
+                        <p class="project-text">Flowing shapes in iridescent hues — from deep blues and purples to vibrant pinks and oranges — creating an ethereal brand identity.</p>
+                        <a href="projects.html" class="theme-btn gray-btn mt-4"><div class="btn-bg orange"></div><span class="btn-text">Read more</span></a>
+                    </div>
+                </div>
+
+                <!-- Project Item 2 (Reversed) -->
+                <div class="project-block reverse mt-24">
+                    <div class="project-image-box">
+                        <img loading="lazy" src="images/imgi_14_68bd33e0e57b111749f34daf_0.png" alt="Star Blox" class="project-image">
+                    </div>
+                    <div class="project-content-box">
+                        <div class="project-line"></div>
+                        <h3 class="project-title">Star Blox</h3>
+                        <p class="project-text">A bold packaging and identity system built to stand out on the shelf and communicate quality at first glance.</p>
+                        <a href="projects.html" class="theme-btn gray-btn mt-4"><div class="btn-bg orange"></div><span class="btn-text">Read more</span></a>
+                    </div>
+                </div>
+
+                <!-- View More Button -->
+                <div class="text-center mt-24" style="margin-bottom: 2rem;">
+                    <a href="projects.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View more</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="service-section" id="services">
+            <div class="container">
+                <div class="section-top mb-16">
+                    <!-- Business Services -->
+                    <div class="section-title-wrap env-business">
+                        <p class="section-subtitle">Services</p>
+                        <h2 class="section-title">How We Can<br>Help You</h2>
+                    </div>
+                    <div class="section-desc-wrap env-business">
+                        <h3 class="section-heading-two">From strategy to visuals, we offer agency-level services to help your brand grow with clarity and impact.</h3>
+                        <div class="section-btn-box mt-4">
+                            <a href="contact.html" class="theme-btn">
+                                <div class="btn-bg"></div>
+                                <span class="btn-text">Get in touch</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Personal Services -->
+                    <div class="section-title-wrap env-personal">
+                        <p class="section-subtitle">Services</p>
+                        <h2 class="section-title">How I Can<br>Help You</h2>
+                    </div>
+                    <div class="section-desc-wrap env-personal">
+                        <h3 class="section-heading-two">From strategy to visuals, I offer tailored services to help your brand grow with clarity and impact.</h3>
+                        <div class="section-btn-box mt-4">
+                            <a href="contact.html" class="theme-btn">
+                                <div class="btn-bg"></div>
+                                <span class="btn-text">Get in touch</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-grid mt-24">
+                    <div class="service-block">
+                        <div class="service-icon"><img loading="lazy" src="images/imgi_16_68d6c6b21fd29ee90bff6298_digital-graphic.png" alt="Logo Design"></div>
+                        <div class="service-content">
+                            <div class="service-line"></div>
+                            <p class="service-sub">Make Your Mark</p>
+                            <h3 class="service-title">Logo Design &amp; Brand Design</h3>
+                            <p class="service-text">We create logos and brand identities that feel honest, clear, and memorable — designed to reflect who you are and help people recognize you instantly.</p>
+                        </div>
+                    </div>
+                    <div class="service-block">
+                        <div class="service-icon"><img loading="lazy" src="images/imgi_17_68d6c66fc2b77dda70e5b0bf_strategy.png" alt="Marketing Design"></div>
+                        <div class="service-content">
+                            <div class="service-line"></div>
+                            <p class="service-sub">Design That Gets People to Act</p>
+                            <h3 class="service-title">Marketing &amp; Campaign Design</h3>
+                            <p class="service-text">Need a flyer, ad, or poster that actually works? We design with purpose so whether someone's scrolling by or walking past, they notice you.</p>
+                        </div>
+                    </div>
+                    <div class="service-block">
+                        <div class="service-icon"><img loading="lazy" src="images/imgi_18_68d6c5defc866f52b23a0656_consulting.png" alt="Social Content"></div>
+                        <div class="service-content">
+                            <div class="service-line"></div>
+                            <p class="service-sub">Graphics That Stop Thumbs in Their Tracks</p>
+                            <h3 class="service-title">Social &amp; Digital Content</h3>
+                            <p class="service-text">Social media moves fast. We design bold, eye-catching visuals made to grab attention and get people to engage wherever they see you.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View More Button -->
+                <div class="text-center mt-24" style="margin-bottom: 2rem;">
+                    <a href="services.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View all services</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="process-section" id="process">
+            <div class="container">
+                <div class="section-top mb-16">
+                    <!-- Business Process -->
+                    <div class="section-title-wrap env-business">
+                        <p class="section-subtitle">Step-by-Step</p>
+                        <h2 class="section-title text-black">Our Process,<br>Step by Step</h2>
+                    </div>
+                    <!-- Personal Process -->
+                    <div class="section-title-wrap env-personal">
+                        <p class="section-subtitle">Step-by-Step</p>
+                        <h2 class="section-title text-black">My Process,<br>Step by Step</h2>
+                    </div>
+                </div>
+                <div class="process-wrapper">
+                    <div class="process-block">
+                        <div class="process-box">
+                            <div class="process-count-box">
+                                <h2 class="process-count">01</h2>
+                                <h3 class="process-heading">Discovery</h3>
+                            </div>
+                            <p class="process-text">Understanding your vision, audience, and goals.</p>
+                        </div>
+                    </div>
+                    <div class="process-block">
+                        <div class="process-box">
+                            <div class="process-count-box">
+                                <h2 class="process-count">02</h2>
+                                <h3 class="process-heading">Strategy</h3>
+                            </div>
+                            <p class="process-text">Defining your unique positioning and messaging.</p>
+                        </div>
+                    </div>
+                    <div class="process-block">
+                        <div class="process-box">
+                            <div class="process-count-box">
+                                <h2 class="process-count">03</h2>
+                                <h3 class="process-heading">Design</h3>
+                            </div>
+                            <p class="process-text">Creating your visual identity system and touchpoints.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promotions Section (Business only) -->
+        <section class="pricing-section env-business" id="promotions">
+            <div class="container text-center pt-24 pb-24">
+                <p class="section-subtitle">Promotions</p>
+                <h2 class="section-title">Current Deals &amp;<br>Special Offers</h2>
+                <h3 class="section-heading-two mt-4" style="max-width:700px; margin: 1rem auto 2rem;">Limited-time offers designed to give you great design at even better value. Grab one before it's gone.</h3>
+
+                <div class="pricing-grid mt-16 text-left">
+                    <!-- Promo 1 -->
+                    <div class="pricing-card">
+                        <div class="pricing-top">
+                            <p class="pricing-name">Starter Brand Pack</p>
+                            <h2 class="pricing-price">20% <span class="pricing-month">OFF</span></h2>
+                            <p class="pricing-desc">New businesses &amp; startups</p>
+                        </div>
+                        <div class="pricing-features">
+                            <p>&#10003; Logo design (3 concepts)</p>
+                            <p>&#10003; Brand colour &amp; font guide</p>
+                            <p>&#10003; Business card design</p>
+                        </div>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Claim Offer</span></a>
+                    </div>
+
+                    <!-- Promo 2 (Featured) -->
+                    <div class="pricing-card active">
+                        <div class="pricing-top">
+                            <p class="pricing-name">Social Media Bundle</p>
+                            <h2 class="pricing-price">Buy 5 <span class="pricing-month">Get 2 Free</span></h2>
+                            <p class="pricing-desc">Social &amp; digital content</p>
+                        </div>
+                        <div class="pricing-features text-black">
+                            <p>&#10003; 5 custom social graphics</p>
+                            <p>&#10003; 2 bonus story templates</p>
+                            <p>&#10003; Ready-to-post files</p>
+                        </div>
+                        <a href="contact.html" class="theme-btn w-full mt-4"><div class="btn-bg orange"></div><span class="btn-text">Claim Offer</span></a>
+                    </div>
+
+                    <!-- Promo 3 -->
+                    <div class="pricing-card">
+                        <div class="pricing-top">
+                            <p class="pricing-name">Pitch Deck Special</p>
+                            <h2 class="pricing-price">15% <span class="pricing-month">OFF</span></h2>
+                            <p class="pricing-desc">For startups &amp; freelancers</p>
+                        </div>
+                        <div class="pricing-features">
+                            <p>&#10003; Up to 15-slide deck</p>
+                            <p>&#10003; Custom layout &amp; design</p>
+                            <p>&#10003; Editable source file</p>
+                        </div>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Claim Offer</span></a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-24" style="margin-bottom: 2rem;">
+                    <a href="promotions.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View all promotions</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section (Personal only) -->
+        <section class="skills-section env-personal pt-24 pb-24" id="skills">
+            <div class="container">
+                <p class="section-subtitle">My Capabilities</p>
+                <h2 class="section-title">Skills &amp; Expertise</h2>
+                
+                <div class="skills-grid">
+                    <!-- Core Design Skills -->
+                    <div class="skill-card">
+                        <h3>Core Design Skills</h3>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Layouts &amp; Typography</span><span class="skill-percent">95%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95%"></div></div>
+                            <p class="skill-desc">I create visually compelling layouts using strong principles of typography, colour theory, hierarchy, and composition</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Brand Identities</span><span class="skill-percent">92%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92%"></div></div>
+                            <p class="skill-desc">I design cohesive brand identities including logos, colour palettes, and brand guidelines for businesses and organisations</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Colour Theory</span><span class="skill-percent">88%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88%"></div></div>
+                            <p class="skill-desc">I apply colour theory strategically to evoke emotion, reinforce brand personality, and guide the viewer's eye</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Structure &amp; Balance</span><span class="skill-percent">90%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%"></div></div>
+                            <p class="skill-desc">I craft clean, well-structured layouts with a sharp eye for balance, contrast, alignment, and use of negative space</p>
+                        </div>
+                    </div>
+
+                    <!-- Software Proficiency -->
+                    <div class="skill-card">
+                        <h3>Software Proficiency</h3>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Adobe Creative Suite</span><span class="skill-percent">98%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="98%"></div></div>
+                            <p class="skill-desc">I am proficient in Adobe Illustrator, Photoshop, and InDesign for vector design, photo editing, and print layouts</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Figma</span><span class="skill-percent">85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%"></div></div>
+                            <p class="skill-desc">I design and prototype digital interfaces using Figma for collaborative UI/UX projects</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">AI-Powered Workflows</span><span class="skill-percent">82%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="82%"></div></div>
+                            <p class="skill-desc">I integrate AI-powered design tools to accelerate ideation and production workflows</p>
+                        </div>
+                    </div>
+
+                    <!-- Technical Skills -->
+                    <div class="skill-card">
+                        <h3>Technical Skills</h3>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Print-Ready Files</span><span class="skill-percent">94%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="94%"></div></div>
+                            <p class="skill-desc">I prepare print-ready files with correct bleed, colour modes (CMYK/RGB), and supplier specifications</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Responsive Graphics</span><span class="skill-percent">96%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="96%"></div></div>
+                            <p class="skill-desc">I design responsive, screen-optimised graphics tailored for web and digital platforms</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">HTML &amp; CSS</span><span class="skill-percent">80%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80%"></div></div>
+                            <p class="skill-desc">I write basic HTML and CSS, allowing me to implement and maintain designs directly in the browser</p>
+                        </div>
+                    </div>
+
+                    <!-- Creative & Strategic Skills -->
+                    <div class="skill-card">
+                        <h3>Creative &amp; Strategic</h3>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Visual Concepts</span><span class="skill-percent">91%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="91%"></div></div>
+                            <p class="skill-desc">I translate client briefs into strong visual concepts through research, moodboarding, and ideation</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Original Artwork</span><span class="skill-percent">87%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="87%"></div></div>
+                            <p class="skill-desc">I create original illustrations and custom artwork for digital and print media</p>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info"><span class="skill-name">Visual Communication</span><span class="skill-percent">93%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="93%"></div></div>
+                            <p class="skill-desc">I solve visual communication challenges by balancing aesthetics with function and purpose</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Professional Skills -->
+                    <div class="skill-card" style="grid-column: 1 / -1;">
+                        <h3>Professional Skills</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;">
+                            <div class="skill-item">
+                                <div class="skill-info"><span class="skill-name">Client Communication</span><span class="skill-percent">96%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="96%"></div></div>
+                                <p class="skill-desc">I communicate design concepts clearly to clients and collaborate effectively with developers and copywriters</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info"><span class="skill-name">Project Management</span><span class="skill-percent">92%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92%"></div></div>
+                                <p class="skill-desc">I manage multiple projects simultaneously, delivering quality work within agreed timelines</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info"><span class="skill-name">Portfolio Maintenance</span><span class="skill-percent">85%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%"></div></div>
+                                <p class="skill-desc">I maintain an up-to-date portfolio that showcases a diverse range of branding, web, and print projects</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info"><span class="skill-name">Industry Awareness</span><span class="skill-percent">90%</span></div>
+                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%"></div></div>
+                                <p class="skill-desc">I stay current with design trends, emerging tools, and industry best practices</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-24" style="margin-bottom: 2rem;">
+                    <a href="skills.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View all skills</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Web Design & Development Section (Business Only) -->
+        <section class="webdev-section env-business mt-24 mb-24">
+            <div class="container">
+                <div class="webdev-header">
+                    <p class="section-subtitle">What We Build</p>
+                    <h2 class="section-title">Web Design &amp;<br>Website Development</h2>
+                    <h3 class="section-heading-two mt-4" style="max-width: 680px; margin: 1rem auto 0;">
+                        We don't just design &mdash; we build custom, high-performing websites that look incredible and drive real results for your brand.
+                    </h3>
+                </div>
+
+                <div class="webdev-grid">
+                    <!-- Card 1: Unique Web Design -->
+                    <div class="webdev-card">
+                        <div class="webdev-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        </div>
+                        <h3>Unique Web Design</h3>
+                        <p>Because our team all have a strong background in design, we don't just put together a website willy-nilly. All our websites are custom designed according to your brand identity and specific requirements aimed at being user-friendly and visually appealing. This means your website is unique, doesn't have that "template" feel which makes it stand out from your competitors.</p>
+                    </div>
+
+                    <!-- Card 2: Custom Web Development -->
+                    <div class="webdev-card">
+                        <div class="webdev-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                        </div>
+                        <h3>Custom Web Development</h3>
+                        <p>What makes us different is that not only can we design but we also have a strong development team who can custom code your website. This is the best of both worlds! Enticing design AND a well functioning website which drives results in terms of reaching your target market visually and engagement.</p>
+                    </div>
+
+                    <!-- Card 3: Easy to Update -->
+                    <div class="webdev-card">
+                        <div class="webdev-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        </div>
+                        <h3>Easy to Update</h3>
+                        <p>We prefer using WordPress when building our websites as it is easy to customise as well as easy to update after it has been built. With a "What You See Is What You Get" (WYSIWYG) builder you don't have to ask us to make small text changes after the website has been completed. Which means you have more control over your own website.</p>
+                    </div>
+
+                    <!-- Card 4: Responsive & Mobile Friendly -->
+                    <div class="webdev-card">
+                        <div class="webdev-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+                        </div>
+                        <h3>Responsive &amp; Mobile Friendly</h3>
+                        <p>More and more websites are being viewed on mobile phones first. Which means having your website optimised for mobile is crucial. All our websites are built to be responsive and adjust according to the device you are viewing it on.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-24">
+                    <a href="contact.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">Start your web project</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section pt-24 pb-24">
+            <div class="container">
+                <div class="section-top mb-16">
+                    <!-- Business Testimonials -->
+                    <div class="section-title-wrap env-business">
+                        <p class="section-subtitle">Kind Words</p>
+                        <h2 class="section-title">What Clients<br>Say About Us</h2>
+                    </div>
+                    <div class="section-desc-wrap env-business">
+                        <h3 class="section-heading-two">Real feedback from brands and founders we've had the pleasure of partnering with.</h3>
+                    </div>
+
+                    <!-- Personal Testimonials -->
+                    <div class="section-title-wrap env-personal">
+                        <p class="section-subtitle">Kind Words</p>
+                        <h2 class="section-title">What Clients<br>Say About Me</h2>
+                    </div>
+                    <div class="section-desc-wrap env-personal">
+                        <h3 class="section-heading-two">Real feedback from real people I've had the pleasure of working with.</h3>
+                    </div>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-quote">"Dubani completely transformed our brand. The logo feels exactly like us &mdash; clean, bold, and memorable. We get compliments on it constantly."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">S</div>
+                            <div class="testimonial-info">
+                                <h4>Sarah M.</h4>
+                                <p>Founder, The Online Cake Shop</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-quote">"Working with Dubani was effortless. He understood the brief immediately and delivered packaging that truly made our product stand out on the shelf."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">J</div>
+                            <div class="testimonial-info">
+                                <h4>James O.</h4>
+                                <p>Product Manager, Cape Craft Co.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-quote">"Our social media content now actually gets attention. The visuals Dubani designed are eye-catching and on-brand every single time."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">A</div>
+                            <div class="testimonial-info">
+                                <h4>Amara N.</h4>
+                                <p>Marketing Lead, Bloom Studio</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-quote">"The pitch deck Dubani designed helped us close our funding round. It was polished, clear, and told our story in a way we never could have done alone."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">K</div>
+                            <div class="testimonial-info">
+                                <h4>Kwame T.</h4>
+                                <p>CEO, TechStart Africa</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-quote">"Incredibly talented and easy to work with. Dubani delivered ahead of schedule and the quality exceeded our expectations. Highly recommended."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">L</div>
+                            <div class="testimonial-info">
+                                <h4>Lerato D.</h4>
+                                <p>Creative Director, Vivid Agency</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <p class="testimonial-quote">"From the first call to the final files, everything was professional and smooth. Our brand now has a voice and a look that we're proud to show the world."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">N</div>
+                            <div class="testimonial-info">
+                                <h4>Nadia R.</h4>
+                                <p>Owner, Roots &amp; Co.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <div class="container pt-24 pb-24">
+                <div class="contact-grid">
+                    <!-- Business Contact -->
+                    <div class="contact-left env-business" style="margin-right: 40px;">
+                        <p class="section-subtitle">Contact us</p>
+                        <h2 class="section-title">Let's Create<br>Something Meaningful</h2>
+                        <h3 class="section-heading-two mt-4">Whether you're starting from scratch or need a brand refresh, our team is here to help bring your vision to life.</h3>
+                    </div>
+
+                    <!-- Personal Contact -->
+                    <div class="contact-left env-personal" style="margin-right: 40px;">
+                        <p class="section-subtitle">Contact me</p>
+                        <h2 class="section-title">Let's Create<br>Something Meaningful</h2>
+                        <h3 class="section-heading-two mt-4">Whether you're starting from scratch or need a brand refresh, I'm here to help bring your vision to life.</h3>
+                    </div>
+                    <div class="contact-form-box">
+                        <form class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" placeholder="John" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" placeholder="Doe" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" placeholder="example@domain.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Message</label>
+                                <textarea placeholder="Type your message..." required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn theme-btn w-full"><div class="btn-bg orange"></div><span class="btn-text text-white">Submit</span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="#home" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;"></a>
+                        <h3 class="footer-heading mt-4">Let's build something remarkable together!</h3>
+                        <p class="footer-text mt-4">&copy; Copyright Dubani Creatives</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Menu</h4>
+                        <a href="#home">Home</a>
+                        <a href="projects.html">Projects</a>
+                        <a href="services.html">Services</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Pages</h4>
+                        <a href="promotions.html">Promotions</a>
+                        <a href="#process">Process</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Social</h4>
+                        <a href="https://www.linkedin.com/company/dubani-creatives" target="_blank" rel="noopener noreferrer" class="footer-social-link">
+                            <svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.83-48.3 93.97 0 111.28 61.9 111.28 142.3V448z"/></svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://www.instagram.com/dubanicreatives/" target="_blank" rel="noopener noreferrer" class="footer-social-link">
+                            <svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                            Instagram
+                        </a>
+                        <a href="https://www.facebook.com/dubanicreativespage/" target="_blank" rel="noopener noreferrer" class="footer-social-link">
+                            <svg class="footer-social-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256c0 120 82.7 220.8 194.2 248.5V334.2h-56.6v-78.2h56.6v-61.3c0-56.4 33.5-87.3 84.6-87.3 24.5 0 50.2 4.4 50.2 4.4v55.4h-28.3c-27.8 0-36.5 17.3-36.5 35v42h62.3l-10 78.2h-52.3v170.3C429.3 476.8 512 376 512 256z"/></svg>
+                            Facebook
+                        </a>
+                        <a href="https://www.tiktok.com/@dubanicreatives" target="_blank" rel="noopener noreferrer" class="footer-social-link">
+                            <svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M448 209.9a210.1 210.1 0 0 1-122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3v89.9a74.6 74.6 0 1 0 52.2 71.2V0h88a121 121 0 0 0 1.9 22.2 122.2 122.2 0 0 0 53.9 80.2 121 121 0 0 0 67 20.1z"/></svg>
+                            TikTok
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="main.js"></script>
+
+    <!-- WhatsApp Chat Widget -->
+    <div class="wa-widget-container">
+        <div class="wa-tooltip">Chat with me on WhatsApp 💬</div>
+        <div class="wa-bot-and-btn">
+            <!-- Animated Chatbot Robot SVG -->
+            <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
+                <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
+                <circle cx="28" cy="20" r="2.5" fill="#fff"/>
+                <circle cx="36" cy="20" r="2.5" fill="#fff"/>
+                <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
+                <circle cx="32" cy="6" r="3" fill="#25D366"/>
+                <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
+                <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+                <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+            </svg>
+            <!-- WhatsApp Button -->
+            <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+

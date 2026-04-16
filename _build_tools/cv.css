@@ -1,0 +1,181 @@
+/* =========================================
+   CV / Resume Page Styles
+========================================= */
+
+.cv-hero {
+    position: relative;
+    border-bottom: 1px solid rgba(255,94,0,0.2) !important;
+}
+
+.cv-heading {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    font-family: var(--font-heading);
+}
+
+.accent-dot {
+    color: var(--primary-color);
+}
+
+.cv-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.summary-card {
+    border-left: 4px solid var(--primary-color);
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.8);
+}
+
+.cv-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 50px;
+}
+
+@media (min-width: 900px) {
+    .cv-grid {
+        grid-template-columns: 2fr 1.2fr;
+        gap: 80px;
+    }
+}
+
+/* Timeline */
+.cv-timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.cv-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.1);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -35px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px rgba(255,94,0,0.5);
+}
+
+.timeline-content h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.timeline-role {
+    display: block;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.timeline-date {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.timeline-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.timeline-content ul li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+}
+
+.timeline-content ul li::before {
+    content: '\\2023'; /* Triangular bullet */
+    color: var(--primary-color);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 18px;
+}
+
+/* Education & Skills */
+.ed-card h4 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.ed-school {
+    display: block;
+    color: var(--primary-color);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.ed-date {
+    color: rgba(255,255,255,0.5);
+}
+
+.cv-simple-list {
+    list-style: none;
+    padding: 0;
+}
+
+.cv-simple-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.8);
+    font-size: 15px;
+}
+
+/* Skill Tags */
+.cv-skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill-tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+    background: rgba(255,94,0,0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.soft-skills .skill-tag {
+    background: transparent;
+    border-style: dashed;
+}
