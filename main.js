@@ -49,6 +49,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initEnvironment();
 
+    // --- Dark/Light Mode Toggle ---
+    const initThemeToggle = () => {
+        const toggle = document.querySelector('.theme-toggle-track');
+        if (!toggle) return;
+
+        const swapLogos = (isLight) => {
+            const logos = document.querySelectorAll('.header-logo img');
+            logos.forEach(logo => {
+                if (isLight) {
+                    logo.src = logo.src.replace('logo.png', 'logo1.png');
+                } else {
+                    logo.src = logo.src.replace('logo1.png', 'logo.png');
+                }
+            });
+        };
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            swapLogos(true);
+        }
+
+        const toggleTheme = () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            swapLogos(isLight);
+        };
+
+        toggle.addEventListener('click', toggleTheme);
+        toggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleTheme();
+            }
+        });
+    };
+
+    initThemeToggle();
+
     // Initialize Lenis for smooth scrolling
     const lenis = new Lenis({
         duration: 1.2,
