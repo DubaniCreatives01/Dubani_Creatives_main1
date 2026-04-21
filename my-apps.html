@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Apps | Dubani Creatives</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #ff5e00;
+            --bg: #0d0d0d;
+            --card-bg: #141414;
+            --card-border: rgba(255,255,255,0.07);
+            --text: #f0f0f0;
+            --muted: #888;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Background grid pattern --- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- Glow blob --- */
+        .glow-blob {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,94,0,0.12) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            pointer-events: none;
+            z-index: 0;
+            animation: blobMove 8s ease-in-out infinite alternate;
+        }
+        @keyframes blobMove {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(-60px, 60px) scale(1.1); }
+        }
+
+        /* --- Header --- */
+        .apps-header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background: rgba(13,13,13,0.85);
+            backdrop-filter: blur(16px);
+        }
+
+        .apps-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .apps-logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .apps-header-title {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .apps-header-title span {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .back-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+        /* --- Main --- */
+        .apps-main {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+
+        .apps-intro {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .apps-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,94,0,0.12);
+            border: 1px solid rgba(255,94,0,0.25);
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .apps-badge::before { content: '\25CF'; font-size: 6px; }
+
+        .apps-intro h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .apps-intro p {
+            font-size: 1rem;
+            color: var(--muted);
+            max-width: 460px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* --- Apps Grid --- */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        /* --- App Card --- */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        border-color 0.3s ease,
+                        box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,94,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,94,0,0.1);
+        }
+
+        .app-card:hover::before { opacity: 1; }
+
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(255,94,0,0.1);
+            border: 1px solid rgba(255,94,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+        .app-card:hover .app-icon {
+            background: rgba(255,94,0,0.18);
+        }
+
+        .app-info { flex: 1; }
+
+        .app-name {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+
+        .app-desc {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .app-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-top: auto;
+        }
+        .app-tag svg { width: 12px; height: 12px; fill: currentColor; }
+
+        /* --- Coming Soon Card --- */
+        .app-card.coming-soon {
+            opacity: 0.45;
+            cursor: default;
+        }
+        .app-card.coming-soon:hover {
+            transform: none;
+            border-color: var(--card-border);
+            box-shadow: none;
+        }
+        .app-card.coming-soon::before { display: none; }
+        .coming-soon .app-tag { color: var(--muted); }
+
+        /* --- Add New Card --- */
+        .app-card.add-new {
+            border-style: dashed;
+            border-color: rgba(255,255,255,0.12);
+            background: transparent;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 180px;
+            cursor: default;
+        }
+        .app-card.add-new:hover {
+            transform: none;
+            border-color: rgba(255,94,0,0.25);
+            box-shadow: none;
+        }
+        .app-card.add-new::before { display: none; }
+        .add-new-icon {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.4rem;
+        }
+        .add-new p {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        /* --- Footer --- */
+        .apps-footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 1px;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            .apps-header { padding: 20px 20px; }
+            .apps-header-title { font-size: 0.95rem; }
+            .apps-main { padding: 40px 16px 60px; }
+            .apps-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+            .app-card { padding: 22px 18px; }
+        }
+        @media (max-width: 400px) {
+            .apps-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-blob"></div>
+
+    <!-- Header -->
+    <header class="apps-header">
+        <div class="apps-header-left">
+            <img src="images/logo.png" alt="Dubani Creatives" class="apps-logo">
+            <span class="apps-header-title">My <span>Apps</span></span>
+        </div>
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Back to Site
+        </a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="apps-main">
+
+        <div class="apps-intro">
+            <div class="apps-badge">Private Hub</div>
+            <h1>My Apps</h1>
+            <p>Your personal toolkit — internal tools, generators, and utilities all in one place.</p>
+        </div>
+
+        <div class="apps-grid" id="appsGrid">
+
+            <!-- App 1: Invoice Generator -->
+            <a href="invoice.html" class="app-card">
+                <div class="app-icon">&#128196;</div>
+                <div class="app-info">
+                    <h3 class="app-name">Invoice Generator</h3>
+                    <p class="app-desc">Create, preview, and send branded invoices to clients via PDF or WhatsApp.</p>
+                </div>
+                <span class="app-tag">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    Open App
+                </span>
+            </a>
+
+            <!-- Coming Soon placeholders -->
+            <div class="app-card coming-soon">
+                <div class="app-icon">&#128200;</div>
+                <div class="app-info">
+                    <h3 class="app-name">Analytics Dashboard</h3>
+                    <p class="app-desc">Track project stats, client activity, and business performance at a glance.</p>
+                </div>
+                <span class="app-tag">Coming Soon</span>
+            </div>
+
+            <div class="app-card coming-soon">
+                <div class="app-icon">&#128197;</div>
+                <div class="app-info">
+                    <h3 class="app-name">Project Tracker</h3>
+                    <p class="app-desc">Manage active projects, deadlines, and client deliverables in one view.</p>
+                </div>
+                <span class="app-tag">Coming Soon</span>
+            </div>
+
+            <div class="app-card coming-soon">
+                <div class="app-icon">&#127775;</div>
+                <div class="app-info">
+                    <h3 class="app-name">Brand Kit Builder</h3>
+                    <p class="app-desc">Quickly assemble and export brand kits for new client onboarding.</p>
+                </div>
+                <span class="app-tag">Coming Soon</span>
+            </div>
+
+            <!-- Add New placeholder -->
+            <div class="app-card add-new">
+                <div class="add-new-icon">&#43;</div>
+                <p>More apps coming soon</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="apps-footer">
+        DUBANI CREATIVES &mdash; PRIVATE &mdash; DO NOT SHARE
+    </footer>
+
+</body>
+</html>
