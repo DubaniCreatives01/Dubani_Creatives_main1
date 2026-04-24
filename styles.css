@@ -456,6 +456,8 @@ body {
 @media (max-width: 991px) {
     .header-nav { display: none; }
     .env-switcher { display: none; }
+    .main-header .theme-btn { display: none !important; }
+    .apps-sidebar-btn { display: none !important; }
     .hamburger-btn { display: flex; }
     .mobile-nav-overlay { display: flex; }
     .hero-content { flex-direction: column; }
@@ -798,58 +800,15 @@ body {
     font-family: var(--font-text);
     font-weight: 400;
 }
-
-/* --- Testimonials --- */
-.testimonials-section {
-    padding: 100px 0;
-}
-.testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-.testimonial-card {
-    background-color: #242424;
-    border-radius: 30px;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-.testimonial-stars {
-    color: #FFD700;
-    margin-bottom: 20px;
-}
-.testimonial-quote {
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-.testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-.testimonial-avatar {
-    width: 50px;
-    height: 50px;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-}
-.testimonial-info h4 {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-.testimonial-info p {
-    font-size: 14px;
+.pricing-desc {
     color: var(--text-muted);
 }
+.pricing-features p {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
 
-/* --- Contact --- */
+/* --- Contact & Footer --- */
 .contact-section {
     padding: 100px 0;
 }
