@@ -1,21 +1,3 @@
-// Safety reveal: force-show all animated elements after 800ms
-// in case GSAP fails to load or fires before elements are ready
-(function safetyReveal() {
-    setTimeout(function() {
-        var els = document.querySelectorAll(
-            '.section-top, .gallery-item, .project-block, .service-block, ' +
-            '.process-block, .pricing-card, .testimonial-card, .approach-big-block, ' +
-            '.approach-small-block, .skill-card, .webdev-card, .contact-left, ' +
-            '.contact-form-box, .hero-right, .hero-center, .banner-item'
-        );
-        els.forEach(function(el) {
-            el.style.opacity = '';
-            el.style.transform = '';
-            el.style.visibility = 'visible';
-        });
-    }, 800);
-})();
-
 document.addEventListener("DOMContentLoaded", () => {
     // Environment Switcher Logic
     const initEnvironment = () => {
@@ -59,9 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     e.target.classList.add('active');
                     
                     // Re-trigger scrollTrigger calculations if layout changed
-                    setTimeout(() => {
-                        if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-                    }, 600);
+                    if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
                 });
             });
         }, 0);
@@ -109,37 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initThemeToggle();
 
-    // Initialize Lenis for smooth scrolling (with graceful fallback)
-    if (typeof Lenis !== 'undefined') {
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        });
+    // Initialize Lenis for smooth scrolling
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
 
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+    function raf(time) {
+        lenis.raf(time);
         requestAnimationFrame(raf);
     }
-
-    // GSAP animations with graceful fallback
-    if (typeof gsap === 'undefined') {
-        // If GSAP didn't load, ensure everything is visible
-        document.querySelectorAll('.biz-title-1, .biz-title-2').forEach(el => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-        });
-        return; // Exit early, no animations
-    }
+    requestAnimationFrame(raf);
 
     gsap.registerPlugin(ScrollTrigger);
-
-    // Refresh ScrollTrigger after a short delay to get correct positions
-    setTimeout(() => {
-        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-    }, 600);
-
     // Initial State Settings
     gsap.set(".title-one", { width: "0%" });
     gsap.set(".title-two", { width: "0%" });
@@ -204,39 +166,46 @@ document.addEventListener("DOMContentLoaded", () => {
         delay: 2.5
     });
 
-    // Business Hero Title Animation
+    // Business Hero Title Animation — text rotator in same position
     const bizTitleTl = gsap.timeline({
         repeat: -1,
         delay: 0.8
     });
 
     bizTitleTl
+    // Title 1 slides up into view
     .to(".biz-title-1", {
         opacity: 1,
         y: 0,
         duration: 0.8,
         ease: "power3.out"
     })
+    // Hold title 1
     .to({}, { duration: 2.5 })
+    // Title 1 slides up and out
     .to(".biz-title-1", {
         opacity: 0,
         y: "-100%",
         duration: 0.8,
         ease: "power3.in"
     })
+    // Title 2 slides up into view
     .to(".biz-title-2", {
         opacity: 1,
         y: 0,
         duration: 0.8,
         ease: "power3.out"
     })
+    // Hold title 2
     .to({}, { duration: 2.5 })
+    // Title 2 slides up and out
     .to(".biz-title-2", {
         opacity: 0,
         y: "-100%",
         duration: 0.8,
         ease: "power3.in"
     })
+    // Reset both positions for next loop
     .set(".biz-title-1", { y: "100%" })
     .set(".biz-title-2", { y: "100%" });
 
@@ -244,6 +213,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Marquee Infinite Animation
     const marqueeTrack = document.querySelector(".marquee-track");
     if(marqueeTrack) {
+        // Find half the width so we can loop seamlessly
+        // We know we duplicated the 5 items, so total items is 10
+        // The animation will translate from 0 to -50%
         gsap.to(marqueeTrack, {
             xPercent: -50,
             ease: "none",
@@ -252,7 +224,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- Scroll Animations ---
+    // Scroll header background transition disabled by user request
+
+    // --- Scroll Animations for new sections ---
 
     // Hero Section Parallax 
     gsap.to(".hero-bg-img", {
@@ -286,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: {
                 trigger: section,
                 start: "top 85%",
-                toggleActions: "play none none none"
+                toggleActions: "play none none reverse"
             },
             y: 40,
             opacity: 0,
@@ -294,6 +268,23 @@ document.addEventListener("DOMContentLoaded", () => {
             ease: "power3.out"
         });
     });
+
+    // Gallery images stagger (Disabled for large gallery performance)
+    /* 
+    if (document.querySelector('.gallery-item')) {
+        gsap.from(".gallery-item", {
+            scrollTrigger: {
+                trigger: ".project-section",
+                start: "top 70%",
+            },
+            y: 60,
+            opacity: 0,
+            stagger: 0.05,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+    }
+    */
 
     // Project Blocks Parallax & fade
     const projectBlocks = gsap.utils.toArray(".project-block");
@@ -317,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: {
                 trigger: block,
                 start: "top 80%",
-                toggleActions: "play none none none"
             },
             y: 80,
             opacity: 0,
@@ -326,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Approach section blocks 
+    // Approach section blocks stagger & parallax
     const approachBlocks = gsap.utils.toArray(".approach-big-block");
     approachBlocks.forEach(block => {
         const bg = block.querySelector(".approach-bg-image");
@@ -349,7 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
             trigger: ".approach-section",
             start: "top 70%",
-            toggleActions: "play none none none"
         },
         scale: 0.95,
         opacity: 0,
@@ -363,7 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
             trigger: ".service-section",
             start: "top 75%",
-            toggleActions: "play none none none"
         },
         y: 50,
         opacity: 0,
@@ -377,7 +365,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
             trigger: ".process-section",
             start: "top 75%",
-            toggleActions: "play none none none"
         },
         y: 40,
         opacity: 0,
@@ -391,7 +378,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
             trigger: ".pricing-section",
             start: "top 75%",
-            toggleActions: "play none none none"
         },
         y: 40,
         opacity: 0,
@@ -400,12 +386,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power2.out"
     });
 
-    // Contact Grid
+    // Contact Grid left and right
     gsap.from(".contact-left", {
         scrollTrigger: {
             trigger: ".contact-section",
-            start: "top 80%",
-            toggleActions: "play none none none"
+            start: "top 80%"
         },
         x: -50,
         opacity: 0,
@@ -416,8 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.from(".contact-form-box", {
         scrollTrigger: {
             trigger: ".contact-section",
-            start: "top 80%",
-            toggleActions: "play none none none"
+            start: "top 80%"
         },
         x: 50,
         opacity: 0,
@@ -433,7 +417,6 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: {
                 trigger: bar,
                 start: "top 90%",
-                toggleActions: "play none none none"
             },
             width: targetWidth,
             duration: 1.5,
@@ -446,7 +429,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
             trigger: ".skills-grid",
             start: "top 85%",
-            toggleActions: "play none none none"
         },
         y: 40,
         opacity: 0,
@@ -460,26 +442,11 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
             trigger: ".webdev-grid",
             start: "top 85%",
-            toggleActions: "play none none none"
         },
         y: 50,
         opacity: 0,
         stagger: 0.15,
         duration: 0.8,
-        ease: "power2.out"
-    });
-
-    // Testimonials
-    gsap.from(".testimonial-card", {
-        scrollTrigger: {
-            trigger: ".testimonials-grid",
-            start: "top 85%",
-            toggleActions: "play none none none"
-        },
-        y: 40,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.7,
         ease: "power2.out"
     });
 
@@ -501,7 +468,6 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: {
                 trigger: ".packages-grid",
                 start: "top 85%",
-                toggleActions: "play none none none"
             },
             y: 50,
             opacity: 0,
@@ -655,5 +621,41 @@ document.addEventListener("DOMContentLoaded", () => {
         
         window.addEventListener('resize', updateSlider);
     }
+
+    // --- Apps Sidebar Toggle Logic ---
+    const sidebar = document.getElementById('apps-sidebar');
+    const sidebarOverlay = document.getElementById('apps-sidebar-overlay');
+    const sidebarBtn = document.getElementById('apps-sidebar-btn');
+    const mobileSidebarBtn = document.getElementById('mobile-apps-btn');
+    const sidebarClose = document.getElementById('sidebar-close');
+
+    const toggleSidebar = (force) => {
+        const isOpen = force !== undefined ? force : !sidebar.classList.contains('active');
+        if (sidebar) sidebar.classList.toggle('active', isOpen);
+        if (sidebarOverlay) sidebarOverlay.classList.toggle('active', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    };
+
+    if (sidebarBtn) sidebarBtn.addEventListener('click', () => toggleSidebar(true));
+    if (mobileSidebarBtn) mobileSidebarBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Close mobile nav first
+        const mobileNav = document.getElementById('mobile-nav');
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        if (mobileNav && mobileNav.classList.contains('open')) {
+            if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+            mobileNav.classList.remove('open');
+        }
+        toggleSidebar(true);
+    });
+    if (sidebarClose) sidebarClose.addEventListener('click', () => toggleSidebar(false));
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+    // Close sidebar on Escape key
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
+            toggleSidebar(false);
+        }
+    });
 
 });
