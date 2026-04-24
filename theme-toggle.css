@@ -279,15 +279,36 @@ body.light-mode .theme-toggle-track {
 }
 
 .theme-toggle-icon {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
     position: relative;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    border: 1px solid transparent;
+}
+
+/* Active state circling (Default is Dark Mode) */
+.theme-toggle-track .moon {
+    border-color: rgba(255, 94, 0, 0.8);
+    background: rgba(255, 94, 0, 0.15);
+}
+.theme-toggle-track .sun {
+    border-color: transparent;
+    background: transparent;
+}
+
+body.light-mode .theme-toggle-track .sun {
+    border-color: rgba(255, 94, 0, 0.8);
+    background: rgba(255, 94, 0, 0.15);
+}
+body.light-mode .theme-toggle-track .moon {
+    border-color: transparent;
+    background: transparent;
 }
 
 .theme-toggle-icon svg {
