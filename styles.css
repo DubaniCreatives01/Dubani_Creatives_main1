@@ -707,6 +707,8 @@ body {
 }
 .service-icon img {
     width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 .service-line {
     width: 100%;
