@@ -458,7 +458,7 @@ body {
     .env-switcher { display: none; }
     .main-header .theme-btn { display: none !important; }
     .apps-sidebar-btn { display: none !important; }
-    .hamburger-btn { display: flex; }
+    .hamburger-btn { display: flex !important; }
     .mobile-nav-overlay { display: flex; }
     .hero-content { flex-direction: column; }
     .hero-right { margin-top: 20px; }
