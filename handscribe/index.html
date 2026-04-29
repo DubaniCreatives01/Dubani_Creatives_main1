@@ -5,52 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Handscribe – Text to Handwriting | Dubani Creatives</title>
   <meta name="description" content="Convert typed text into beautiful handwriting. Choose from 16 handwriting styles, customize ink, background and download in high quality PDF or image." />
-  <meta name="robots" content="noindex, nofollow">
-
-  <!-- Brand Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Covered+By+Your+Grace&family=Nothing+You+Could+Do&family=Just+Me+Again+Down+Here&family=Reenie+Beanie&family=Gochi+Hand&family=La+Belle+Aurore&family=Dawning+of+a+New+Day&family=Zeyada&family=Give+You+Glory&family=Miss+Fajardose&family=Homemade+Apple&family=Sue+Ellen+Francisco&family=Loved+by+the+King&family=Nanum+Pen+Script&family=Indie+Flower&display=swap" rel="stylesheet" />
-
-  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Particles -->
   <div class="particles" id="particles"></div>
-
-  <!-- Header -->
   <header class="header">
     <a class="logo" href="#">
       <div class="logo-icon">✍️</div>
       <div class="logo-text">Hand<span>scribe</span></div>
     </a>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span class="header-badge">by Dubani Creatives</span>
-      <a href="../my-apps.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#a09a9a;font-family:'Poppins',sans-serif;font-size:0.78rem;font-weight:500;padding:7px 14px;border-radius:30px;text-decoration:none;transition:background 0.2s,color 0.2s;">← My Apps</a>
-    </div>
+    <span class="header-badge">by Dubani Creatives</span>
   </header>
-
-  <!-- Main: Sidebar + Canvas -->
   <main class="main">
-
-    <!-- ═══════════════ CONTROLS PANEL ═══════════════ -->
     <aside class="controls-panel">
-
       <div class="panel-section-title">✏️ &nbsp;Text Input</div>
-
       <section class="control-section">
         <label class="ctrl-label" for="inputText">Your Text</label>
         <textarea id="inputText" placeholder="Type your text here…">The quick brown fox jumps over the lazy dog.</textarea>
       </section>
-
       <div class="divider"></div>
       <div class="panel-section-title">🖋️ &nbsp;Handwriting Style</div>
-
-      <!-- Font Dropdown -->
       <section class="control-section">
         <label class="ctrl-label" for="fontSelect">Font</label>
         <div class="font-select-wrap">
@@ -81,46 +59,26 @@
             </optgroup>
           </select>
         </div>
-        <!-- Live font preview -->
         <div id="fontPreview" style="font-family:'Kalam',cursive">The quick brown fox…</div>
       </section>
-
-      <!-- Font Size -->
       <section class="control-section">
-        <label class="ctrl-label" for="fontSize">
-          Font Size <span id="fontSizeVal" class="val-badge">28px</span>
-        </label>
+        <label class="ctrl-label" for="fontSize">Font Size <span id="fontSizeVal" class="val-badge">28px</span></label>
         <input type="range" id="fontSize" class="slider" min="14" max="80" value="28" />
       </section>
-
-      <!-- Line Height -->
       <section class="control-section">
-        <label class="ctrl-label" for="lineHeight">
-          Line Height <span id="lineHeightVal" class="val-badge">1.8</span>
-        </label>
+        <label class="ctrl-label" for="lineHeight">Line Height <span id="lineHeightVal" class="val-badge">1.8</span></label>
         <input type="range" id="lineHeight" class="slider" min="1.2" max="3.5" step="0.1" value="1.8" />
       </section>
-
-      <!-- Letter Spacing -->
       <section class="control-section">
-        <label class="ctrl-label" for="letterSpacing">
-          Letter Spacing <span id="letterSpacingVal" class="val-badge">0px</span>
-        </label>
+        <label class="ctrl-label" for="letterSpacing">Letter Spacing <span id="letterSpacingVal" class="val-badge">0px</span></label>
         <input type="range" id="letterSpacing" class="slider" min="-2" max="12" step="0.5" value="0" />
       </section>
-
-      <!-- Word Spacing -->
       <section class="control-section">
-        <label class="ctrl-label" for="wordSpacing">
-          Word Spacing <span id="wordSpacingVal" class="val-badge">0px</span>
-        </label>
+        <label class="ctrl-label" for="wordSpacing">Word Spacing <span id="wordSpacingVal" class="val-badge">0px</span></label>
         <input type="range" id="wordSpacing" class="slider" min="0" max="24" step="1" value="0" />
       </section>
-
       <div class="divider"></div>
       <div class="panel-section-title">🎨 &nbsp;Appearance</div>
-
-      <!-- Ink Color -->
       <section class="control-section">
         <label class="ctrl-label">Ink Color</label>
         <div class="color-row">
@@ -136,8 +94,6 @@
           <input type="color" id="customColor" value="#1a1a1a" title="Custom color" class="color-picker" />
         </div>
       </section>
-
-      <!-- Alignment -->
       <section class="control-section">
         <label class="ctrl-label">Text Alignment</label>
         <div class="btn-group">
@@ -146,95 +102,52 @@
           <button class="align-btn" data-align="right" id="alignRight">➡ Right</button>
         </div>
       </section>
-
-      <!-- Page Padding -->
       <section class="control-section">
-        <label class="ctrl-label" for="pagePadding">
-          Page Padding <span id="paddingVal" class="val-badge">40px</span>
-        </label>
+        <label class="ctrl-label" for="pagePadding">Page Padding <span id="paddingVal" class="val-badge">40px</span></label>
         <input type="range" id="pagePadding" class="slider" min="10" max="120" step="5" value="40" />
       </section>
-
       <div class="divider"></div>
       <div class="panel-section-title">⚙️ &nbsp;Effects</div>
-
-      <!-- Jitter -->
       <section class="control-section">
-        <label class="ctrl-label" for="jitter">
-          Handwriting Jitter <span id="jitterVal" class="val-badge">Off</span>
-        </label>
+        <label class="ctrl-label" for="jitter">Handwriting Jitter <span id="jitterVal" class="val-badge">Off</span></label>
         <input type="range" id="jitter" class="slider" min="0" max="4" step="0.5" value="0" />
         <small class="hint">Adds natural variation per character for a more authentic look</small>
       </section>
-
-      <!-- Shadow -->
       <section class="control-section">
-        <label class="ctrl-label toggle-row">
-          Ink Shadow
-          <label class="toggle">
-            <input type="checkbox" id="shadowToggle" />
-            <span class="toggle-slider"></span>
-          </label>
+        <label class="ctrl-label toggle-row">Ink Shadow
+          <label class="toggle"><input type="checkbox" id="shadowToggle" /><span class="toggle-slider"></span></label>
         </label>
       </section>
-
-      <!-- Ink Opacity -->
       <section class="control-section">
-        <label class="ctrl-label" for="inkOpacity">
-          Ink Opacity <span id="inkOpacityVal" class="val-badge">100%</span>
-        </label>
+        <label class="ctrl-label" for="inkOpacity">Ink Opacity <span id="inkOpacityVal" class="val-badge">100%</span></label>
         <input type="range" id="inkOpacity" class="slider" min="20" max="100" step="5" value="100" />
       </section>
-
-      <!-- Ink Density Variation -->
       <section class="control-section">
-        <label class="ctrl-label" for="inkVariation">
-          Ink Density Variation <span id="inkVariationVal" class="val-badge">Off</span>
-        </label>
+        <label class="ctrl-label" for="inkVariation">Ink Density Variation <span id="inkVariationVal" class="val-badge">Off</span></label>
         <input type="range" id="inkVariation" class="slider" min="0" max="0.25" step="0.01" value="0" />
         <small class="hint">Simulates ink running thick &amp; thin as a real pen would</small>
       </section>
-
-      <!-- Pen Pressure -->
       <section class="control-section">
-        <label class="ctrl-label toggle-row">
-          Pen Pressure Effect
-          <label class="toggle">
-            <input type="checkbox" id="pressureToggle" />
-            <span class="toggle-slider"></span>
-          </label>
+        <label class="ctrl-label toggle-row">Pen Pressure Effect
+          <label class="toggle"><input type="checkbox" id="pressureToggle" /><span class="toggle-slider"></span></label>
         </label>
         <small class="hint">Subtly varies letter size to mimic real pen pressure</small>
       </section>
-
-      <!-- Baseline Drift -->
       <section class="control-section">
-        <label class="ctrl-label toggle-row">
-          Baseline Drift
-          <label class="toggle">
-            <input type="checkbox" id="baselineToggle" checked />
-            <span class="toggle-slider"></span>
-          </label>
+        <label class="ctrl-label toggle-row">Baseline Drift
+          <label class="toggle"><input type="checkbox" id="baselineToggle" checked /><span class="toggle-slider"></span></label>
         </label>
         <small class="hint">Lines sit on a natural slight wave, not a ruler-straight base</small>
       </section>
-
     </aside>
-
-    <!-- ═══════════════ CANVAS AREA ═══════════════ -->
     <div class="canvas-wrapper">
-
-      <!-- Toolbar -->
       <div class="canvas-toolbar">
-        <!-- Background Options -->
         <div class="toolbar-group">
           <span class="toolbar-label">Background</span>
           <button class="bg-btn selected" data-bg="lined" id="bgLined">📄 Lined Paper</button>
           <button class="bg-btn" data-bg="white" id="bgWhite">⬜ Plain White</button>
           <button class="bg-btn" data-bg="transparent" id="bgTransparent">🔲 Transparent</button>
         </div>
-
-        <!-- Download Group -->
         <div class="toolbar-group">
           <span class="toolbar-label">Quality</span>
           <div class="res-select-wrap">
@@ -249,24 +162,15 @@
           <button class="dl-btn primary" id="dlPDF">⬇ PDF</button>
         </div>
       </div>
-
-      <!-- Canvas Preview -->
       <div class="preview-scroll" id="previewScroll">
         <canvas id="hwCanvas"></canvas>
       </div>
-
     </div>
-
   </main>
-
-  <!-- Footer -->
   <footer class="footer">
     Handscribe &copy; 2026 — A <span>Dubani Creatives</span> Tool · Powered by Google Fonts &amp; Canvas API
   </footer>
-
-  <!-- Toast notification -->
   <div id="toast"></div>
-
   <script src="app.js"></script>
 </body>
 </html>
