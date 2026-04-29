@@ -205,6 +205,38 @@
     });
   });
 
+  // 11. AZTEC / MESOAMERICAN (15 patterns)
+  for(let i = 1; i <= 15; i++) {
+    extra.push({
+      id: `aztec_geo_${i}`, name: `Aztec Geometric v${i}`, tags: ['aztec', 'mesoamerican', 'tribal', 'geometric', 'steps', 'diamonds', 'ethnic'],
+      render: (w, h, sw, c1, c2) => {
+        const u = w/10;
+        let svg = '';
+        if(i%3 === 0) {
+          svg = `<path d="M${u*5},0 L${u*7},${u*2} L${u*5},${u*4} L${u*3},${u*2}Z" fill="${c1}"/>
+                 <path d="M0,${u*5} L${u*2},${u*7} L0,${u*9} L${-u*2},${u*7}Z" fill="${c2}"/>
+                 <path d="M${w},${u*5} L${w+u*2},${u*7} L${w},${u*9} L${w-u*2},${u*7}Z" fill="${c2}"/>
+                 <polyline points="${u*2},0 0,${u*2} ${u*2},${u*4}" fill="none" stroke="${c1}" stroke-width="${sw}"/>
+                 <polyline points="${w-u*2},0 ${w},${u*2} ${w-u*2},${u*4}" fill="none" stroke="${c1}" stroke-width="${sw}"/>`;
+        } else if(i%3 === 1) {
+          svg = `<rect x="${u*2}" y="${u*2}" width="${u*6}" height="${u*6}" fill="none" stroke="${c1}" stroke-width="${sw}"/>
+                 <rect x="${u*4}" y="${u*4}" width="${u*2}" height="${u*2}" fill="${c2}"/>
+                 <line x1="${u*5}" y1="0" x2="${u*5}" y2="${u*2}" stroke="${c2}" stroke-width="${sw}"/>
+                 <line x1="${u*5}" y1="${u*8}" x2="${u*5}" y2="${h}" stroke="${c2}" stroke-width="${sw}"/>
+                 <line x1="0" y1="${u*5}" x2="${u*2}" y2="${u*5}" stroke="${c2}" stroke-width="${sw}"/>
+                 <line x1="${u*8}" y1="${u*5}" x2="${w}" y2="${u*5}" stroke="${c2}" stroke-width="${sw}"/>`;
+        } else {
+          svg = `<path d="M0,${u*3} L${u*3},${u*3} L${u*3},0" fill="none" stroke="${c1}" stroke-width="${sw}"/>
+                 <path d="M${w},${u*3} L${w-u*3},${u*3} L${w-u*3},0" fill="none" stroke="${c1}" stroke-width="${sw}"/>
+                 <path d="M0,${h-u*3} L${u*3},${h-u*3} L${u*3},${h}" fill="none" stroke="${c1}" stroke-width="${sw}"/>
+                 <path d="M${w},${h-u*3} L${w-u*3},${h-u*3} L${w-u*3},${h}" fill="none" stroke="${c1}" stroke-width="${sw}"/>
+                 <circle cx="${w/2}" cy="${h/2}" r="${u*2}" fill="${c2}"/>`;
+        }
+        return svg;
+      }
+    });
+  }
+
   // Append to main patterns array
   if (typeof patterns !== 'undefined') {
     patterns.push(...extra);
