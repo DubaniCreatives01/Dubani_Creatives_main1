@@ -238,7 +238,6 @@
   }
 
   // Append to main patterns array
-  if (typeof patterns !== 'undefined') {
-    patterns.push(...extra);
-  }
+  window.patterns = window.patterns || [];
+  window.patterns.push(...extra);
 })();
