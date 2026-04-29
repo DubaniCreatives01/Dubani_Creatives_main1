@@ -1,21 +1,43 @@
 /* ============================================================
-   PatternForge v2 – app.js  |  Dubani Creatives Edition
-   SVG Pattern Generator Engine with Search & Palettes
+   PatternForge v3 – app.js  |  Pattern Monster SPA Layout
    ============================================================ */
 'use strict';
 
 // ── STATE ──
 const state = {
   pattern: null, scale: 60, rotation: 0, strokeWidth: 2,
-  opacity: 100, c1: '#ff5e00', c2: '#cc4b00', bg: '#0d0d0d',
+  opacity: 100, c1: '#ff5e00', c2: '#ffffff', bg: '#0d0d0d',
   exportScale: 2
 };
 
+const galleryView = document.getElementById('galleryView');
+const editorView = document.getElementById('editorView');
 const previewTile = document.getElementById('previewTile');
-const emptyState = document.getElementById('emptyState');
-const galleryGrid = document.getElementById('galleryGrid');
+const massiveGrid = document.getElementById('massiveGrid');
 const matchCount = document.getElementById('matchCount');
 const activePatternName = document.getElementById('activePatternName');
+
+// ── VIEW SWITCHING ──
+window.showGallery = function() {
+  editorView.style.display = 'none';
+  galleryView.style.display = 'block';
+  setTimeout(() => {
+    editorView.classList.remove('active');
+    galleryView.classList.add('active');
+  }, 10);
+};
+
+window.showEditor = function(id) {
+  galleryView.style.display = 'none';
+  editorView.style.display = 'block';
+  setTimeout(() => {
+    galleryView.classList.remove('active');
+    editorView.classList.add('active');
+    selectPattern(id);
+  }, 10);
+};
+
+document.getElementById('backToGallery').addEventListener('click', showGallery);
 
 // ── PARTICLES ──
 (function(){
@@ -26,6 +48,7 @@ const activePatternName = document.getElementById('activePatternName');
 
 // ── UTILS ──
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
 
 // ── PALETTES ──
@@ -54,13 +77,16 @@ function renderPalettes() {
       const p = palettes[el.dataset.idx];
       state.c1 = p.c1; state.c2 = p.c2; state.bg = p.bg;
       updateColorPickers();
-      render();
+      renderPreview();
     });
   });
 }
 
-// ── PATTERNS DATA ──
-const patterns = [
+// ── CORE PATTERNS (V1) ──
+// Note: patterns_ext.js is loaded first and will append 100+ patterns to this array
+// If patterns_ext is loaded after, it appends to window.patterns
+window.patterns = window.patterns || [];
+const basePatterns = [
   {
     id: 'african_mudcloth', name: 'African Mudcloth', tags: ['african', 'mudcloth', 'tribal', 'geometric', 'crosses', 'lines', 'ethnic'],
     render: (w, h, sw, c1, c2) => {
@@ -145,17 +171,6 @@ const patterns = [
     }
   },
   {
-    id: 'aztec_steps', name: 'Aztec Steps', tags: ['aztec', 'tribal', 'geometric', 'steps', 'diamonds', 'native', 'ethnic'],
-    render: (w, h, sw, c1, c2) => {
-      const u=w/8;
-      return `<path d="M${u*4},0 L${u*5},${u} L${u*4},${u*2} L${u*3},${u}Z" fill="${c1}"/>
-              <path d="M${u*4},${u*2} L${u*6},${u*4} L${u*4},${u*6} L${u*2},${u*4}Z" fill="none" stroke="${c2}" stroke-width="${sw}"/>
-              <path d="M${u*4},${u*6} L${u*5},${u*7} L${u*4},${u*8} L${u*3},${u*7}Z" fill="${c1}"/>
-              <rect x="0" y="${u*3}" width="${u*2}" height="${u*2}" fill="${c2}"/>
-              <rect x="${u*6}" y="${u*3}" width="${u*2}" height="${u*2}" fill="${c2}"/>`;
-    }
-  },
-  {
     id: 'dots', name: 'Polka Dots', tags: ['basic', 'dots', 'circles', 'retro', 'simple'],
     render: (w, h, sw, c1, c2) => {
       return `<circle cx="${w/4}" cy="${h/4}" r="${w*0.15}" fill="${c1}"/>
@@ -169,50 +184,15 @@ const patterns = [
               <line x1="0" y1="${h/2}" x2="${w/2}" y2="0" stroke="${c2}" stroke-width="${sw}"/>
               <line x1="${w/2}" y1="${h}" x2="${w}" y2="${h/2}" stroke="${c2}" stroke-width="${sw}"/>`;
     }
-  },
-  {
-    id: 'memphis', name: 'Memphis Mix', tags: ['memphis', '80s', 'retro', 'abstract', 'shapes', 'pop'],
-    render: (w, h, sw, c1, c2) => {
-      return `<circle cx="${w*0.2}" cy="${h*0.2}" r="${w*0.1}" fill="${c1}"/>
-              <line x1="${w*0.5}" y1="${h*0.3}" x2="${w*0.8}" y2="${h*0.7}" stroke="${c2}" stroke-width="${sw}" stroke-dasharray="${sw*3},${sw*2}"/>
-              <rect x="${w*0.1}" y="${h*0.6}" width="${w*0.2}" height="${h*0.2}" fill="none" stroke="${c1}" stroke-width="${sw}"/>
-              <polygon points="${w*0.8},${h*0.1} ${w*0.9},${h*0.3} ${w*0.7},${h*0.3}" fill="${c2}"/>`;
-    }
-  },
-  {
-    id: 'celtic_knot', name: 'Celtic Knot', tags: ['celtic', 'knot', 'interlocking', 'irish', 'traditional', 'lines'],
-    render: (w, h, sw, c1, c2) => {
-      const cx=w/2, cy=h/2, r=w*0.3;
-      return `<circle cx="${cx}" cy="${cy-r*0.5}" r="${r}" fill="none" stroke="${c1}" stroke-width="${sw}"/>
-              <circle cx="${cx-r*0.5}" cy="${cy+r*0.5}" r="${r}" fill="none" stroke="${c2}" stroke-width="${sw}"/>
-              <circle cx="${cx+r*0.5}" cy="${cy+r*0.5}" r="${r}" fill="none" stroke="${c1}" stroke-width="${sw}"/>`;
-    }
-  },
-  {
-    id: 'scandinavian_trees', name: 'Scandi Trees', tags: ['scandinavian', 'trees', 'nature', 'minimalist', 'forest', 'nordic'],
-    render: (w, h, sw, c1, c2) => {
-      return `<polygon points="${w*0.25},${h*0.2} ${w*0.45},${h*0.7} ${w*0.05},${h*0.7}" fill="${c1}"/>
-              <polygon points="${w*0.75},${h*0.4} ${w*0.9},${h*0.8} ${w*0.6},${h*0.8}" fill="${c2}"/>
-              <line x1="${w*0.25}" y1="${h*0.7}" x2="${w*0.25}" y2="${h*0.9}" stroke="${c1}" stroke-width="${sw}"/>
-              <line x1="${w*0.75}" y1="${h*0.8}" x2="${w*0.75}" y2="${h}" stroke="${c2}" stroke-width="${sw}"/>`;
-    }
-  },
-  {
-    id: 'animal_leopard', name: 'Leopard Spots', tags: ['animal', 'leopard', 'spots', 'wild', 'safari', 'print'],
-    render: (w, h, sw, c1, c2) => {
-      return `<path d="M${w*0.2},${h*0.2} Q${w*0.3},${h*0.1} ${w*0.4},${h*0.25} Q${w*0.3},${h*0.4} ${w*0.15},${h*0.3}Z" fill="${c1}"/>
-              <path d="M${w*0.7},${h*0.6} Q${w*0.85},${h*0.5} ${w*0.9},${h*0.7} Q${w*0.75},${h*0.8} ${w*0.65},${h*0.7}Z" fill="${c2}"/>
-              <circle cx="${w*0.8}" cy="${h*0.2}" r="${w*0.08}" fill="${c2}"/>
-              <circle cx="${w*0.3}" cy="${h*0.8}" r="${w*0.06}" fill="${c1}"/>`;
-    }
   }
 ];
+window.patterns.push(...basePatterns);
 
 // ── RENDER ENGINE ──
-function buildSVG(patternId) {
-  const p = patterns.find(x => x.id === patternId);
+function buildSVG(patternId, customScale) {
+  const p = window.patterns.find(x => x.id === patternId);
   if(!p) return '';
-  const w = state.scale, h = state.scale;
+  const w = customScale || state.scale, h = customScale || state.scale;
   const inner = p.render(w, h, state.strokeWidth, state.c1, state.c2);
   const op = state.opacity/100;
   const rot = state.rotation;
@@ -223,13 +203,7 @@ function buildSVG(patternId) {
 function svgToDataURI(svg){ return 'data:image/svg+xml,'+encodeURIComponent(svg); }
 
 function renderPreview() {
-  if (!state.pattern) {
-    emptyState.style.display = 'flex';
-    previewTile.style.backgroundImage = 'none';
-    previewTile.style.backgroundColor = 'transparent';
-    return;
-  }
-  emptyState.style.display = 'none';
+  if (!state.pattern) return;
   const svg = buildSVG(state.pattern);
   const uri = svgToDataURI(svg);
   previewTile.style.backgroundColor = state.bg;
@@ -242,17 +216,28 @@ const debouncedRender = debounce(renderPreview, 40);
 // ── UI LOGIC ──
 function selectPattern(id) {
   state.pattern = id;
-  const p = patterns.find(x => x.id === id);
+  const p = window.patterns.find(x => x.id === id);
   activePatternName.textContent = p ? p.name : 'Select a pattern';
-  document.querySelectorAll('.gallery-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.id === id);
-  });
   renderPreview();
 }
 
-function renderGallery(query = '') {
+// Special lightweight build for gallery thumbnails
+function buildCardPreview(p) {
+  const w = 120, h = 120;
+  // Render using the Dubani palette to make the gallery pop initially
+  const inner = p.render(w, h, 4, '#ff5e00', '#ffffff'); 
+  return `<svg viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="#111"/>${inner}</svg>`;
+}
+
+window.renderMassiveGallery = function(query = '') {
+  // Give patterns array time to populate if patterns_ext.js is loading asynchronously
+  if(window.patterns.length < 20) {
+     setTimeout(() => renderMassiveGallery(query), 100);
+     return;
+  }
+  
   const q = query.toLowerCase().trim();
-  const matches = patterns.filter(p => {
+  const matches = window.patterns.filter(p => {
     if(!q) return true;
     return p.name.toLowerCase().includes(q) || p.tags.some(t => t.includes(q));
   });
@@ -260,35 +245,23 @@ function renderGallery(query = '') {
   matchCount.textContent = matches.length;
   
   if (matches.length === 0) {
-    galleryGrid.innerHTML = '<div class="no-results">No patterns found matching "'+esc(query)+'". Try "african", "floral", or "geometric".</div>';
+    massiveGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">No patterns found. Try "african", "floral", or "stars".</div>';
     return;
   }
   
-  galleryGrid.innerHTML = matches.map(p => {
-    const svg = buildSVGPreview(p);
-    const active = state.pattern === p.id ? 'active' : '';
-    return `<div class="gallery-item ${active}" data-id="${p.id}" title="${p.tags.join(', ')}">
-              ${svg}
-              <div class="item-name">${p.name}</div>
+  massiveGrid.innerHTML = matches.map(p => {
+    // We use inline background-image to create the pattern card effect
+    const svg = buildCardPreview(p);
+    const uri = svgToDataURI(svg);
+    return `<div class="pattern-card" onclick="showEditor('${p.id}')" style="background-image: url('${uri}'); background-size: 80px;">
+              <div class="pill-label">${p.name}</div>
             </div>`;
   }).join('');
-  
-  galleryGrid.querySelectorAll('.gallery-item').forEach(el => {
-    el.addEventListener('click', () => selectPattern(el.dataset.id));
-  });
-}
-
-// Special lightweight build for gallery thumbnails
-function buildSVGPreview(p) {
-  const w=100, h=100;
-  // Use monochrome colors for the gallery to keep focus on structure
-  const inner = p.render(w, h, 3, '#ff5e00', '#ffffff'); 
-  return `<svg viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="#111"/>${inner}</svg>`;
-}
+};
 
 // Search
-document.getElementById('searchInput').addEventListener('input', e => {
-  renderGallery(e.target.value);
+document.getElementById('mainSearch').addEventListener('input', e => {
+  renderMassiveGallery(e.target.value);
 });
 
 // Controls
@@ -328,7 +301,7 @@ bindColor('colorBg', 'bg');
 
 // Surprise Me
 document.getElementById('inspireBtn').addEventListener('click', () => {
-  const p = patterns[Math.floor(Math.random() * patterns.length)];
+  const p = window.patterns[Math.floor(Math.random() * window.patterns.length)];
   const pal = palettes[Math.floor(Math.random() * palettes.length)];
   state.c1 = pal.c1; state.c2 = pal.c2; state.bg = pal.bg;
   updateColorPickers();
@@ -336,14 +309,10 @@ document.getElementById('inspireBtn').addEventListener('click', () => {
   state.scale = Math.round(30 + Math.random()*80);
   document.getElementById('scale').value = state.scale; document.getElementById('scaleVal').textContent = state.scale;
   
-  state.rotation = Math.round(Math.random()*4)*90; // 0, 90, 180, 270, 360
+  state.rotation = Math.round(Math.random()*4)*90; 
   document.getElementById('rotation').value = state.rotation; document.getElementById('rotationVal').textContent = state.rotation+'°';
   
   selectPattern(p.id);
-  // Auto scroll to pattern
-  const item = document.querySelector(`.gallery-item[data-id="${p.id}"]`);
-  if(item) item.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-  
   showToast('✨ Random inspiration applied!');
 });
 
@@ -356,13 +325,13 @@ function downloadBlob(blob, name) {
 }
 
 document.getElementById('dlSVG').addEventListener('click', () => {
-  if(!state.pattern) return showToast('❌ Select a pattern first');
+  if(!state.pattern) return;
   downloadBlob(new Blob([buildSVG(state.pattern)],{type:'image/svg+xml'}), getFilename('svg'));
   showToast('✅ SVG downloaded!');
 });
 
 document.getElementById('dlPNG').addEventListener('click', () => {
-  if(!state.pattern) return showToast('❌ Select a pattern first');
+  if(!state.pattern) return;
   showToast('⏳ Rendering PNG…');
   setTimeout(() => {
     const ts = state.scale, tiles = 8, cs = ts * tiles * state.exportScale;
@@ -380,16 +349,17 @@ document.getElementById('dlPNG').addEventListener('click', () => {
 });
 
 document.getElementById('copyCSS').addEventListener('click', () => {
-  if(!state.pattern) return showToast('❌ Select a pattern first');
+  if(!state.pattern) return;
   const css = `background-color: ${state.bg};\nbackground-image: url("${svgToDataURI(buildSVG(state.pattern))}");\nbackground-repeat: repeat;\nbackground-size: ${state.scale}px ${state.scale}px;`;
   navigator.clipboard.writeText(css).then(()=>showToast('📋 CSS copied!')).catch(()=>showToast('❌ Copy failed'));
 });
 
 document.getElementById('copySVG').addEventListener('click', () => {
-  if(!state.pattern) return showToast('❌ Select a pattern first');
+  if(!state.pattern) return;
   navigator.clipboard.writeText(buildSVG(state.pattern)).then(()=>showToast('📋 SVG copied!')).catch(()=>showToast('❌ Copy failed'));
 });
 
 // INIT
 renderPalettes();
-renderGallery();
+// Initial render happens when DOM/scripts load
+setTimeout(() => window.renderMassiveGallery(), 50);
