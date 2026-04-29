@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PatternForge – SVG Pattern Generator | Dubani Creatives</title>
+  <meta name="description" content="Generate beautiful, seamless SVG patterns for websites, packaging, branding and more. Customize colors, scale, rotation and export as SVG, PNG or CSS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  <header class="header">
+    <a class="logo" href="#">
+      <div class="logo-icon">◆</div>
+      <div class="logo-text">Pattern<span>Forge</span></div>
+    </a>
+    <span class="header-badge">by Dubani Creatives</span>
+  </header>
+  <main class="main">
+    <aside class="controls-panel">
+      <div class="panel-section-title">◇ &nbsp;Pattern</div>
+      <section class="control-section">
+        <label class="ctrl-label" for="patternSelect">Style</label>
+        <div class="font-select-wrap">
+          <select id="patternSelect">
+            <optgroup label="── Geometric ──">
+              <option value="dots" selected>Dots</option>
+              <option value="grid">Grid</option>
+              <option value="chevrons">Chevrons</option>
+              <option value="triangles">Triangles</option>
+              <option value="diamonds">Diamonds</option>
+              <option value="hexagons">Hexagons</option>
+              <option value="zigzag">Zigzag</option>
+              <option value="crosses">Crosses</option>
+              <option value="stars">Stars</option>
+              <option value="plus">Plus Signs</option>
+            </optgroup>
+            <optgroup label="── Organic ──">
+              <option value="waves">Waves</option>
+              <option value="scales">Scales</option>
+              <option value="leaves">Leaves</option>
+              <option value="circles">Concentric Circles</option>
+              <option value="arcs">Arcs</option>
+            </optgroup>
+            <optgroup label="── Abstract ──">
+              <option value="memphis">Memphis</option>
+              <option value="confetti">Confetti</option>
+              <option value="lines">Diagonal Lines</option>
+              <option value="crosshatch">Crosshatch</option>
+              <option value="arrows">Arrows</option>
+              <option value="bricks">Bricks</option>
+            </optgroup>
+          </select>
+        </div>
+      </section>
+      <section class="control-section" style="padding-top:8px">
+        <button class="inspire-btn" id="inspireBtn">🎲 &nbsp;Inspire Me</button>
+      </section>
+      <div class="divider"></div>
+      <div class="panel-section-title">⚙️ &nbsp;Geometry</div>
+      <section class="control-section">
+        <label class="ctrl-label" for="scale">Scale <span id="scaleVal" class="val-badge">40</span></label>
+        <input type="range" id="scale" class="slider" min="10" max="120" value="40" />
+      </section>
+      <section class="control-section">
+        <label class="ctrl-label" for="rotation">Rotation <span id="rotationVal" class="val-badge">0°</span></label>
+        <input type="range" id="rotation" class="slider" min="0" max="360" value="0" />
+      </section>
+      <section class="control-section">
+        <label class="ctrl-label" for="strokeWidth">Stroke Width <span id="strokeWidthVal" class="val-badge">2</span></label>
+        <input type="range" id="strokeWidth" class="slider" min="0.5" max="10" step="0.5" value="2" />
+      </section>
+      <section class="control-section">
+        <label class="ctrl-label" for="spacing">Spacing <span id="spacingVal" class="val-badge">0</span></label>
+        <input type="range" id="spacing" class="slider" min="0" max="40" value="0" />
+      </section>
+      <section class="control-section">
+        <label class="ctrl-label" for="opacity">Opacity <span id="opacityVal" class="val-badge">100%</span></label>
+        <input type="range" id="opacity" class="slider" min="10" max="100" step="5" value="100" />
+      </section>
+      <div class="divider"></div>
+      <div class="panel-section-title">🎨 &nbsp;Colors</div>
+      <section class="control-section">
+        <label class="ctrl-label">Foreground</label>
+        <div class="color-row">
+          <div class="ink-swatch fg selected" data-color="#ff5e00" style="background:#ff5e00" title="Dubani Orange"></div>
+          <div class="ink-swatch fg" data-color="#ffffff" style="background:#ffffff" title="White"></div>
+          <div class="ink-swatch fg" data-color="#1a1a1a" style="background:#1a1a1a" title="Black"></div>
+          <div class="ink-swatch fg" data-color="#1565C0" style="background:#1565C0" title="Blue"></div>
+          <div class="ink-swatch fg" data-color="#1b5e20" style="background:#1b5e20" title="Green"></div>
+          <div class="ink-swatch fg" data-color="#6a0dad" style="background:#6a0dad" title="Purple"></div>
+          <div class="ink-swatch fg" data-color="#b71c1c" style="background:#b71c1c" title="Red"></div>
+          <div class="ink-swatch fg" data-color="#f9a825" style="background:#f9a825" title="Gold"></div>
+          <input type="color" id="fgCustom" value="#ff5e00" title="Custom color" class="color-picker" />
+        </div>
+      </section>
+      <section class="control-section">
+        <label class="ctrl-label">Background</label>
+        <div class="color-row">
+          <div class="ink-swatch bg selected" data-color="#0d0d0d" style="background:#0d0d0d" title="Near Black"></div>
+          <div class="ink-swatch bg" data-color="#141414" style="background:#141414;border:1px solid rgba(255,255,255,0.15)" title="Dark"></div>
+          <div class="ink-swatch bg" data-color="#1a1a2e" style="background:#1a1a2e" title="Navy"></div>
+          <div class="ink-swatch bg" data-color="#ffffff" style="background:#ffffff" title="White"></div>
+          <div class="ink-swatch bg" data-color="#fdf9f0" style="background:#fdf9f0" title="Cream"></div>
+          <div class="ink-swatch bg" data-color="#0d1b2a" style="background:#0d1b2a" title="Midnight"></div>
+          <div class="ink-swatch bg" data-color="#2d1b69" style="background:#2d1b69" title="Deep Purple"></div>
+          <div class="ink-swatch bg" data-color="#f0f0f0" style="background:#f0f0f0" title="Light Grey"></div>
+          <input type="color" id="bgCustom" value="#0d0d0d" title="Custom color" class="color-picker" />
+        </div>
+      </section>
+    </aside>
+    <div class="canvas-wrapper">
+      <div class="canvas-toolbar">
+        <div class="toolbar-group">
+          <span class="toolbar-label">Export</span>
+          <div class="res-select-wrap">
+            <select id="resSelect" title="PNG resolution">
+              <option value="1">1× (Standard)</option>
+              <option value="2" selected>2× (Retina)</option>
+              <option value="4">4× (Print)</option>
+            </select>
+          </div>
+          <button class="dl-btn" id="dlSVG">⬇ SVG</button>
+          <button class="dl-btn" id="dlPNG">⬇ PNG</button>
+          <button class="dl-btn primary" id="copyCSS">📋 Copy CSS</button>
+          <button class="dl-btn" id="copySVG">📋 SVG Code</button>
+        </div>
+      </div>
+      <div class="preview-area" id="previewArea">
+        <div class="preview-tile" id="previewTile"></div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    PatternForge &copy; 2026 — A <span>Dubani Creatives</span> Tool · Seamless SVG Patterns
+  </footer>
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
