@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PatternForge – SVG Pattern Generator | Dubani Creatives</title>
-  <meta name="description" content="Describe the pattern you want — African, floral, geometric, art deco and more. Customize colors, scale, rotation and export as SVG, PNG or CSS." />
+  <meta name="description" content="A massive collection of 100+ customizable SVG patterns for your projects. Free to use and export." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -12,112 +12,130 @@
 </head>
 <body>
   <div class="particles" id="particles"></div>
+  
   <header class="header">
-    <a class="logo" href="#">
+    <a class="logo" href="#" onclick="showGallery(); return false;">
       <div class="logo-icon">◆</div>
       <div class="logo-text">Pattern<span>Forge</span></div>
     </a>
     <span class="header-badge">by Dubani Creatives</span>
   </header>
-  <main class="main">
-    <aside class="controls-panel">
-      <!-- Search -->
-      <div class="panel-section-title">🔍 &nbsp;Describe Your Pattern</div>
-      <section class="control-section">
-        <input type="text" id="searchInput" class="search-input" placeholder="e.g. African, floral, geometric, art deco…" />
-        <small class="hint">Type keywords to find matching pattern styles</small>
-      </section>
-      <section class="control-section" style="padding-top:4px">
-        <button class="inspire-btn" id="inspireBtn">🎲 &nbsp;Surprise Me</button>
-      </section>
-      <div class="divider"></div>
-      <!-- Gallery -->
-      <div class="panel-section-title">◇ &nbsp;Pattern Gallery <span id="matchCount" class="val-badge" style="margin-left:auto">0</span></div>
-      <div class="gallery-grid" id="galleryGrid"></div>
-      <div class="divider"></div>
-      <!-- Colors -->
-      <div class="panel-section-title">🎨 &nbsp;Colors</div>
-      <section class="control-section">
-        <label class="ctrl-label">Primary Color</label>
-        <div class="color-row">
-          <input type="color" id="color1" value="#ff5e00" class="color-picker-lg" />
-          <span class="color-hex" id="color1Hex">#ff5e00</span>
-        </div>
-      </section>
-      <section class="control-section">
-        <label class="ctrl-label">Secondary Color</label>
-        <div class="color-row">
-          <input type="color" id="color2" value="#cc4b00" class="color-picker-lg" />
-          <span class="color-hex" id="color2Hex">#cc4b00</span>
-        </div>
-      </section>
-      <section class="control-section">
-        <label class="ctrl-label">Background</label>
-        <div class="color-row">
-          <input type="color" id="colorBg" value="#0d0d0d" class="color-picker-lg" />
-          <span class="color-hex" id="colorBgHex">#0d0d0d</span>
-        </div>
-      </section>
-      <section class="control-section">
-        <label class="ctrl-label">Quick Palettes</label>
-        <div class="palette-row" id="paletteRow"></div>
-      </section>
-      <div class="divider"></div>
-      <!-- Adjustments -->
-      <div class="panel-section-title">⚙️ &nbsp;Adjustments</div>
-      <section class="control-section">
-        <label class="ctrl-label" for="scale">Scale <span id="scaleVal" class="val-badge">40</span></label>
-        <input type="range" id="scale" class="slider" min="16" max="140" value="40" />
-      </section>
-      <section class="control-section">
-        <label class="ctrl-label" for="rotation">Rotation <span id="rotationVal" class="val-badge">0°</span></label>
-        <input type="range" id="rotation" class="slider" min="0" max="360" value="0" />
-      </section>
-      <section class="control-section">
-        <label class="ctrl-label" for="strokeWidth">Stroke <span id="strokeWidthVal" class="val-badge">2</span></label>
-        <input type="range" id="strokeWidth" class="slider" min="0.5" max="8" step="0.5" value="2" />
-      </section>
-      <section class="control-section">
-        <label class="ctrl-label" for="opacity">Opacity <span id="opacityVal" class="val-badge">100%</span></label>
-        <input type="range" id="opacity" class="slider" min="10" max="100" step="5" value="100" />
-      </section>
-    </aside>
-    <div class="canvas-wrapper">
-      <div class="canvas-toolbar">
-        <div class="toolbar-group">
-          <span class="toolbar-label" id="activePatternName">Select a pattern</span>
-        </div>
-        <div class="toolbar-group">
-          <span class="toolbar-label">Export</span>
-          <div class="res-select-wrap">
-            <select id="resSelect" title="PNG resolution">
-              <option value="1">1×</option>
-              <option value="2" selected>2×</option>
-              <option value="4">4×</option>
-            </select>
-          </div>
-          <button class="dl-btn" id="dlSVG">⬇ SVG</button>
-          <button class="dl-btn" id="dlPNG">⬇ PNG</button>
-          <button class="dl-btn primary" id="copyCSS">📋 CSS</button>
-          <button class="dl-btn" id="copySVG">📋 SVG</button>
-        </div>
-      </div>
-      <div class="preview-area" id="previewArea">
-        <div class="preview-tile" id="previewTile">
-          <div class="empty-state" id="emptyState">
-            <div class="empty-icon">◆</div>
-            <h3>Describe your pattern above</h3>
-            <p>Type keywords like "african", "floral", "geometric" or click Surprise Me</p>
-          </div>
-        </div>
-      </div>
+
+  <!-- ================= GALLERY VIEW ================= -->
+  <section id="galleryView" class="view-section active">
+    <div class="hero">
+      <h1>Customizable <span>SVG patterns</span> for your projects</h1>
+      <p>A massive collection of procedurally generated seamless patterns. Search by style or keyword.</p>
     </div>
-  </main>
+    
+    <div class="filter-bar">
+      <div class="search-box">
+         <span class="search-icon">🔍</span>
+         <input type="text" id="mainSearch" placeholder="Search patterns (e.g., african, geometric, floral, art deco)..." autocomplete="off" />
+      </div>
+      <div class="filter-stats"><span id="matchCount">0</span> patterns found</div>
+    </div>
+    
+    <div class="massive-grid" id="massiveGrid">
+      <!-- Cards injected by JS -->
+    </div>
+  </section>
+
+  <!-- ================= EDITOR VIEW ================= -->
+  <section id="editorView" class="view-section" style="display:none;">
+    <main class="main">
+      <aside class="controls-panel">
+        <button class="back-btn" id="backToGallery">← Back to Gallery</button>
+        
+        <div class="panel-section-title">✨ &nbsp;Quick Actions</div>
+        <section class="control-section">
+          <button class="inspire-btn" id="inspireBtn">🎲 &nbsp;Surprise Me</button>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <div class="panel-section-title">🎨 &nbsp;Colors</div>
+        <section class="control-section">
+          <label class="ctrl-label">Primary Color</label>
+          <div class="color-row">
+            <input type="color" id="color1" value="#ff5e00" class="color-picker-lg" />
+            <span class="color-hex" id="color1Hex">#ff5e00</span>
+          </div>
+        </section>
+        <section class="control-section">
+          <label class="ctrl-label">Secondary Color</label>
+          <div class="color-row">
+            <input type="color" id="color2" value="#cc4b00" class="color-picker-lg" />
+            <span class="color-hex" id="color2Hex">#cc4b00</span>
+          </div>
+        </section>
+        <section class="control-section">
+          <label class="ctrl-label">Background</label>
+          <div class="color-row">
+            <input type="color" id="colorBg" value="#0d0d0d" class="color-picker-lg" />
+            <span class="color-hex" id="colorBgHex">#0d0d0d</span>
+          </div>
+        </section>
+        <section class="control-section">
+          <label class="ctrl-label">Quick Palettes</label>
+          <div class="palette-row" id="paletteRow"></div>
+        </section>
+        
+        <div class="divider"></div>
+        
+        <div class="panel-section-title">⚙️ &nbsp;Adjustments</div>
+        <section class="control-section">
+          <label class="ctrl-label" for="scale">Scale <span id="scaleVal" class="val-badge">40</span></label>
+          <input type="range" id="scale" class="slider" min="16" max="140" value="40" />
+        </section>
+        <section class="control-section">
+          <label class="ctrl-label" for="rotation">Rotation <span id="rotationVal" class="val-badge">0°</span></label>
+          <input type="range" id="rotation" class="slider" min="0" max="360" value="0" />
+        </section>
+        <section class="control-section">
+          <label class="ctrl-label" for="strokeWidth">Stroke <span id="strokeWidthVal" class="val-badge">2</span></label>
+          <input type="range" id="strokeWidth" class="slider" min="0.5" max="8" step="0.5" value="2" />
+        </section>
+        <section class="control-section">
+          <label class="ctrl-label" for="opacity">Opacity <span id="opacityVal" class="val-badge">100%</span></label>
+          <input type="range" id="opacity" class="slider" min="10" max="100" step="5" value="100" />
+        </section>
+      </aside>
+      
+      <div class="canvas-wrapper">
+        <div class="canvas-toolbar">
+          <div class="toolbar-group">
+            <span class="toolbar-label" id="activePatternName">Select a pattern</span>
+          </div>
+          <div class="toolbar-group">
+            <span class="toolbar-label">Export</span>
+            <div class="res-select-wrap">
+              <select id="resSelect" title="PNG resolution">
+                <option value="1">1×</option>
+                <option value="2" selected>2×</option>
+                <option value="4">4×</option>
+              </select>
+            </div>
+            <button class="dl-btn" id="dlSVG">⬇ SVG</button>
+            <button class="dl-btn" id="dlPNG">⬇ PNG</button>
+            <button class="dl-btn primary" id="copyCSS">📋 CSS</button>
+            <button class="dl-btn" id="copySVG">📋 SVG</button>
+          </div>
+        </div>
+        <div class="preview-area" id="previewArea">
+          <div class="preview-tile" id="previewTile"></div>
+        </div>
+      </div>
+    </main>
+  </section>
+
   <footer class="footer">
     PatternForge &copy; 2026 — A <span>Dubani Creatives</span> Tool · Seamless SVG Patterns
   </footer>
+  
   <div id="toast"></div>
-  <script src="app.js"></script>
+  
   <script src="patterns_ext.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
