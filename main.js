@@ -709,18 +709,21 @@ document.addEventListener("DOMContentLoaded", () => {
             ease: "power3.out"
         }, "-=0.6");
 
-        // Staggered count-up of numbers, synchronized with staggered reveal
+        // Staggered count-up of numbers using custom target object for robust count-up rendering
         numSpans.forEach((num, index) => {
             const targetVal = parseInt(num.getAttribute('data-target'), 10);
             if (isNaN(targetVal)) return;
 
-            tl.to(num, {
-                innerText: targetVal,
+            // Set initial state to 0
+            num.textContent = "0";
+
+            const countObj = { val: 0 };
+            tl.to(countObj, {
+                val: targetVal,
                 duration: 1.8,
-                snap: { innerText: 1 },
                 ease: "power2.out",
-                onUpdate: function() {
-                    num.textContent = Math.floor(this.targets()[0].innerText);
+                onUpdate: () => {
+                    num.textContent = Math.floor(countObj.val);
                 }
             }, `-=${1.6 - index * 0.12}`);
         });
