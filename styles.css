@@ -31,9 +31,9 @@ body {
 
 .container {
     width: 100%;
-    max-width: 1630px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 clamp(20px, 6vw, 80px);
 }
 
 /* --- Header --- */
@@ -43,7 +43,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     width: 95%;
-    max-width: 1400px;
+    max-width: 1320px;
     z-index: 100;
     padding: 18px 30px;
     background-color: var(--dark);
@@ -2315,7 +2315,7 @@ body.is-personal .env-personal.flex-env {
 
 /* --- Small Phone (max 480px) --- */
 @media (max-width: 480px) {
-    .container { padding: 0 12px; }
+    .container { padding: 0 20px; }
     .hero-title { font-size: 32px; }
     .hero-heading-two { font-size: 18px; }
     .hero-text { font-size: 14px; }
