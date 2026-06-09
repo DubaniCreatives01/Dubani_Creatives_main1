@@ -1083,6 +1083,31 @@ textarea {
     flex-shrink: 0;
 }
 
+/* --- Section Divider Lines --- */
+.section-divider-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+.section-divider-line {
+    width: 80%;
+    max-width: 1200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+    opacity: 0.25;
+    transform: scaleX(0);
+    transform-origin: center;
+}
+body.light-mode .section-divider-line {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 94, 0, 0.6) 50%, transparent 100%);
+    opacity: 0.4;
+}
+
 /* --- Web Design & Development Section --- */
 .webdev-section {
     background: var(--secondary-color);

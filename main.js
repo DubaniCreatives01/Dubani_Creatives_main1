@@ -269,6 +269,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Animated line dividers
+    const dividerLines = gsap.utils.toArray(".section-divider-line");
+    dividerLines.forEach(line => {
+        gsap.to(line, {
+            scaleX: 1,
+            duration: 1.5,
+            ease: "power3.inOut",
+            scrollTrigger: {
+                trigger: line,
+                start: "top 95%",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
+
     // Gallery images stagger (Disabled for large gallery performance)
     /* 
     if (document.querySelector('.gallery-item')) {
