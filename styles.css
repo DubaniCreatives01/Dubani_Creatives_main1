@@ -686,6 +686,25 @@ body {
     border-radius: 100px;
     margin-bottom: 100px;
 }
+
+.service-section .section-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.service-section .section-title-wrap,
+.service-section .section-desc-wrap {
+    width: 100%;
+    flex: none;
+    min-width: 0;
+}
+.service-section .section-btn-box {
+    display: flex;
+    justify-content: center;
+}
 .service-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -842,6 +861,8 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 24px;
     padding: 40px;
+    text-align: center;
+    align-items: center;
 }
 .service-icon {
     width: 60px;
@@ -857,7 +878,7 @@ body {
     width: 40px;
     height: 3px;
     background-color: var(--primary-color);
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
 }
 .service-sub {
     font-size: 14px;
