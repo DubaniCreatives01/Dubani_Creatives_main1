@@ -89,17 +89,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initThemeToggle();
 
-    // Initialize Lenis for smooth scrolling
-    const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
+    // Initialize Lenis for smooth scrolling (Desktop Only)
+    let lenis;
+    if (window.innerWidth >= 992) {
+        lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
 
-    function raf(time) {
-        lenis.raf(time);
+        function raf(time) {
+            if (lenis) lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
         requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
 
     gsap.registerPlugin(ScrollTrigger);
     // Initial State Settings
@@ -118,50 +121,50 @@ document.addEventListener("DOMContentLoaded", () => {
         delay: 0.2
     });
 
-    // Initial reveal for text and banners
+    // Initial reveal for text and banners (accelerated for instant load feel)
     gsap.to(".hero-right", {
         opacity: 1,
         y: 0,
-        duration: 1,
-        delay: 1.5,
+        duration: 0.8,
+        delay: 0.4,
         ease: "power3.out"
     });
 
     gsap.to(".banner-item", {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        delay: 1.8,
-        stagger: 0.1,
+        duration: 0.6,
+        delay: 0.6,
+        stagger: 0.08,
         ease: "power2.out"
     });
 
     // Personal Hero Title Animation (original behavior)
     const titleTl = gsap.timeline({
         repeat: -1,
-        delay: 0.5
+        delay: 0.2
     });
 
     titleTl.to(".title-one", {
         width: "100%",
-        duration: 1.2,
+        duration: 1.0,
         ease: "power4.inOut"
     })
     .to(".title-one", {
         width: "0%",
-        duration: 1.2,
+        duration: 1.0,
         ease: "power4.inOut",
         delay: 2.5
     })
     .to(".title-two", {
         width: "100%",
-        duration: 1.2,
+        duration: 1.0,
         ease: "power4.inOut",
-        delay: 0.2
+        delay: 0.1
     })
     .to(".title-two", {
         width: "0%",
-        duration: 1.2,
+        duration: 1.0,
         ease: "power4.inOut",
         delay: 2.5
     });
@@ -169,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Business Hero Title Animation — text rotator in same position
     const bizTitleTl = gsap.timeline({
         repeat: -1,
-        delay: 0.8
+        delay: 0.3
     });
 
     bizTitleTl
@@ -228,29 +231,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Scroll Animations for new sections ---
 
-    // Hero Section Parallax 
-    gsap.to(".hero-bg-img", {
-        yPercent: 30,
-        scale: 1.1,
-        ease: "none",
-        scrollTrigger: {
-            trigger: ".hero-section",
-            start: "top top",
-            end: "bottom top",
-            scrub: true
-        }
-    });
+    // Desktop-only Scroll Parallax animations to save mobile CPU/battery
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 992px)", () => {
+        // Hero Section Parallax 
+        gsap.to(".hero-bg-img", {
+            yPercent: 30,
+            scale: 1.1,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".hero-section",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
 
-    gsap.to(".hero-content, .banner-list-container", {
-        y: -100,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: {
-            trigger: ".hero-section",
-            start: "top top",
-            end: "bottom top",
-            scrub: true
-        }
+        gsap.to(".hero-content, .banner-list-container", {
+            y: -100,
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".hero-section",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
     });
 
     // Fade up sections universally
@@ -262,9 +269,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 start: "top 85%",
                 toggleActions: "play none none reverse"
             },
-            y: 40,
+            y: 20,
             opacity: 0,
-            duration: 0.8,
+            duration: 0.6,
             ease: "power3.out"
         });
     });
@@ -306,16 +313,18 @@ document.addEventListener("DOMContentLoaded", () => {
     projectBlocks.forEach(block => {
         const img = block.querySelector(".project-image");
         if(img) {
-            gsap.set(img, { scale: 1.2, transformOrigin: "center center" });
-            gsap.to(img, {
-                yPercent: 20,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: block,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
+            mm.add("(min-width: 992px)", () => {
+                gsap.set(img, { scale: 1.2, transformOrigin: "center center" });
+                gsap.to(img, {
+                    yPercent: 20,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: block,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
             });
         }
         
@@ -324,9 +333,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 trigger: block,
                 start: "top 80%",
             },
-            y: 80,
+            y: 30,
             opacity: 0,
-            duration: 1,
+            duration: 0.7,
             ease: "power3.out"
         });
     });
@@ -336,16 +345,18 @@ document.addEventListener("DOMContentLoaded", () => {
     approachBlocks.forEach(block => {
         const bg = block.querySelector(".approach-bg-image");
         if(bg) {
-            gsap.set(bg, { scale: 1.2, transformOrigin: "center top" });
-            gsap.to(bg, {
-                yPercent: 15,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: block,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
+            mm.add("(min-width: 992px)", () => {
+                gsap.set(bg, { scale: 1.2, transformOrigin: "center top" });
+                gsap.to(bg, {
+                    yPercent: 15,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: block,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
             });
         }
     });
@@ -634,7 +645,11 @@ document.addEventListener("DOMContentLoaded", () => {
             slide.addEventListener('dragstart', (e) => e.preventDefault());
         });
         
-        window.addEventListener('resize', updateSlider);
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateSlider, 100);
+        });
     }
 
     // --- Apps Sidebar Toggle Logic ---

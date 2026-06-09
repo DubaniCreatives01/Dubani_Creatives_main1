@@ -278,10 +278,19 @@ body {
     z-index: 0;
 }
 .hero-bg-img.bg-business {
-    background-image: url('images/Hero 03.jpg');
+    background-image: url('images/Hero 03_mobile.jpg');
 }
 .hero-bg-img.bg-personal {
-    background-image: url('images/Hero 02.jpg');
+    background-image: url('images/Hero 02_mobile.jpg');
+}
+
+@media (min-width: 768px) {
+    .hero-bg-img.bg-business {
+        background-image: url('images/Hero 03.jpg');
+    }
+    .hero-bg-img.bg-personal {
+        background-image: url('images/Hero 02.jpg');
+    }
 }
 
 .hero-bg-overlay {
@@ -2933,5 +2942,36 @@ body.light-mode .sidebar-close {
     }
     .mobile-nav-overlay .mobile-nav-link {
         font-size: 20px;
+    }
+}
+
+
+/* ==========================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ========================================== */
+@media (max-width: 991px) {
+    .mobile-nav-overlay {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(15, 15, 16, 0.98) !important;
+    }
+    .hero-badge-widget,
+    .hero-stats-widget {
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        background: rgba(20, 20, 22, 0.88) !important;
+    }
+    .apps-sidebar {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: #0f0f10 !important;
+    } 
+    .hero-badge-widget,
+    .hero-stats-widget,
+    .apps-sidebar {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    }
+    .portfolio-slider-track {
+        will-change: transform;
     }
 }
