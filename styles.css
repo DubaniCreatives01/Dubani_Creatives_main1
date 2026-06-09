@@ -719,6 +719,8 @@ body {
     height: 100%;
     min-height: 400px;
     transition: transform 0.3s ease;
+    text-align: center;
+    align-items: center;
 }
 .service-block:hover {
     transform: translateY(-10px);
@@ -741,11 +743,11 @@ body {
     filter: brightness(0) saturate(100%) invert(44%) sepia(99%) saturate(1912%) hue-rotate(356deg) brightness(101%) contrast(106%);
 }
 .service-line {
-    width: 100%;
+    width: 40px;
     height: 4px;
     background-color: var(--primary-color);
     border-radius: 4px;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
 }
 .service-sub {
     color: var(--primary-color);
