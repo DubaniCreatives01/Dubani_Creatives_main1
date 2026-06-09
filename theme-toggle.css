@@ -435,3 +435,17 @@ body.light-mode .theme-toggle-knob {
         display: none;
     }
 }
+
+/* Service Cards on Services page */
+body.light-mode .service-card-full {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+body.light-mode .service-card-full:hover {
+    border-color: rgba(255, 94, 0, 0.25) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+body.light-mode .service-card-number {
+    color: rgba(0, 0, 0, 0.04) !important;
+}
