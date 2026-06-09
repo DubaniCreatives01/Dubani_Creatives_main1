@@ -416,7 +416,7 @@ body {
 @media (min-width: 992px) {
     .hero-badge-widget {
         position: absolute;
-        left: 0;
+        left: -40px;
         top: 38%;
         transform: translateY(-50%);
         max-width: 340px;
