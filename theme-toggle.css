@@ -25,19 +25,19 @@ body.light-mode .hamburger-btn span {
 body.light-mode .hero-bg-overlay {
     background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
 }
-body.light-mode .hero-title { color: #fff !important; }
-body.light-mode .title-one .hero-title {
+body.light-mode .hero-section:not(.cv-hero) .hero-title { color: #fff !important; }
+body.light-mode .hero-section:not(.cv-hero) .title-one .hero-title {
     color: transparent !important;
     -webkit-text-stroke: 1px var(--primary-color);
 }
-body.light-mode .title-two .hero-title { color: #fff !important; }
-body.light-mode .biz-title-1 .hero-title,
-body.light-mode .biz-title-2 .hero-title { color: #fff !important; }
-body.light-mode .hero-subtitle { color: #fff !important; }
-body.light-mode .hero-heading-two { color: #fff !important; }
-body.light-mode .hero-text { color: rgba(255,255,255,0.8) !important; }
-body.light-mode .banner-number { color: #fff !important; }
-body.light-mode .banner-text { color: rgba(255,255,255,0.7) !important; }
+body.light-mode .hero-section:not(.cv-hero) .title-two .hero-title { color: #fff !important; }
+body.light-mode .hero-section:not(.cv-hero) .biz-title-1 .hero-title,
+body.light-mode .hero-section:not(.cv-hero) .biz-title-2 .hero-title { color: #fff !important; }
+body.light-mode .hero-section:not(.cv-hero) .hero-subtitle { color: #fff !important; }
+body.light-mode .hero-section:not(.cv-hero) .hero-heading-two { color: #fff !important; }
+body.light-mode .hero-section:not(.cv-hero) .hero-text { color: rgba(255,255,255,0.8) !important; }
+body.light-mode .hero-section:not(.cv-hero) .banner-number { color: #fff !important; }
+body.light-mode .hero-section:not(.cv-hero) .banner-text { color: rgba(255,255,255,0.7) !important; }
 body.light-mode .hero-section { background-color: #0d0d0d; }
 
 /* Client marquee — starts the light theme */
@@ -159,6 +159,12 @@ body.light-mode .cv-hero::before {
     background-image:
         linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+body.light-mode .cv-contact-bar {
+    color: #555555 !important;
+}
+body.light-mode .cv-contact-bar a {
+    color: #1a1a1a !important;
 }
 body.light-mode .cv-heading {
     background: linear-gradient(90deg, #1a1a1a, rgba(26,26,26,0.5));
