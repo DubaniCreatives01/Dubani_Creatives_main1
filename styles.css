@@ -1097,15 +1097,15 @@ textarea {
 .section-divider-line {
     width: 80%;
     max-width: 1200px;
-    height: 1px;
+    height: 2px;
     background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
-    opacity: 0.25;
+    opacity: 0.55;
     transform: scaleX(0);
     transform-origin: center;
 }
 body.light-mode .section-divider-line {
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 94, 0, 0.6) 50%, transparent 100%);
-    opacity: 0.4;
+    background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+    opacity: 0.75;
 }
 
 /* --- Web Design & Development Section --- */
