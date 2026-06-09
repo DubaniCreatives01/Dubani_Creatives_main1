@@ -673,4 +673,60 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // --- Hero Statistics Count-Up and Staggered Reveal ---
+    const initHeroStats = () => {
+        const statsWidget = document.querySelector('.hero-stats-widget');
+        if (!statsWidget) return;
+
+        const statItems = statsWidget.querySelectorAll('.stat-item');
+        const numSpans = statsWidget.querySelectorAll('.stat-number .num');
+
+        // Create initial hidden state for staggered reveal
+        gsap.set(statsWidget, { opacity: 0, y: 35 });
+        gsap.set(statItems, { opacity: 0, y: 15 });
+
+        // Build the reveal timeline
+        const tl = gsap.timeline({
+            delay: 0.6, // Slight delay to run after primary hero text animations
+            scrollTrigger: {
+                trigger: statsWidget,
+                start: "top 95%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        tl.to(statsWidget, {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            ease: "power4.out"
+        })
+        .to(statItems, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out"
+        }, "-=0.6");
+
+        // Staggered count-up of numbers, synchronized with staggered reveal
+        numSpans.forEach((num, index) => {
+            const targetVal = parseInt(num.getAttribute('data-target'), 10);
+            if (isNaN(targetVal)) return;
+
+            tl.to(num, {
+                innerText: targetVal,
+                duration: 1.8,
+                snap: { innerText: 1 },
+                ease: "power2.out",
+                onUpdate: function() {
+                    num.textContent = Math.floor(this.targets()[0].innerText);
+                }
+            }, `-=${1.6 - index * 0.12}`);
+        });
+    };
+
+    initHeroStats();
+
 });
+

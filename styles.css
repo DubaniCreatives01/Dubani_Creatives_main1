@@ -304,10 +304,130 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 340px;
+    margin-bottom: 120px;
     flex-wrap: wrap;
     gap: 40px;
 }
+
+/* --- Hero Statistics Widget --- */
+.hero-stats-widget {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 25px 40px;
+    max-width: 820px;
+    width: 100%;
+    margin-right: auto; /* Aligns widget on the left side of the container */
+    margin-bottom: 100px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    z-index: 12;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-stats-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 94, 0, 0.25);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    padding: 0 15px;
+    transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: scale(1.05);
+}
+
+.stat-number {
+    font-size: clamp(32px, 4vw, 42px);
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    line-height: 1.1;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.stat-number .plus {
+    font-weight: 500;
+    margin-left: 2px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0) 100%);
+    flex-shrink: 0;
+}
+
+/* Responsive grid layouts for stats widget */
+@media (max-width: 991px) {
+    .hero-stats-widget {
+        max-width: 650px;
+        padding: 20px 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .stat-divider {
+        display: none;
+    }
+    .stat-item {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        align-items: center;
+        text-align: center;
+    }
+    .stat-item:nth-of-type(3),
+    .stat-item:nth-of-type(4) {
+        border-bottom: none;
+    }
+    .stat-number {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575px) {
+    .hero-stats-widget {
+        max-width: 100%;
+        padding: 18px 20px;
+        gap: 15px;
+        border-radius: 18px;
+        margin-bottom: 60px;
+    }
+    .stat-number {
+        font-size: clamp(28px, 6vw, 34px);
+    }
+    .stat-label {
+        font-size: 11px;
+    }
+}
+
 
 .hero-left {
     flex: 1;
