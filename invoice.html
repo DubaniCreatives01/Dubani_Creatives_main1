@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
-    <link rel="stylesheet" href="invoice-styles.css?v=20">
+    <link rel="stylesheet" href="invoice-styles.css?v=21">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -17,6 +17,7 @@
         <div class="topbar-left">
             <img loading="lazy" src="images/logo1.png" alt="Dubani Creatives">
             <h1 class="topbar-title"><span>Invoice</span> Generator</h1>
+            <span class="cloud-status-badge" id="cloudStatusBadge">☁️ Cloud Active</span>
         </div>
         <div class="topbar-actions">
             <button class="btn btn-secondary btn-sm" id="manageInvoicesBtn">📁 Saved Invoices</button>
@@ -279,11 +280,19 @@
                     <input type="number" id="settDefaultTax" class="form-input" min="0" max="100">
                 </div>
             </div>
+            <div style="margin: 16px 0; padding-top: 14px; border-top: 1px solid var(--border);">
+                <label class="form-label" style="margin-bottom: 8px;">Backup & Restore Data</label>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="exportBackupBtn" style="flex:1;">📥 Export Backup</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="importBackupBtn" style="flex:1;">📤 Import Backup</button>
+                    <input type="file" id="importBackupFile" accept=".json" style="display:none;">
+                </div>
+            </div>
             <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;">💾 Save Settings</button>
         </div>
     </div>
 
-    <script src="invoice-app.js?v=20"></script>
+    <script src="invoice-app.js?v=21"></script>
 </body>
 </html>
 

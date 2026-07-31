@@ -69,6 +69,32 @@ body {
 
 .topbar-title span { color: var(--accent); }
 
+.cloud-status-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(255, 94, 0, 0.12);
+    border: 1px solid rgba(255, 94, 0, 0.25);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s ease;
+}
+
+.cloud-status-badge.synced {
+    background: rgba(37, 211, 102, 0.12);
+    border-color: rgba(37, 211, 102, 0.25);
+    color: #25D366;
+}
+
+.cloud-status-badge.error {
+    background: rgba(255, 68, 68, 0.12);
+    border-color: rgba(255, 68, 68, 0.25);
+    color: #ff4444;
+}
+
 .topbar-actions {
     display: flex;
     gap: 10px;

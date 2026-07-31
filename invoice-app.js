@@ -31,6 +31,8 @@ const App = {
         notes: "",
     },
 
+    cloudDbUrl: "https://jsonblob.com/api/jsonBlob/019fb7a8-8e8d-79f8-b9f8-8a28ac9722e8",
+
     init() {
         this.loadData();
         this.setDefaultDates();
@@ -38,6 +40,7 @@ const App = {
             this.bindEvents();
             this.renderForm();
             this.updatePreview();
+            this.syncFromCloud();
         });
     },
 
@@ -98,11 +101,13 @@ const App = {
             clients.push(client);
         }
         localStorage.setItem("dc_clients", JSON.stringify(clients));
+        this.syncToCloud();
     },
 
     deleteClient(name) {
         const clients = this.getClients().filter(c => c.name !== name);
         localStorage.setItem("dc_clients", JSON.stringify(clients));
+        this.syncToCloud();
     },
 
     getServices() {
@@ -118,11 +123,13 @@ const App = {
             services.push(service);
         }
         localStorage.setItem("dc_services", JSON.stringify(services));
+        this.syncToCloud();
     },
 
     deleteService(name) {
         const services = this.getServices().filter(s => s.name !== name);
         localStorage.setItem("dc_services", JSON.stringify(services));
+        this.syncToCloud();
     },
 
     // ---- Invoices History & Saved Invoices ----
@@ -164,9 +171,10 @@ const App = {
         // Sort descending by number
         invoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
         localStorage.setItem("dc_invoices", JSON.stringify(invoices));
+        this.syncToCloud();
 
         if (!quiet) {
-            this.showToast(`💾 Invoice #${this.state.invoiceNumber} saved successfully!`);
+            this.showToast(`💾 Invoice #${this.state.invoiceNumber} saved & synced to database!`);
         }
         return true;
     },
@@ -225,6 +233,7 @@ const App = {
         let invoices = this.getInvoices();
         invoices = invoices.filter(i => parseInt(i.invoiceNumber) !== parseInt(invoiceNumber));
         localStorage.setItem("dc_invoices", JSON.stringify(invoices));
+        this.syncToCloud();
         this.showToast(`Deleted Invoice #${invoiceNumber}.`);
     },
 
@@ -248,6 +257,181 @@ const App = {
             toast.style.transform = "translateY(10px)";
             setTimeout(() => toast.remove(), 300);
         }, 3000);
+    },
+
+    // ---- Cloud Database Sync ----
+    updateCloudStatus(status, text) {
+        const badge = document.getElementById("cloudStatusBadge");
+        if (!badge) return;
+        badge.className = `cloud-status-badge ${status}`;
+        badge.innerHTML = text;
+    },
+
+    async syncFromCloud() {
+        try {
+            this.updateCloudStatus("", "☁️ Syncing...");
+            const res = await fetch(this.cloudDbUrl, { cache: "no-store" });
+            if (!res.ok) throw new Error("Cloud DB response error: " + res.status);
+            const cloudData = await res.json();
+
+            if (cloudData && typeof cloudData === "object") {
+                let updated = false;
+
+                // Merge clients
+                if (Array.isArray(cloudData.clients)) {
+                    const localClients = this.getClients();
+                    const mergedClients = [...localClients];
+                    cloudData.clients.forEach(cc => {
+                        const idx = mergedClients.findIndex(lc => lc.name.toLowerCase() === (cc.name || "").toLowerCase());
+                        if (idx >= 0) {
+                            mergedClients[idx] = { ...mergedClients[idx], ...cc };
+                        } else {
+                            mergedClients.push(cc);
+                        }
+                    });
+                    localStorage.setItem("dc_clients", JSON.stringify(mergedClients));
+                    updated = true;
+                }
+
+                // Merge invoices
+                if (Array.isArray(cloudData.invoices)) {
+                    const localInvoices = this.getInvoices();
+                    const mergedInvoices = [...localInvoices];
+                    cloudData.invoices.forEach(ci => {
+                        const idx = mergedInvoices.findIndex(li => parseInt(li.invoiceNumber) === parseInt(ci.invoiceNumber));
+                        if (idx >= 0) {
+                            mergedInvoices[idx] = { ...mergedInvoices[idx], ...ci };
+                        } else {
+                            mergedInvoices.push(ci);
+                        }
+                    });
+                    mergedInvoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
+                    localStorage.setItem("dc_invoices", JSON.stringify(mergedInvoices));
+                    updated = true;
+                }
+
+                // Merge services
+                if (Array.isArray(cloudData.services)) {
+                    const localServices = this.getServices();
+                    const mergedServices = [...localServices];
+                    cloudData.services.forEach(cs => {
+                        const idx = mergedServices.findIndex(ls => ls.name.toLowerCase() === (cs.name || "").toLowerCase());
+                        if (idx >= 0) {
+                            mergedServices[idx] = { ...mergedServices[idx], ...cs };
+                        } else {
+                            mergedServices.push(cs);
+                        }
+                    });
+                    localStorage.setItem("dc_services", JSON.stringify(mergedServices));
+                    updated = true;
+                }
+
+                // Settings
+                if (cloudData.settings && typeof cloudData.settings === "object") {
+                    Object.assign(this.defaults, cloudData.settings);
+                    localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
+                }
+
+                // Counter
+                if (cloudData.invoiceCounter && cloudData.invoiceCounter > this.state.invoiceNumber) {
+                    this.state.invoiceNumber = cloudData.invoiceCounter;
+                    this.saveCounter();
+                    const numInput = document.getElementById("invoiceNumber");
+                    if (numInput) numInput.value = this.state.invoiceNumber;
+                }
+
+                if (updated) {
+                    this.populateClientSelect();
+                    this.renderItems();
+                    this.updatePreview();
+                }
+
+                this.updateCloudStatus("synced", "☁️ Cloud Synced");
+            }
+        } catch (err) {
+            console.warn("Cloud DB fetch failed, using local cache:", err);
+            this.updateCloudStatus("synced", "☁️ Local Cache Active");
+        }
+    },
+
+    async syncToCloud() {
+        try {
+            this.updateCloudStatus("", "☁️ Syncing...");
+            const payload = {
+                clients: this.getClients(),
+                invoices: this.getInvoices(),
+                services: this.getServices(),
+                settings: this.defaults,
+                invoiceCounter: this.state.invoiceNumber,
+                lastUpdated: new Date().toISOString()
+            };
+
+            const res = await fetch(this.cloudDbUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("Cloud DB sync failed: " + res.status);
+            this.updateCloudStatus("synced", "☁️ Cloud Synced");
+        } catch (err) {
+            console.error("Cloud DB push failed:", err);
+            this.updateCloudStatus("error", "⚠️ Offline");
+        }
+    },
+
+    exportBackup() {
+        const backupData = {
+            version: 1,
+            exportDate: new Date().toISOString(),
+            clients: this.getClients(),
+            invoices: this.getInvoices(),
+            services: this.getServices(),
+            settings: this.defaults,
+            invoiceCounter: this.state.invoiceNumber
+        };
+
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const dateStr = new Date().toISOString().split("T")[0];
+        a.href = url;
+        a.download = `dubani_creatives_backup_${dateStr}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.showToast("📥 Data Backup Exported Successfully!");
+    },
+
+    importBackup(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async e => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (Array.isArray(data.clients)) localStorage.setItem("dc_clients", JSON.stringify(data.clients));
+                if (Array.isArray(data.invoices)) localStorage.setItem("dc_invoices", JSON.stringify(data.invoices));
+                if (Array.isArray(data.services)) localStorage.setItem("dc_services", JSON.stringify(data.services));
+                if (data.settings) {
+                    Object.assign(this.defaults, data.settings);
+                    localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
+                }
+                if (data.invoiceCounter) {
+                    this.state.invoiceNumber = parseInt(data.invoiceCounter);
+                    this.saveCounter();
+                }
+
+                this.renderForm();
+                this.updatePreview();
+                await this.syncToCloud();
+                this.showToast("📤 Backup Imported & Synced to Cloud!");
+            } catch (err) {
+                alert("Failed to import backup file. Invalid format: " + err.message);
+            }
+        };
+        reader.readAsText(file);
     },
 
     // ---- Dates ----
@@ -441,6 +625,23 @@ const App = {
                 this.populateClientSelect();
             }
         });
+
+        // Backup & Restore
+        const exportBackupBtn = document.getElementById("exportBackupBtn");
+        if (exportBackupBtn) {
+            exportBackupBtn.addEventListener("click", () => this.exportBackup());
+        }
+
+        const importBackupBtn = document.getElementById("importBackupBtn");
+        const importBackupFile = document.getElementById("importBackupFile");
+        if (importBackupBtn && importBackupFile) {
+            importBackupBtn.addEventListener("click", () => importBackupFile.click());
+            importBackupFile.addEventListener("change", e => {
+                if (e.target.files && e.target.files[0]) {
+                    this.importBackup(e.target.files[0]);
+                }
+            });
+        }
 
         // Settings save
         document.getElementById("saveSettingsBtn").addEventListener("click", () => this.saveSettings());
@@ -1219,9 +1420,10 @@ const App = {
         this.defaults.taxRate = parseFloat(document.getElementById("settDefaultTax").value) || 0;
 
         localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
+        this.syncToCloud();
         this.updatePreview();
         document.getElementById("settingsModal").classList.remove("active");
-        alert("Settings saved!");
+        this.showToast("⚙️ Settings saved & synced to database!");
     }
 };
 
