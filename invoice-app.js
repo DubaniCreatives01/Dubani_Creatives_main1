@@ -12,7 +12,7 @@ const App = {
         phone: "+27 733464805",
         website: "admin@dubanicreatives.com",
         taxReg: "Tax Reg No.9695889171 : 2020/073382/07",
-        bankDetails: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0733464805",
+        bankDetails: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503",
         paymentNote: "A payment of the quoted fee will become immediately due upon acceptance of the project. Additional inter-est may be charged on payment received more than 5 days past its due date.",
         terms: "The following Terms and Conditions of Service apply to all products and services provided by Dubani Creatives Pty.Ltd and in the event of any dispute are governed by the laws of South Africa.\nAll work is carried out by Dubani Creatives on the understanding that the client has agreed to our terms and conditions.\nCopyright is retained by Dubani Creatives on all design work including words, pictures, ideas, visuals and illustrations unless specifically released in writing and after all costs have been settled.",
         taxRate: 0,
@@ -71,6 +71,12 @@ const App = {
         const settings = localStorage.getItem("dc_settings");
         if (settings) Object.assign(this.defaults, JSON.parse(settings));
 
+        // Update/migrate Capitec contact number in bankDetails if old number exists
+        if (this.defaults.bankDetails && this.defaults.bankDetails.includes("0733464805")) {
+            this.defaults.bankDetails = this.defaults.bankDetails.replace(/0733464805/g, "0719721503");
+            localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
+        }
+
         this.state.taxRate = this.defaults.taxRate;
         this.state.notes = this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote;
     },
@@ -119,23 +125,34 @@ const App = {
         localStorage.setItem("dc_services", JSON.stringify(services));
     },
 
-    // ---- Invoices History ----
+    // ---- Invoices History & Saved Invoices ----
     getInvoices() {
         return JSON.parse(localStorage.getItem("dc_invoices") || "[]");
     },
 
-    saveInvoiceRecord() {
-        if (!this.state.client.name) return; // Need a client to save history
+    saveInvoiceRecord(quiet = true) {
+        if (!this.state.client.name && !this.state.items.some(i => i.service)) {
+            if (!quiet) alert("Please enter a client name or at least one service line item before saving.");
+            return false;
+        }
         const invoices = this.getInvoices();
-        const existingIdx = invoices.findIndex(i => i.invoiceNumber === this.state.invoiceNumber);
+        const existingIdx = invoices.findIndex(i => parseInt(i.invoiceNumber) === parseInt(this.state.invoiceNumber));
 
         const record = {
-            invoiceNumber: this.state.invoiceNumber,
-            date: this.state.invoiceDate,
-            clientName: this.state.client.name,
+            invoiceNumber: parseInt(this.state.invoiceNumber),
+            invoiceDate: this.state.invoiceDate,
+            dueDate: this.state.dueDate,
+            clientName: this.state.client.name || "Unnamed Client",
+            client: { ...this.state.client },
+            items: JSON.parse(JSON.stringify(this.state.items)),
+            taxRate: this.state.taxRate,
+            discount: this.state.discount,
+            discountType: this.state.discountType,
+            notes: this.state.notes,
             total: this.calcTotal(),
             currency: this.defaults.currency,
-            itemsCount: this.state.items.filter(i => i.service).length
+            itemsCount: this.state.items.filter(i => i.service).length,
+            savedAt: new Date().toISOString()
         };
 
         if (existingIdx >= 0) {
@@ -147,12 +164,90 @@ const App = {
         // Sort descending by number
         invoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
         localStorage.setItem("dc_invoices", JSON.stringify(invoices));
+
+        if (!quiet) {
+            this.showToast(`💾 Invoice #${this.state.invoiceNumber} saved successfully!`);
+        }
+        return true;
+    },
+
+    loadInvoiceIntoForm(invoiceNumber) {
+        const invoices = this.getInvoices();
+        const inv = invoices.find(i => parseInt(i.invoiceNumber) === parseInt(invoiceNumber));
+        if (!inv) {
+            alert("Saved invoice not found.");
+            return;
+        }
+
+        this.state.invoiceNumber = parseInt(inv.invoiceNumber);
+        this.state.invoiceDate = inv.invoiceDate || inv.date || this.formatDateInput(new Date());
+        this.state.dueDate = inv.dueDate || this.state.invoiceDate;
+        this.state.client = inv.client ? { ...inv.client } : { name: inv.clientName || "", email: "", phone: "", address: "" };
+        this.state.items = inv.items && inv.items.length ? JSON.parse(JSON.stringify(inv.items)) : [{ service: "", description: "", qty: 1, rate: 0 }];
+        this.state.taxRate = typeof inv.taxRate !== "undefined" ? inv.taxRate : this.defaults.taxRate;
+        this.state.discount = typeof inv.discount !== "undefined" ? inv.discount : 0;
+        this.state.discountType = inv.discountType || "percent";
+        this.state.notes = typeof inv.notes !== "undefined" ? inv.notes : (this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote);
+
+        document.getElementById("invoiceNumber").value = this.state.invoiceNumber;
+        document.getElementById("invoiceDate").value = this.state.invoiceDate;
+        document.getElementById("dueDate").value = this.state.dueDate;
+        document.getElementById("taxRate").value = this.state.taxRate;
+        document.getElementById("discount").value = this.state.discount;
+        document.getElementById("discountType").value = this.state.discountType;
+        document.getElementById("invoiceNotes").value = this.state.notes;
+
+        document.getElementById("clientName").value = this.state.client.name || "";
+        document.getElementById("clientEmail").value = this.state.client.email || "";
+        document.getElementById("clientPhone").value = this.state.client.phone || "";
+        document.getElementById("clientAddress").value = this.state.client.address || "";
+
+        this.populateClientSelect();
+        const select = document.getElementById("clientSelect");
+        if (select) {
+            const opt = Array.from(select.options).find(o => o.value.toLowerCase() === (this.state.client.name || "").toLowerCase());
+            if (opt) select.value = opt.value;
+        }
+
+        this.renderItems();
+        this.updatePreview();
+
+        document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+        this.showToast(`✏️ Loaded Invoice #${inv.invoiceNumber} for editing.`);
+    },
+
+    downloadPDFForInvoice(invoiceNumber) {
+        this.loadInvoiceIntoForm(invoiceNumber);
+        this.downloadPDF();
     },
 
     deleteInvoiceRecord(invoiceNumber) {
         let invoices = this.getInvoices();
-        invoices = invoices.filter(i => i.invoiceNumber !== parseInt(invoiceNumber));
+        invoices = invoices.filter(i => parseInt(i.invoiceNumber) !== parseInt(invoiceNumber));
         localStorage.setItem("dc_invoices", JSON.stringify(invoices));
+        this.showToast(`Deleted Invoice #${invoiceNumber}.`);
+    },
+
+    showToast(msg) {
+        let container = document.getElementById("toastContainer");
+        if (!container) {
+            container = document.createElement("div");
+            container.id = "toastContainer";
+            container.style.cssText = "position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none;";
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement("div");
+        toast.style.cssText = "background: #1a1a1a; border: 1px solid #ff5e00; color: #fff; padding: 12px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.6); pointer-events: auto; transition: all 0.3s ease;";
+        toast.innerHTML = msg;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(10px)";
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     },
 
     // ---- Dates ----
@@ -272,6 +367,10 @@ const App = {
         });
 
         // Export buttons
+        const saveInvoiceBtn = document.getElementById("saveInvoiceBtn");
+        if (saveInvoiceBtn) {
+            saveInvoiceBtn.addEventListener("click", () => this.saveInvoiceRecord(false));
+        }
         document.getElementById("downloadPdf").addEventListener("click", () => this.downloadPDF());
         document.getElementById("shareWhatsapp").addEventListener("click", () => this.shareWhatsApp());
         document.getElementById("shareEmail").addEventListener("click", () => this.shareEmail());
@@ -281,14 +380,24 @@ const App = {
             if (this.state.client.name.trim()) {
                 this.saveClient({ ...this.state.client });
                 this.populateClientSelect();
-                alert("Client saved!");
+                this.showToast("👤 Client saved successfully!");
             }
         });
 
         // Modal buttons
+        const manageInvoicesBtn = document.getElementById("manageInvoicesBtn");
+        if (manageInvoicesBtn) {
+            manageInvoicesBtn.addEventListener("click", () => this.showModal("invoicesModal"));
+        }
         document.getElementById("manageClientsBtn").addEventListener("click", () => this.showModal("clientsModal"));
         document.getElementById("manageServicesBtn").addEventListener("click", () => this.showModal("servicesModal"));
         document.getElementById("settingsBtn").addEventListener("click", () => this.showModal("settingsModal"));
+
+        // Search invoices
+        const searchInvoicesInput = document.getElementById("searchInvoicesInput");
+        if (searchInvoicesInput) {
+            searchInvoicesInput.addEventListener("input", e => this.renderInvoicesModal(e.target.value.toLowerCase().trim()));
+        }
 
         // Close modals
         document.querySelectorAll(".modal-close").forEach(btn => {
@@ -968,9 +1077,61 @@ const App = {
     // ---- Modals ----
     showModal(id) {
         document.getElementById(id).classList.add("active");
+        if (id === "invoicesModal") this.renderInvoicesModal();
         if (id === "clientsModal") this.renderClientsModal();
         if (id === "servicesModal") this.renderServicesModal();
         if (id === "settingsModal") this.renderSettingsModal();
+    },
+
+    renderInvoicesModal(searchTerm = "") {
+        const list = document.getElementById("invoicesList");
+        if (!list) return;
+        let invoices = this.getInvoices();
+
+        if (searchTerm) {
+            invoices = invoices.filter(i => 
+                (i.invoiceNumber + "").includes(searchTerm) ||
+                (i.clientName || "").toLowerCase().includes(searchTerm) ||
+                (i.items && i.items.some(item => (item.service || "").toLowerCase().includes(searchTerm)))
+            );
+        }
+
+        if (invoices.length === 0) {
+            list.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 24px;">${searchTerm ? "No matching invoices found." : "No saved invoices yet. Click 'Save Invoice' to save invoices for future editing or download."}</p>`;
+            return;
+        }
+
+        list.innerHTML = invoices.map(inv => {
+            const clientName = this.escHtml(inv.clientName || (inv.client && inv.client.name) || "Unnamed Client");
+            const dateStr = this.formatDateDisplay(inv.invoiceDate || inv.date);
+            const dueDateStr = this.formatDateDisplay(inv.dueDate);
+            const itemsCount = inv.itemsCount || (inv.items ? inv.items.length : 0);
+            const formattedTotal = this.formatCurrency(parseFloat(inv.total) || 0);
+
+            return `
+                <div class="saved-item" style="flex-direction: column; align-items: stretch; gap: 12px; cursor: default;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--accent);">#${inv.invoiceNumber}</span>
+                                <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);">${clientName}</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                                Date: ${dateStr}${dueDateStr ? ' • Due: ' + dueDateStr : ''} • ${itemsCount} Item${itemsCount === 1 ? '' : 's'}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">${formattedTotal}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary btn-sm" onclick="App.loadInvoiceIntoForm(${inv.invoiceNumber})">✏️ Edit / Load</button>
+                        <button class="btn btn-secondary btn-sm" onclick="App.downloadPDFForInvoice(${inv.invoiceNumber})">📄 Download PDF</button>
+                        <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete Invoice #${inv.invoiceNumber}?')) { App.deleteInvoiceRecord(${inv.invoiceNumber}); App.renderInvoicesModal('${this.escHtml(searchTerm)}'); }">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
     },
 
     renderClientsModal() {
@@ -981,20 +1142,22 @@ const App = {
         list.innerHTML = clients.length === 0
             ? '<p style="color: var(--text-muted); font-size: 13px;">No saved clients yet.</p>'
             : clients.map(c => {
-                const clientInvoices = allInvoices.filter(i => i.clientName.toLowerCase() === c.name.toLowerCase());
+                const clientInvoices = allInvoices.filter(i => (i.clientName || "").toLowerCase() === c.name.toLowerCase());
                 const invoicesHtml = clientInvoices.length > 0
                     ? `<div class="client-history-list" style="margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px;">
                         <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Past Invoices (${clientInvoices.length})</span>
                         <div style="margin-top: 6px; display: grid; gap: 6px;">
                             ${clientInvoices.map(inv => `
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 6px 10px; border-radius: 4px; font-size: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 6px 10px; border-radius: 6px; font-size: 12px; flex-wrap: wrap; gap: 6px;">
                                     <div>
                                         <span style="color: var(--accent); font-weight: bold;">#${inv.invoiceNumber}</span>
-                                        <span style="color: var(--text-muted); margin-left: 6px;">${this.formatDateDisplay(inv.date)}</span>
+                                        <span style="color: var(--text-muted); margin-left: 6px;">${this.formatDateDisplay(inv.invoiceDate || inv.date)}</span>
                                     </div>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <span style="color: var(--text-primary);">${inv.currency} ${parseFloat(inv.total).toFixed(2)}</span>
-                                        <button class="btn btn-sm" style="padding: 2px 6px; background: transparent; color: #ff4444;" onclick="App.deleteInvoiceRecord('${inv.invoiceNumber}'); App.renderClientsModal();">×</button>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span style="color: var(--text-primary); font-weight: 600;">${inv.currency || 'ZAR'} ${parseFloat(inv.total).toFixed(2)}</span>
+                                        <button class="btn btn-primary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="App.loadInvoiceIntoForm('${inv.invoiceNumber}')">✏️ Edit</button>
+                                        <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="App.downloadPDFForInvoice('${inv.invoiceNumber}')">📄 PDF</button>
+                                        <button class="btn btn-sm" style="padding: 2px 6px; background: transparent; color: #ff4444;" onclick="if(confirm('Delete Invoice #${inv.invoiceNumber}?')) { App.deleteInvoiceRecord('${inv.invoiceNumber}'); App.renderClientsModal(); }">×</button>
                                     </div>
                                 </div>
                             `).join('')}
@@ -1003,7 +1166,7 @@ const App = {
                     : '<div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">No invoices generated for this client yet.</div>';
 
                 return `
-                <div class="saved-item" style="flex-direction: column; align-items: stretch;">
+                <div class="saved-item" style="flex-direction: column; align-items: stretch; cursor: default;">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div class="saved-item-info">
                             <h4>${this.escHtml(c.name)}</h4>

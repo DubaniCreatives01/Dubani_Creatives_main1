@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
-    <link rel="stylesheet" href="invoice-styles.css">
+    <link rel="stylesheet" href="invoice-styles.css?v=20">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -19,6 +19,7 @@
             <h1 class="topbar-title"><span>Invoice</span> Generator</h1>
         </div>
         <div class="topbar-actions">
+            <button class="btn btn-secondary btn-sm" id="manageInvoicesBtn">📁 Saved Invoices</button>
             <button class="btn btn-secondary btn-sm" id="manageClientsBtn">👤 Clients</button>
             <button class="btn btn-secondary btn-sm" id="manageServicesBtn">📦 Services</button>
             <button class="btn btn-secondary btn-sm" id="settingsBtn">⚙ Settings</button>
@@ -154,7 +155,8 @@
 
             <!-- Export Actions -->
             <div class="export-actions">
-                <button class="btn btn-primary" id="downloadPdf">📄 Download PDF</button>
+                <button class="btn btn-primary" id="saveInvoiceBtn">💾 Save Invoice</button>
+                <button class="btn btn-secondary" id="downloadPdf">📄 Download PDF</button>
                 <button class="btn btn-success" id="shareWhatsapp">💬 Share via WhatsApp</button>
                 <button class="btn btn-secondary" id="shareEmail">📧 Share via Email</button>
             </div>
@@ -170,6 +172,20 @@
     </div>
 
     <!-- ======== MODALS ======== -->
+
+    <!-- Invoices Modal -->
+    <div class="modal-overlay" id="invoicesModal">
+        <div class="modal" style="max-width: 680px;">
+            <div class="modal-title">
+                <span>📁 Saved Invoices</span>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <input type="text" id="searchInvoicesInput" class="form-input" placeholder="🔍 Search saved invoices by client or invoice number...">
+            </div>
+            <div class="saved-list" id="invoicesList"></div>
+        </div>
+    </div>
 
     <!-- Clients Modal -->
     <div class="modal-overlay" id="clientsModal">
@@ -267,7 +283,7 @@
         </div>
     </div>
 
-    <script src="invoice-app.js"></script>
+    <script src="invoice-app.js?v=20"></script>
 </body>
 </html>
 
