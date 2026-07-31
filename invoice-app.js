@@ -29,6 +29,8 @@ const App = {
         discountType: "percent",
         taxRate: 0,
         notes: "",
+        status: "UNPAID",
+        amountPaid: 0,
     },
 
     cloudDbUrl: "https://jsonblob.com/api/jsonBlob/019fb7a8-8e8d-79f8-b9f8-8a28ac9722e8",
@@ -157,6 +159,9 @@ const App = {
             discountType: this.state.discountType,
             notes: this.state.notes,
             total: this.calcTotal(),
+            status: this.state.status || "UNPAID",
+            amountPaid: parseFloat(this.state.amountPaid) || 0,
+            balance: this.calcBalance(),
             currency: this.defaults.currency,
             itemsCount: this.state.items.filter(i => i.service).length,
             savedAt: new Date().toISOString()
@@ -196,6 +201,8 @@ const App = {
         this.state.discount = typeof inv.discount !== "undefined" ? inv.discount : 0;
         this.state.discountType = inv.discountType || "percent";
         this.state.notes = typeof inv.notes !== "undefined" ? inv.notes : (this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote);
+        this.state.status = inv.status || "UNPAID";
+        this.state.amountPaid = typeof inv.amountPaid !== "undefined" ? parseFloat(inv.amountPaid) : 0;
 
         document.getElementById("invoiceNumber").value = this.state.invoiceNumber;
         document.getElementById("invoiceDate").value = this.state.invoiceDate;
@@ -476,6 +483,16 @@ const App = {
         return this.calcSubtotal() - this.calcDiscount() + this.calcTax();
     },
 
+    calcBalance() {
+        const total = this.calcTotal();
+        if (this.state.status === "PAID") return 0;
+        if (this.state.status === "PARTIALLY PAID") {
+            const paid = parseFloat(this.state.amountPaid) || 0;
+            return Math.max(0, total - paid);
+        }
+        return total;
+    },
+
     formatCurrency(amount) {
         return `${this.defaults.currency} ${amount.toFixed(2)}`;
     },
@@ -555,9 +572,26 @@ const App = {
         if (saveInvoiceBtn) {
             saveInvoiceBtn.addEventListener("click", () => this.saveInvoiceRecord(false));
         }
+        const markPaidBtn = document.getElementById("markPaidBtn");
+        if (markPaidBtn) {
+            markPaidBtn.addEventListener("click", () => this.openPaymentModal());
+        }
         document.getElementById("downloadPdf").addEventListener("click", () => this.downloadPDF());
         document.getElementById("shareWhatsapp").addEventListener("click", () => this.shareWhatsApp());
         document.getElementById("shareEmail").addEventListener("click", () => this.shareEmail());
+
+        // Payment Form events
+        const paymentForm = document.getElementById("paymentForm");
+        if (paymentForm) {
+            paymentForm.addEventListener("submit", e => this.applyPayment(e));
+        }
+        document.querySelectorAll('input[name="payOption"]').forEach(radio => {
+            radio.addEventListener("change", () => this.updatePaymentSummary());
+        });
+        const customPaidInput = document.getElementById("customPaidAmount");
+        if (customPaidInput) {
+            customPaidInput.addEventListener("input", () => this.updatePaymentSummary());
+        }
 
         // Save client button
         document.getElementById("saveClientBtn").addEventListener("click", () => {
@@ -763,13 +797,27 @@ const App = {
         document.getElementById("formTotal").textContent = this.formatCurrency(this.calcTotal());
     },
 
-    // ---- Live Preview ----
     updatePreview() {
         const p = document.getElementById("invoicePreview");
         const subtotal = this.calcSubtotal();
         const discount = this.calcDiscount();
         const tax = this.calcTax();
         const total = this.calcTotal();
+        const balance = this.calcBalance();
+        const amountPaid = parseFloat(this.state.amountPaid) || 0;
+
+        let watermarkHtml = "";
+        if (this.state.status === "PAID") {
+            watermarkHtml = `<div class="inv-watermark-stamp">PAID FULL</div>`;
+        } else if (this.state.status === "PARTIALLY PAID") {
+            watermarkHtml = `
+                <div class="inv-watermark-stamp partial">
+                    PARTIALLY PAID
+                    <div style="font-size: 13px; font-weight: 800; margin-top: 2px;">PAID: ${this.formatCurrency(amountPaid)}</div>
+                    <div style="font-size: 13px; font-weight: 800;">BAL: ${this.formatCurrency(balance)}</div>
+                </div>
+            `;
+        }
 
         const itemsHtml = this.state.items.filter(i => i.service).map(item => `
             <tr>
@@ -786,6 +834,7 @@ const App = {
         const notesHtml = this.state.notes ? this.state.notes.replace(/\n/g, "<br>") : "";
 
         p.innerHTML = `
+            ${watermarkHtml}
             <div class="inv-header">
                 <div class="inv-logo"><img src="${this.logoBase64}" alt="Dubani Creatives"></div>
                 <div class="inv-title-block">
@@ -810,9 +859,9 @@ const App = {
                         <tr><td>Date:</td><td>${this.formatDateDisplay(this.state.invoiceDate)}</td></tr>
                         <tr><td>Due Date:</td><td>${this.formatDateDisplay(this.state.dueDate)}</td></tr>
                     </table>
-                    <div class="inv-balance-due">
+                    <div class="inv-balance-due" style="${this.state.status === 'PAID' ? 'background:#25D366;' : (this.state.status === 'PARTIALLY PAID' ? 'background:#ff9900;' : '')}">
                         <span>Balance Due:</span>
-                        <span>${this.formatCurrency(total)}</span>
+                        <span>${this.formatCurrency(balance)}</span>
                     </div>
                 </div>
             </div>
@@ -845,6 +894,8 @@ const App = {
                     ${discount > 0 ? `<tr><td>Discount:</td><td>- ${this.formatCurrency(discount)}</td></tr>` : ""}
                     <tr><td>Tax (${this.state.taxRate}%):</td><td>${this.formatCurrency(tax)}</td></tr>
                     <tr class="inv-grand-total"><td>Total:</td><td>${this.formatCurrency(total)}</td></tr>
+                    ${amountPaid > 0 ? `<tr><td style="color:#25D366; font-weight:600;">Amount Paid:</td><td style="color:#25D366; font-weight:600;">- ${this.formatCurrency(amountPaid)}</td></tr>` : ""}
+                    ${this.state.status !== "UNPAID" ? `<tr style="border-top:2px solid #1a1a1a;"><td style="font-size:15px; font-weight:700; color:${balance === 0 ? '#25D366' : '#ff5e00'};">Balance Due:</td><td style="font-size:15px; font-weight:700; color:${balance === 0 ? '#25D366' : '#ff5e00'};">${this.formatCurrency(balance)}</td></tr>` : ""}
                 </table>
             </div>
 
@@ -936,13 +987,20 @@ const App = {
         y += 7;
 
         // Balance Due box
-        doc.setFillColor(30, 30, 30);
+        const balance = this.calcBalance();
+        if (this.state.status === "PAID") {
+            doc.setFillColor(37, 211, 102);
+        } else if (this.state.status === "PARTIALLY PAID") {
+            doc.setFillColor(255, 153, 0);
+        } else {
+            doc.setFillColor(30, 30, 30);
+        }
         doc.rect(rightCol - 80, y - 1, 80, 10, "F");
         doc.setTextColor(255);
         doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
         doc.text("Balance Due:", rightCol - 76, y + 5);
-        doc.text(this.formatCurrency(this.calcTotal()), rightCol - 4, y + 5, { align: "right" });
+        doc.text(this.formatCurrency(balance), rightCol - 4, y + 5, { align: "right" });
         doc.setFont("helvetica", "normal");
 
         // --- Bill To (left side, same height) ---
@@ -1042,6 +1100,21 @@ const App = {
         doc.text("Total:", rightCol - 50, y);
         doc.text(this.formatCurrency(total), rightCol, y, { align: "right" });
         doc.setFont("helvetica", "normal");
+
+        if (this.state.status === "PARTIALLY PAID" || (this.state.amountPaid > 0 && this.state.amountPaid < total)) {
+            y += 5;
+            doc.setFontSize(9);
+            doc.setTextColor(37, 211, 102);
+            doc.text("Amount Paid:", rightCol - 50, y);
+            doc.text("- " + this.formatCurrency(this.state.amountPaid), rightCol, y, { align: "right" });
+            y += 5;
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(255, 94, 0);
+            doc.text("Balance Due:", rightCol - 50, y);
+            doc.text(this.formatCurrency(balance), rightCol, y, { align: "right" });
+            doc.setFont("helvetica", "normal");
+        }
         y += 12;
 
         // --- Notes ---
@@ -1060,7 +1133,6 @@ const App = {
         }
 
         // --- Terms ---
-        // Check if we need a new page
         if (y > 250) { doc.addPage(); y = 20; }
         doc.setFontSize(10);
         doc.setTextColor(255, 94, 0);
@@ -1072,6 +1144,41 @@ const App = {
         doc.setTextColor(100);
         const termLines = doc.splitTextToSize(this.defaults.terms, pageW - margin * 2);
         doc.text(termLines, margin, y);
+
+        // --- Watermark Stamp ---
+        if (this.state.status === "PAID" || this.state.status === "PARTIALLY PAID") {
+            try {
+                if (typeof doc.saveGraphicsState === "function") doc.saveGraphicsState();
+                if (typeof doc.setGState === "function") {
+                    doc.setGState(new doc.GState({ opacity: 0.25 }));
+                }
+
+                doc.setFont("helvetica", "bold");
+                const centerX = pageW / 2;
+                const centerY = 140;
+
+                if (this.state.status === "PAID") {
+                    doc.setTextColor(37, 211, 102);
+                    doc.setFontSize(54);
+                    doc.text("PAID FULL", centerX, centerY, { align: "center", angle: 25 });
+                    doc.setDrawColor(37, 211, 102);
+                    doc.setLineWidth(2.5);
+                    doc.rect(centerX - 60, centerY - 20, 120, 26, "S");
+                } else {
+                    doc.setTextColor(255, 140, 0);
+                    doc.setFontSize(36);
+                    doc.text("PARTIALLY PAID", centerX, centerY - 6, { align: "center", angle: 25 });
+                    doc.setFontSize(16);
+                    doc.text(`PAID: ${this.formatCurrency(this.state.amountPaid || 0)} | BAL: ${this.formatCurrency(balance)}`, centerX, centerY + 8, { align: "center", angle: 25 });
+                    doc.setDrawColor(255, 140, 0);
+                    doc.setLineWidth(2.5);
+                    doc.rect(centerX - 70, centerY - 20, 140, 36, "S");
+                }
+                if (typeof doc.restoreGraphicsState === "function") doc.restoreGraphicsState();
+            } catch (e) {
+                console.warn("Watermark rendering warning:", e);
+            }
+        }
 
         return doc;
     },
@@ -1262,6 +1369,8 @@ const App = {
         this.state.items = [{ service: "", description: "", qty: 1, rate: 0 }];
         this.state.client = { name: "", email: "", phone: "", address: "" };
         this.state.discount = 0;
+        this.state.status = "UNPAID";
+        this.state.amountPaid = 0;
         this.setDefaultDates();
 
         document.getElementById("clientName").value = "";
@@ -1273,6 +1382,141 @@ const App = {
 
         this.renderForm();
         this.updatePreview();
+    },
+
+    // ---- Payment & Watermark Logic ----
+    openPaymentModal(targetInvNum) {
+        if (targetInvNum) {
+            this.loadInvoiceIntoForm(targetInvNum);
+        }
+        const total = this.calcTotal();
+        const invNumEl = document.getElementById("payModalInvNum");
+        const totalEl = document.getElementById("payModalTotal");
+        const halfDesc = document.getElementById("payHalfDesc");
+
+        if (invNumEl) invNumEl.textContent = `#${this.state.invoiceNumber}`;
+        if (totalEl) totalEl.textContent = this.formatCurrency(total);
+        if (halfDesc) halfDesc.textContent = `Pay 50% (${this.formatCurrency(total / 2)}) & auto-create balance invoice`;
+
+        const fullRadio = document.querySelector('input[name="payOption"][value="full"]');
+        if (fullRadio) fullRadio.checked = true;
+
+        const customGroup = document.getElementById("customAmountGroup");
+        if (customGroup) customGroup.style.display = "none";
+
+        const customInput = document.getElementById("customPaidAmount");
+        if (customInput) customInput.value = "";
+
+        this.updatePaymentSummary();
+        this.showModal("paymentModal");
+    },
+
+    updatePaymentSummary() {
+        const total = this.calcTotal();
+        const selectedOpt = document.querySelector('input[name="payOption"]:checked')?.value || "full";
+        const customGroup = document.getElementById("customAmountGroup");
+
+        let amountPaid = total;
+        if (selectedOpt === "full") {
+            if (customGroup) customGroup.style.display = "none";
+            amountPaid = total;
+        } else if (selectedOpt === "half") {
+            if (customGroup) customGroup.style.display = "none";
+            amountPaid = total / 2;
+        } else if (selectedOpt === "custom") {
+            if (customGroup) customGroup.style.display = "block";
+            const customVal = parseFloat(document.getElementById("customPaidAmount")?.value) || 0;
+            amountPaid = Math.min(total, Math.max(0, customVal));
+        }
+
+        const balance = Math.max(0, total - amountPaid);
+
+        const paidValEl = document.getElementById("summaryPaidVal");
+        const balValEl = document.getElementById("summaryBalanceVal");
+
+        if (paidValEl) paidValEl.textContent = this.formatCurrency(amountPaid);
+        if (balValEl) balValEl.textContent = this.formatCurrency(balance);
+    },
+
+    applyPayment(e) {
+        if (e) e.preventDefault();
+        const total = this.calcTotal();
+        const selectedOpt = document.querySelector('input[name="payOption"]:checked')?.value || "full";
+
+        let amountPaid = total;
+        if (selectedOpt === "full") {
+            amountPaid = total;
+        } else if (selectedOpt === "half") {
+            amountPaid = total / 2;
+        } else if (selectedOpt === "custom") {
+            const customVal = parseFloat(document.getElementById("customPaidAmount")?.value) || 0;
+            amountPaid = Math.max(0, customVal);
+        }
+
+        const balance = Math.max(0, total - amountPaid);
+        const origNum = this.state.invoiceNumber;
+        const clientObj = { ...this.state.client };
+        const mainService = this.state.items.find(i => i.service)?.service || "Services";
+
+        if (balance <= 0) {
+            this.state.status = "PAID";
+            this.state.amountPaid = total;
+        } else {
+            this.state.status = "PARTIALLY PAID";
+            this.state.amountPaid = amountPaid;
+        }
+
+        this.saveInvoiceRecord(true);
+        this.updatePreview();
+        document.getElementById("paymentModal").classList.remove("active");
+
+        if (balance > 0) {
+            const newNum = this.createBalanceInvoice(origNum, balance, clientObj, mainService);
+            this.showToast(`💳 Payment recorded! Balance invoice #${newNum} created for ${this.formatCurrency(balance)}.`);
+        } else {
+            this.showToast(`💳 Invoice #${origNum} stamped as PAID FULL!`);
+        }
+    },
+
+    createBalanceInvoice(origNum, balance, client, serviceName) {
+        const newInvoiceNum = this.state.invoiceNumber + 1;
+        this.state.invoiceNumber = newInvoiceNum;
+        this.saveCounter();
+
+        const todayStr = this.formatDateInput(new Date());
+
+        const balanceRecord = {
+            invoiceNumber: newInvoiceNum,
+            invoiceDate: todayStr,
+            dueDate: todayStr,
+            clientName: client.name || "Valued Client",
+            client: { ...client },
+            items: [{
+                service: `Balance Due (Inv #${origNum})`,
+                description: `Remaining balance for Invoice #${origNum} — ${serviceName}`,
+                qty: 1,
+                rate: balance
+            }],
+            taxRate: 0,
+            discount: 0,
+            discountType: "percent",
+            notes: `Reference: Outstanding balance for Invoice #${origNum}.\n\n` + this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote,
+            total: balance,
+            status: "UNPAID",
+            amountPaid: 0,
+            balance: balance,
+            currency: this.defaults.currency,
+            itemsCount: 1,
+            savedAt: new Date().toISOString()
+        };
+
+        const invoices = this.getInvoices();
+        invoices.push(balanceRecord);
+        invoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
+        localStorage.setItem("dc_invoices", JSON.stringify(invoices));
+        this.syncToCloud();
+
+        return newInvoiceNum;
     },
 
     // ---- Modals ----
@@ -1309,13 +1553,25 @@ const App = {
             const itemsCount = inv.itemsCount || (inv.items ? inv.items.length : 0);
             const formattedTotal = this.formatCurrency(parseFloat(inv.total) || 0);
 
+            const status = inv.status || "UNPAID";
+            const paidAmount = parseFloat(inv.amountPaid) || 0;
+            const bal = typeof inv.balance !== "undefined" ? parseFloat(inv.balance) : (status === "PAID" ? 0 : parseFloat(inv.total) || 0);
+
+            let statusBadge = `<span class="status-tag unpaid">UNPAID</span>`;
+            if (status === "PAID") {
+                statusBadge = `<span class="status-tag paid">PAID FULL</span>`;
+            } else if (status === "PARTIALLY PAID") {
+                statusBadge = `<span class="status-tag partial">PAID: ${this.formatCurrency(paidAmount)}</span>`;
+            }
+
             return `
                 <div class="saved-item" style="flex-direction: column; align-items: stretch; gap: 12px; cursor: default;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
                         <div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                 <span style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--accent);">#${inv.invoiceNumber}</span>
                                 <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);">${clientName}</span>
+                                ${statusBadge}
                             </div>
                             <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
                                 Date: ${dateStr}${dueDateStr ? ' • Due: ' + dueDateStr : ''} • ${itemsCount} Item${itemsCount === 1 ? '' : 's'}
@@ -1323,11 +1579,13 @@ const App = {
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">${formattedTotal}</div>
+                            ${status === "PARTIALLY PAID" ? `<div style="font-size: 12px; color: var(--accent); font-weight: 600;">Bal: ${this.formatCurrency(bal)}</div>` : ''}
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap;">
                         <button class="btn btn-primary btn-sm" onclick="App.loadInvoiceIntoForm(${inv.invoiceNumber})">✏️ Edit / Load</button>
-                        <button class="btn btn-secondary btn-sm" onclick="App.downloadPDFForInvoice(${inv.invoiceNumber})">📄 Download PDF</button>
+                        <button class="btn btn-success btn-sm" style="background:#25D366; color:#fff;" onclick="App.openPaymentModal(${inv.invoiceNumber})">💳 Mark Paid</button>
+                        <button class="btn btn-secondary btn-sm" onclick="App.downloadPDFForInvoice(${inv.invoiceNumber})">📄 PDF</button>
                         <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete Invoice #${inv.invoiceNumber}?')) { App.deleteInvoiceRecord(${inv.invoiceNumber}); App.renderInvoicesModal('${this.escHtml(searchTerm)}'); }">Delete</button>
                     </div>
                 </div>

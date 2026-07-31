@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
-    <link rel="stylesheet" href="invoice-styles.css?v=21">
+    <link rel="stylesheet" href="invoice-styles.css?v=22">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -157,8 +157,9 @@
             <!-- Export Actions -->
             <div class="export-actions">
                 <button class="btn btn-primary" id="saveInvoiceBtn">💾 Save Invoice</button>
+                <button class="btn btn-success" id="markPaidBtn">💳 Mark / Clip Paid</button>
                 <button class="btn btn-secondary" id="downloadPdf">📄 Download PDF</button>
-                <button class="btn btn-success" id="shareWhatsapp">💬 Share via WhatsApp</button>
+                <button class="btn btn-success" id="shareWhatsapp" style="background:#25D366;">💬 Share via WhatsApp</button>
                 <button class="btn btn-secondary" id="shareEmail">📧 Share via Email</button>
             </div>
         </div>
@@ -173,6 +174,75 @@
     </div>
 
     <!-- ======== MODALS ======== -->
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-title">
+                <span>💳 Record Payment & Watermark</span>
+                <button class="modal-close">×</button>
+            </div>
+            <div style="background: var(--bg-input); padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px; border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 13px; color: var(--text-secondary);">Target Invoice:</span>
+                    <strong style="color: var(--accent);" id="payModalInvNum">#389</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="font-size: 13px; color: var(--text-secondary);">Total Invoice Amount:</span>
+                    <strong style="color: var(--text-primary); font-size: 16px;" id="payModalTotal">ZAR 0.00</strong>
+                </div>
+            </div>
+
+            <form id="paymentForm">
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <label class="pay-option-card">
+                        <input type="radio" name="payOption" value="full" checked>
+                        <div class="pay-option-content">
+                            <div class="pay-option-title">Paid in Full (100%)</div>
+                            <div class="pay-option-desc">Stamps "PAID FULL" watermark. Balance = ZAR 0.00</div>
+                        </div>
+                    </label>
+
+                    <label class="pay-option-card">
+                        <input type="radio" name="payOption" value="half">
+                        <div class="pay-option-content">
+                            <div class="pay-option-title">Paid Half (50%)</div>
+                            <div class="pay-option-desc" id="payHalfDesc">Stamps "PARTIALLY PAID" and auto-creates balance invoice</div>
+                        </div>
+                    </label>
+
+                    <label class="pay-option-card">
+                        <input type="radio" name="payOption" value="custom">
+                        <div class="pay-option-content">
+                            <div class="pay-option-title">Custom Amount Paid</div>
+                            <div class="pay-option-desc">Specify exact amount received and generate new balance invoice</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="form-group" id="customAmountGroup" style="display: none; margin-bottom: 20px;">
+                    <label class="form-label">Custom Amount Paid (ZAR)</label>
+                    <input type="number" id="customPaidAmount" class="form-input" min="0" step="0.01" placeholder="Enter amount paid">
+                </div>
+
+                <div id="paymentSummaryBox" style="background: rgba(255,94,0,0.1); border: 1px solid rgba(255,94,0,0.25); padding: 14px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span>Amount Paid:</span>
+                        <strong id="summaryPaidVal" style="color: var(--success);">ZAR 0.00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Balance Remaining:</span>
+                        <strong id="summaryBalanceVal" style="color: var(--accent);">ZAR 0.00</strong>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-secondary modal-close" style="flex:1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:2;">💾 Apply Payment & Save Stamp</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Invoices Modal -->
     <div class="modal-overlay" id="invoicesModal">
@@ -292,7 +362,7 @@
         </div>
     </div>
 
-    <script src="invoice-app.js?v=21"></script>
+    <script src="invoice-app.js?v=22"></script>
 </body>
 </html>
 

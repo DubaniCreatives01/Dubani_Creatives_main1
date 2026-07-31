@@ -655,6 +655,91 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
+/* ---- Watermark Stamp & Payment Cards ---- */
+.inv-watermark-stamp {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-18deg);
+    border: 5px double #25D366;
+    color: #25D366;
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: 5px;
+    padding: 10px 28px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    pointer-events: none;
+    user-select: none;
+    box-shadow: 0 0 25px rgba(37, 211, 102, 0.2);
+    z-index: 20;
+    text-shadow: 0 0 10px rgba(37, 211, 102, 0.3);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(2px);
+}
+
+.inv-watermark-stamp.partial {
+    border-color: #ff9900;
+    color: #ff9900;
+    font-size: 28px;
+    letter-spacing: 3px;
+    padding: 8px 20px;
+    box-shadow: 0 0 25px rgba(255, 153, 0, 0.2);
+    text-shadow: 0 0 10px rgba(255, 153, 0, 0.3);
+}
+
+.pay-option-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pay-option-card:hover {
+    border-color: var(--accent);
+    background: #282828;
+}
+
+.pay-option-card input[type="radio"] {
+    accent-color: var(--accent);
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+}
+
+.pay-option-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.pay-option-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.status-tag.unpaid { background: rgba(255, 255, 255, 0.1); color: var(--text-secondary); border: 1px solid var(--border); }
+.status-tag.paid { background: rgba(37, 211, 102, 0.15); color: #25D366; border: 1px solid rgba(37, 211, 102, 0.3); }
+.status-tag.partial { background: rgba(255, 153, 0, 0.15); color: #ff9900; border: 1px solid rgba(255, 153, 0, 0.3); }
+
 /* ---- Responsive ---- */
 @media (max-width: 1100px) {
     .app-layout {
