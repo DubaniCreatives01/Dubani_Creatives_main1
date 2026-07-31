@@ -186,13 +186,13 @@ const App = {
 
     loadInvoiceIntoForm(invoiceNumber) {
         const invoices = this.getInvoices();
-        const inv = invoices.find(i => parseInt(i.invoiceNumber) === parseInt(invoiceNumber));
+        const inv = invoices.find(i => String(i.invoiceNumber) === String(invoiceNumber));
         if (!inv) {
             alert("Saved invoice not found.");
             return;
         }
 
-        this.state.invoiceNumber = parseInt(inv.invoiceNumber);
+        this.state.invoiceNumber = parseInt(inv.invoiceNumber) || inv.invoiceNumber;
         this.state.invoiceDate = inv.invoiceDate || inv.date || this.formatDateInput(new Date());
         this.state.dueDate = inv.dueDate || this.state.invoiceDate;
         this.state.client = inv.client ? { ...inv.client } : { name: inv.clientName || "", email: "", phone: "", address: "" };
@@ -204,18 +204,38 @@ const App = {
         this.state.status = inv.status || "UNPAID";
         this.state.amountPaid = typeof inv.amountPaid !== "undefined" ? parseFloat(inv.amountPaid) : 0;
 
-        document.getElementById("invoiceNumber").value = this.state.invoiceNumber;
-        document.getElementById("invoiceDate").value = this.state.invoiceDate;
-        document.getElementById("dueDate").value = this.state.dueDate;
-        document.getElementById("taxRate").value = this.state.taxRate;
-        document.getElementById("discount").value = this.state.discount;
-        document.getElementById("discountType").value = this.state.discountType;
-        document.getElementById("invoiceNotes").value = this.state.notes;
+        const invNumInput = document.getElementById("invoiceNumber");
+        if (invNumInput) invNumInput.value = this.state.invoiceNumber;
 
-        document.getElementById("clientName").value = this.state.client.name || "";
-        document.getElementById("clientEmail").value = this.state.client.email || "";
-        document.getElementById("clientPhone").value = this.state.client.phone || "";
-        document.getElementById("clientAddress").value = this.state.client.address || "";
+        const invDateInput = document.getElementById("invoiceDate");
+        if (invDateInput) invDateInput.value = this.state.invoiceDate;
+
+        const dueDateInput = document.getElementById("dueDate");
+        if (dueDateInput) dueDateInput.value = this.state.dueDate;
+
+        const taxRateInput = document.getElementById("taxRate");
+        if (taxRateInput) taxRateInput.value = this.state.taxRate;
+
+        const discountInput = document.getElementById("discount");
+        if (discountInput) discountInput.value = this.state.discount;
+
+        const discountTypeInput = document.getElementById("discountType");
+        if (discountTypeInput) discountTypeInput.value = this.state.discountType;
+
+        const notesInput = document.getElementById("invoiceNotes");
+        if (notesInput) notesInput.value = this.state.notes;
+
+        const clientNameInput = document.getElementById("clientName");
+        if (clientNameInput) clientNameInput.value = this.state.client.name || "";
+
+        const clientEmailInput = document.getElementById("clientEmail");
+        if (clientEmailInput) clientEmailInput.value = this.state.client.email || "";
+
+        const clientPhoneInput = document.getElementById("clientPhone");
+        if (clientPhoneInput) clientPhoneInput.value = this.state.client.phone || "";
+
+        const clientAddressInput = document.getElementById("clientAddress");
+        if (clientAddressInput) clientAddressInput.value = this.state.client.address || "";
 
         this.populateClientSelect();
         const select = document.getElementById("clientSelect");
@@ -238,7 +258,7 @@ const App = {
 
     deleteInvoiceRecord(invoiceNumber) {
         let invoices = this.getInvoices();
-        invoices = invoices.filter(i => parseInt(i.invoiceNumber) !== parseInt(invoiceNumber));
+        invoices = invoices.filter(i => String(i.invoiceNumber) !== String(invoiceNumber));
         localStorage.setItem("dc_invoices", JSON.stringify(invoices));
         this.syncToCloud();
         this.showToast(`Deleted Invoice #${invoiceNumber}.`);
@@ -1564,6 +1584,8 @@ const App = {
                 statusBadge = `<span class="status-tag partial">PAID: ${this.formatCurrency(paidAmount)}</span>`;
             }
 
+            const invNumSafe = String(inv.invoiceNumber).replace(/'/g, "\\'");
+
             return `
                 <div class="saved-item" style="flex-direction: column; align-items: stretch; gap: 12px; cursor: default;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
@@ -1583,10 +1605,10 @@ const App = {
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-primary btn-sm" onclick="App.loadInvoiceIntoForm(${inv.invoiceNumber})">✏️ Edit / Load</button>
-                        <button class="btn btn-success btn-sm" style="background:#25D366; color:#fff;" onclick="App.openPaymentModal(${inv.invoiceNumber})">💳 Mark Paid</button>
-                        <button class="btn btn-secondary btn-sm" onclick="App.downloadPDFForInvoice(${inv.invoiceNumber})">📄 PDF</button>
-                        <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete Invoice #${inv.invoiceNumber}?')) { App.deleteInvoiceRecord(${inv.invoiceNumber}); App.renderInvoicesModal('${this.escHtml(searchTerm)}'); }">Delete</button>
+                        <button class="btn btn-primary btn-sm" onclick="window.App.loadInvoiceIntoForm('${invNumSafe}')">✏️ Edit / Load</button>
+                        <button class="btn btn-success btn-sm" style="background:#25D366; color:#fff;" onclick="window.App.openPaymentModal('${invNumSafe}')">💳 Mark Paid</button>
+                        <button class="btn btn-secondary btn-sm" onclick="window.App.downloadPDFForInvoice('${invNumSafe}')">📄 PDF</button>
+                        <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete Invoice #${invNumSafe}?')) { window.App.deleteInvoiceRecord('${invNumSafe}'); window.App.renderInvoicesModal('${this.escHtml(searchTerm)}'); }">Delete</button>
                     </div>
                 </div>
             `;
@@ -1685,5 +1707,6 @@ const App = {
     }
 };
 
-// Boot
+// Boot & Global Bind
+window.App = App;
 document.addEventListener("DOMContentLoaded", () => App.init());
