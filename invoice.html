@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
-    <link rel="stylesheet" href="invoice-styles.css?v=25">
+    <link rel="stylesheet" href="invoice-styles.css?v=26">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -218,6 +218,14 @@
                             <div class="pay-option-desc">Specify exact amount received and generate new balance invoice</div>
                         </div>
                     </label>
+
+                    <label class="pay-option-card" style="border-color: rgba(255, 68, 68, 0.35);">
+                        <input type="radio" name="payOption" value="unpaid">
+                        <div class="pay-option-content">
+                            <div class="pay-option-title" style="color: #ff4444;">↩️ Retract Payment (Reset to UNPAID)</div>
+                            <div class="pay-option-desc">Removes PAID / PARTIAL watermark stamp and resets balance to full amount</div>
+                        </div>
+                    </label>
                 </div>
 
                 <div class="form-group" id="customAmountGroup" style="display: none; margin-bottom: 20px;">
@@ -362,7 +370,7 @@
         </div>
     </div>
 
-    <script src="invoice-app.js?v=25"></script>
+    <script src="invoice-app.js?v=26"></script>
 </body>
 </html>
 

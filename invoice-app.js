@@ -1482,6 +1482,9 @@ const App = {
             if (customGroup) customGroup.style.display = "block";
             const customVal = parseFloat(document.getElementById("customPaidAmount")?.value) || 0;
             amountPaid = Math.min(total, Math.max(0, customVal));
+        } else if (selectedOpt === "unpaid") {
+            if (customGroup) customGroup.style.display = "none";
+            amountPaid = 0;
         }
 
         const balance = Math.max(0, total - amountPaid);
@@ -1497,6 +1500,13 @@ const App = {
         if (e) e.preventDefault();
         const total = this.calcTotal();
         const selectedOpt = document.querySelector('input[name="payOption"]:checked')?.value || "full";
+        const origNum = this.state.invoiceNumber;
+
+        if (selectedOpt === "unpaid") {
+            this.retractPaymentStatus();
+            document.getElementById("paymentModal").classList.remove("active");
+            return;
+        }
 
         let amountPaid = total;
         if (selectedOpt === "full") {
@@ -1509,7 +1519,6 @@ const App = {
         }
 
         const balance = Math.max(0, total - amountPaid);
-        const origNum = this.state.invoiceNumber;
         const clientObj = { ...this.state.client };
         const mainService = this.state.items.find(i => i.service)?.service || "Services";
 
@@ -1531,6 +1540,24 @@ const App = {
         } else {
             this.showToast(`💳 Invoice #${origNum} stamped as PAID FULL!`);
         }
+    },
+
+    retractPaymentStatus(targetInvNum) {
+        if (targetInvNum) {
+            this.loadInvoiceIntoForm(targetInvNum);
+        }
+        this.state.status = "UNPAID";
+        this.state.amountPaid = 0;
+        this.saveInvoiceRecord(true);
+        this.updatePreview();
+
+        if (document.getElementById("invoicesModal").classList.contains("active")) {
+            this.renderInvoicesModal();
+        }
+        if (document.getElementById("clientsModal").classList.contains("active")) {
+            this.renderClientsModal();
+        }
+        this.showToast(`↩️ Retracted payment status for Invoice #${this.state.invoiceNumber}. Marked as UNPAID.`);
     },
 
     createBalanceInvoice(origNum, balance, client, serviceName) {
@@ -1641,7 +1668,8 @@ const App = {
                     </div>
                     <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap;">
                         <button class="btn btn-primary btn-sm" onclick="window.App.loadInvoiceIntoForm('${invNumSafe}')">✏️ Edit / Load</button>
-                        <button class="btn btn-success btn-sm" style="background:#25D366; color:#fff;" onclick="window.App.openPaymentModal('${invNumSafe}')">💳 Mark Paid</button>
+                        <button class="btn btn-success btn-sm" style="background:#25D366; color:#fff;" onclick="window.App.openPaymentModal('${invNumSafe}')">💳 ${status === 'UNPAID' ? 'Mark Paid' : 'Update Paid'}</button>
+                        ${(status === 'PAID' || status === 'PARTIALLY PAID') ? `<button class="btn btn-secondary btn-sm" style="border-color:rgba(255,68,68,0.5); color:#ff4444;" onclick="if(confirm('Retract payment status for Invoice #${invNumSafe}?')) window.App.retractPaymentStatus('${invNumSafe}')">↩️ Retract Paid</button>` : ''}
                         <button class="btn btn-secondary btn-sm" onclick="window.App.downloadPDFForInvoice('${invNumSafe}')">📄 PDF</button>
                         <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete Invoice #${invNumSafe}?')) { window.App.deleteInvoiceRecord('${invNumSafe}'); window.App.renderInvoicesModal('${this.escHtml(searchTerm)}'); }">Delete</button>
                     </div>
