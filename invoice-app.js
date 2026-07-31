@@ -195,10 +195,45 @@ const App = {
         this.state.invoiceNumber = parseInt(inv.invoiceNumber) || inv.invoiceNumber;
         this.state.invoiceDate = inv.invoiceDate || inv.date || this.formatDateInput(new Date());
         this.state.dueDate = inv.dueDate || this.state.invoiceDate;
-        this.state.client = inv.client ? { ...inv.client } : { name: inv.clientName || "", email: "", phone: "", address: "" };
-        this.state.items = inv.items && inv.items.length ? JSON.parse(JSON.stringify(inv.items)) : [{ service: "", description: "", qty: 1, rate: 0 }];
-        this.state.taxRate = typeof inv.taxRate !== "undefined" ? inv.taxRate : this.defaults.taxRate;
-        this.state.discount = typeof inv.discount !== "undefined" ? inv.discount : 0;
+
+        // Client lookup: if client object missing or incomplete, lookup in saved clients
+        let clientObj = inv.client ? { ...inv.client } : { name: inv.clientName || "", email: "", phone: "", address: "" };
+        if (!clientObj.phone || !clientObj.email) {
+            const savedClients = this.getClients();
+            const matchedClient = savedClients.find(c => c.name.toLowerCase() === (clientObj.name || "").toLowerCase());
+            if (matchedClient) {
+                clientObj = {
+                    name: matchedClient.name || clientObj.name,
+                    email: matchedClient.email || clientObj.email,
+                    phone: matchedClient.phone || clientObj.phone,
+                    address: matchedClient.address || clientObj.address
+                };
+            }
+        }
+        this.state.client = clientObj;
+
+        // Items lookup: if items array is missing/empty but invoice total > 0, generate line item for total
+        const invTotal = parseFloat(inv.total) || 0;
+        if (Array.isArray(inv.items) && inv.items.length > 0) {
+            this.state.items = inv.items.map(item => ({
+                service: item.service || item.name || item.title || "Services",
+                description: item.description || item.desc || "",
+                qty: typeof item.qty !== "undefined" ? parseFloat(item.qty) : (item.quantity ? parseFloat(item.quantity) : 1),
+                rate: typeof item.rate !== "undefined" ? parseFloat(item.rate) : (item.price ? parseFloat(item.price) : 0)
+            }));
+        } else if (invTotal > 0) {
+            this.state.items = [{
+                service: "Design & Development Services",
+                description: `Services rendered for Invoice #${this.state.invoiceNumber}`,
+                qty: 1,
+                rate: invTotal
+            }];
+        } else {
+            this.state.items = [{ service: "", description: "", qty: 1, rate: 0 }];
+        }
+
+        this.state.taxRate = typeof inv.taxRate !== "undefined" ? parseFloat(inv.taxRate) : this.defaults.taxRate;
+        this.state.discount = typeof inv.discount !== "undefined" ? parseFloat(inv.discount) : 0;
         this.state.discountType = inv.discountType || "percent";
         this.state.notes = typeof inv.notes !== "undefined" ? inv.notes : (this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote);
         this.state.status = inv.status || "UNPAID";
@@ -248,7 +283,7 @@ const App = {
         this.updatePreview();
 
         document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
-        this.showToast(`✏️ Loaded Invoice #${inv.invoiceNumber} for editing.`);
+        this.showToast(`✏️ Loaded Invoice #${inv.invoiceNumber} (${this.formatCurrency(this.calcTotal())}) for editing.`);
     },
 
     downloadPDFForInvoice(invoiceNumber) {
