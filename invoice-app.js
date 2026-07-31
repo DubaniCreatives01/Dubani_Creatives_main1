@@ -145,10 +145,10 @@ const App = {
             return false;
         }
         const invoices = this.getInvoices();
-        const existingIdx = invoices.findIndex(i => parseInt(i.invoiceNumber) === parseInt(this.state.invoiceNumber));
+        const existingIdx = invoices.findIndex(i => String(i.invoiceNumber).trim() === String(this.state.invoiceNumber).trim());
 
         const record = {
-            invoiceNumber: parseInt(this.state.invoiceNumber),
+            invoiceNumber: parseInt(this.state.invoiceNumber) || this.state.invoiceNumber,
             invoiceDate: this.state.invoiceDate,
             dueDate: this.state.dueDate,
             clientName: this.state.client.name || "Unnamed Client",
@@ -174,7 +174,7 @@ const App = {
         }
 
         // Sort descending by number
-        invoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
+        invoices.sort((a, b) => (parseInt(b.invoiceNumber) || 0) - (parseInt(a.invoiceNumber) || 0));
         localStorage.setItem("dc_invoices", JSON.stringify(invoices));
         this.syncToCloud();
 
@@ -360,14 +360,14 @@ const App = {
                     const localInvoices = this.getInvoices();
                     const mergedInvoices = [...localInvoices];
                     cloudData.invoices.forEach(ci => {
-                        const idx = mergedInvoices.findIndex(li => parseInt(li.invoiceNumber) === parseInt(ci.invoiceNumber));
+                        const idx = mergedInvoices.findIndex(li => String(li.invoiceNumber).trim() === String(ci.invoiceNumber).trim());
                         if (idx >= 0) {
                             mergedInvoices[idx] = { ...mergedInvoices[idx], ...ci };
                         } else {
                             mergedInvoices.push(ci);
                         }
                     });
-                    mergedInvoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
+                    mergedInvoices.sort((a, b) => (parseInt(b.invoiceNumber) || 0) - (parseInt(a.invoiceNumber) || 0));
                     localStorage.setItem("dc_invoices", JSON.stringify(mergedInvoices));
                     updated = true;
                 }
@@ -1658,28 +1658,40 @@ const App = {
         list.innerHTML = clients.length === 0
             ? '<p style="color: var(--text-muted); font-size: 13px;">No saved clients yet.</p>'
             : clients.map(c => {
-                const clientInvoices = allInvoices.filter(i => (i.clientName || "").toLowerCase() === c.name.toLowerCase());
+                const cName = (c.name || "").trim().toLowerCase();
+                const clientInvoices = allInvoices.filter(i => {
+                    const iName = (i.clientName || (i.client && i.client.name) || "").trim().toLowerCase();
+                    return iName === cName || (iName && cName && (iName.includes(cName) || cName.includes(iName)));
+                });
+
                 const invoicesHtml = clientInvoices.length > 0
                     ? `<div class="client-history-list" style="margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px;">
                         <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Past Invoices (${clientInvoices.length})</span>
                         <div style="margin-top: 6px; display: grid; gap: 6px;">
-                            ${clientInvoices.map(inv => `
+                            ${clientInvoices.map(inv => {
+                                const invNumSafe = String(inv.invoiceNumber).replace(/'/g, "\\'");
+                                const dateVal = this.formatDateDisplay(inv.invoiceDate || inv.date);
+                                const totVal = parseFloat(inv.total) || 0;
+                                return `
                                 <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 6px 10px; border-radius: 6px; font-size: 12px; flex-wrap: wrap; gap: 6px;">
                                     <div>
                                         <span style="color: var(--accent); font-weight: bold;">#${inv.invoiceNumber}</span>
-                                        <span style="color: var(--text-muted); margin-left: 6px;">${this.formatDateDisplay(inv.invoiceDate || inv.date)}</span>
+                                        <span style="color: var(--text-muted); margin-left: 6px;">${dateVal}</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 6px;">
-                                        <span style="color: var(--text-primary); font-weight: 600;">${inv.currency || 'ZAR'} ${parseFloat(inv.total).toFixed(2)}</span>
-                                        <button class="btn btn-primary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="App.loadInvoiceIntoForm('${inv.invoiceNumber}')">✏️ Edit</button>
-                                        <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="App.downloadPDFForInvoice('${inv.invoiceNumber}')">📄 PDF</button>
-                                        <button class="btn btn-sm" style="padding: 2px 6px; background: transparent; color: #ff4444;" onclick="if(confirm('Delete Invoice #${inv.invoiceNumber}?')) { App.deleteInvoiceRecord('${inv.invoiceNumber}'); App.renderClientsModal(); }">×</button>
+                                        <span style="color: var(--text-primary); font-weight: 600;">${inv.currency || 'ZAR'} ${totVal.toFixed(2)}</span>
+                                        <button class="btn btn-primary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="window.App.loadInvoiceIntoForm('${invNumSafe}')">✏️ Edit</button>
+                                        <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="window.App.downloadPDFForInvoice('${invNumSafe}')">📄 PDF</button>
+                                        <button class="btn btn-sm" style="padding: 2px 6px; background: transparent; color: #ff4444;" onclick="if(confirm('Delete Invoice #${invNumSafe}?')) { window.App.deleteInvoiceRecord('${invNumSafe}'); window.App.renderClientsModal(); }">×</button>
                                     </div>
                                 </div>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </div>
                        </div>`
                     : '<div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">No invoices generated for this client yet.</div>';
+
+                const cNameSafe = (c.name || "").replace(/'/g, "\\'");
 
                 return `
                 <div class="saved-item" style="flex-direction: column; align-items: stretch; cursor: default;">
@@ -1689,7 +1701,7 @@ const App = {
                             <p>${this.escHtml(c.phone || "")} ${c.email ? "• " + this.escHtml(c.email) : ""}</p>
                         </div>
                         <div class="saved-item-actions">
-                            <button class="btn btn-danger btn-sm" onclick="App.deleteClient('${c.name.replace(/'/g, "\\'")}'); App.renderClientsModal(); App.populateClientSelect();">Delete Client</button>
+                            <button class="btn btn-danger btn-sm" onclick="window.App.deleteClient('${cNameSafe}'); window.App.renderClientsModal(); window.App.populateClientSelect();">Delete Client</button>
                         </div>
                     </div>
                     ${invoicesHtml}
