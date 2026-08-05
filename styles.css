@@ -1705,55 +1705,62 @@ body.light-mode .section-divider-line {
     color: #fff;
     font-weight: 600;
 }
+/* ==========================================================================
+   FULL-BLEED SEAMLESS TILE / COLLAGE GALLERY GRID (OUR WORK PAGE)
+   ========================================================================== */
+
+/* Full-Width Edge-to-Edge Container */
 .gallery-grid-filter {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 30px;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 30px 0 0 0 !important;
+    padding: 0 !important;
 }
 
-/* Vibrant Solid Color Background Cards (Out of the Blue Style) */
+/* Individual Collage / Tile Card Item */
 .gallery-grid-filter .gallery-item {
-    border-radius: 24px;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
     overflow: hidden;
     position: relative;
     cursor: pointer;
     aspect-ratio: 4/3;
-    padding: 24px;
+    padding: 0 !important;
+    margin: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s ease,
-                opacity 0.4s ease;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.4s ease, filter 0.4s ease;
 }
 
 .gallery-grid-filter .gallery-item.hidden { display: none !important; }
 
-/* Palette Rotation matching reference screenshot */
-.gallery-grid-filter .gallery-item:nth-child(9n+1) { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); } /* Amber Gold */
-.gallery-grid-filter .gallery-item:nth-child(9n+2) { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); } /* Deep Royal Blue */
-.gallery-grid-filter .gallery-item:nth-child(9n+3) { background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); } /* Crimson Red */
-.gallery-grid-filter .gallery-item:nth-child(9n+4) { background: linear-gradient(135deg, #f472b6 0%, #db2777 100%); } /* Soft Coral Pink */
-.gallery-grid-filter .gallery-item:nth-child(9n+5) { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); } /* Cyan Blue */
-.gallery-grid-filter .gallery-item:nth-child(9n+6) { background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); } /* Pure Crisp White */
-.gallery-grid-filter .gallery-item:nth-child(9n+7) { background: linear-gradient(135deg, #059669 0%, #047857 100%); } /* Emerald Green */
-.gallery-grid-filter .gallery-item:nth-child(9n+8) { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); } /* Deep Purple */
-.gallery-grid-filter .gallery-item:nth-child(9n+9) { background: linear-gradient(135deg, #ff5e00 0%, #d94f00 100%); } /* Dubani Orange */
+/* Vibrant Solid Color Palette Rotation (Out of the Blue Style) */
+.gallery-grid-filter .gallery-item:nth-child(9n+1) { background: #f59e0b; } /* Amber Gold */
+.gallery-grid-filter .gallery-item:nth-child(9n+2) { background: #1d4ed8; } /* Royal Blue */
+.gallery-grid-filter .gallery-item:nth-child(9n+3) { background: #e11d48; } /* Crimson Red */
+.gallery-grid-filter .gallery-item:nth-child(9n+4) { background: #f472b6; } /* Coral / Pink */
+.gallery-grid-filter .gallery-item:nth-child(9n+5) { background: #0284c7; } /* Cyan Blue */
+.gallery-grid-filter .gallery-item:nth-child(9n+6) { background: #ffffff; } /* Crisp White */
+.gallery-grid-filter .gallery-item:nth-child(9n+7) { background: #059669; } /* Emerald Green */
+.gallery-grid-filter .gallery-item:nth-child(9n+8) { background: #7c3aed; } /* Deep Purple */
+.gallery-grid-filter .gallery-item:nth-child(9n+9) { background: #ff5e00; } /* Dubani Orange */
 
-/* Mockup / Image inside the Vibrant Card Block */
+/* Mockup / Image inside the Vibrant Tile Block */
 .gallery-grid-filter .gallery-item-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 14px;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease, box-shadow 0.5s ease;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
     will-change: transform;
+    display: block;
 }
 
 .gallery-placeholder {
@@ -1768,33 +1775,28 @@ body.light-mode .section-divider-line {
     font-size: 14px;
     color: rgba(255,255,255,0.85);
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 14px;
+    border-radius: 0 !important;
     transition: transform 0.5s ease;
 }
 .gallery-placeholder svg { width: 40px; height: 40px; fill: rgba(255,255,255,0.7); }
 
-/* Hover Tilt-Zoom & Shadow Expansion */
-.gallery-grid-filter .gallery-item:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 94, 0, 0.3);
-}
-
+/* Hover Zoom-Tilt Effect inside the Seamless Tile */
 .gallery-grid-filter .gallery-item:hover .gallery-item-img {
-    transform: scale(1.08) rotate(2deg);
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
-    filter: brightness(1.05);
+    transform: scale(1.09) rotate(2deg);
+    filter: brightness(1.06) contrast(1.02);
+    z-index: 2;
 }
 
 .gallery-grid-filter .gallery-item:nth-child(even):hover .gallery-item-img {
-    transform: scale(1.08) rotate(-2deg);
+    transform: scale(1.09) rotate(-2deg);
 }
 
-/* Category Badge Tag */
+/* Sharp Category Tag Badge */
 .gallery-grid-filter .gallery-tag {
     position: absolute;
-    top: 18px;
-    left: 18px;
-    background: rgba(10, 10, 15, 0.75);
+    top: 16px;
+    left: 16px;
+    background: rgba(10, 10, 15, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: #fff;
@@ -1803,26 +1805,26 @@ body.light-mode .section-divider-line {
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 6px 14px;
-    border-radius: 30px;
+    border-radius: 0 !important;
     border: 1px solid rgba(255, 255, 255, 0.2);
     font-family: var(--font-heading);
     z-index: 3;
     pointer-events: none;
 }
 
-/* Gallery Overlay & Click-to-View Badge */
+/* Tile Overlay & Click-to-View Badge */
 .gallery-grid-filter .gallery-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.1) 20%, rgba(0,0,0,0.88) 100%);
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 20%, rgba(0,0,0,0.92) 100%);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 24px;
+    padding: 28px;
     opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
-    border-radius: 24px;
+    border-radius: 0 !important;
 }
 
 .gallery-grid-filter .gallery-item:hover .gallery-overlay {
@@ -1834,7 +1836,7 @@ body.light-mode .section-divider-line {
     font-weight: 700;
     font-family: var(--font-heading);
     color: #fff;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     text-shadow: 0 2px 10px rgba(0,0,0,0.8);
 }
 
@@ -1846,8 +1848,8 @@ body.light-mode .section-divider-line {
     color: #fff;
     font-size: 12px;
     font-weight: 700;
-    padding: 8px 16px;
-    border-radius: 30px;
+    padding: 8px 18px;
+    border-radius: 0 !important;
     width: fit-content;
     box-shadow: 0 4px 15px rgba(255, 94, 0, 0.5);
     transition: transform 0.3s ease, background 0.3s ease;
@@ -1855,6 +1857,25 @@ body.light-mode .section-divider-line {
 
 .gallery-grid-filter .gallery-item:hover .gallery-view-btn {
     transform: scale(1.05);
+}
+
+/* Responsive Grid Columns */
+@media (min-width: 1400px) {
+    .gallery-grid-filter {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 991px) {
+    .gallery-grid-filter {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .gallery-grid-filter {
+        grid-template-columns: 1fr;
+    }
 }
     margin-top: 12px;
     text-decoration: none;
