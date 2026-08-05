@@ -301,23 +301,39 @@ body {
 }
 
 /* --- Contra Achievement Badge Widget --- */
+/* --- Contra Achievement Badge Widget (Top Centered & Enlarged) --- */
 .hero-badge-widget {
     position: relative;
     display: inline-flex;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 16px 22px;
+    align-items: center;
+    background: rgba(15, 15, 22, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 2px solid rgba(255, 94, 0, 0.7);
+    border-radius: 50px;
+    padding: 16px 28px;
     text-decoration: none;
     overflow: hidden;
     z-index: 12;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    margin: 0 auto 30px auto;
+    max-width: 580px;
+    width: fit-content;
+    box-shadow: 0 12px 35px rgba(255, 94, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    animation: badgePulseGlow 2.5s ease-in-out infinite;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+}
+
+@keyframes badgePulseGlow {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(255, 94, 0, 0.3), 0 0 0 0 rgba(255, 94, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 94, 0, 0.7);
+    }
+    50% {
+        box-shadow: 0 16px 45px rgba(255, 94, 0, 0.65), 0 0 25px 8px rgba(255, 94, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 94, 0, 1);
+    }
 }
 
 /* Light Shine sweep diagonal reflection */
@@ -331,37 +347,30 @@ body {
     background: linear-gradient(
         to right,
         rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.2) 50%,
         rgba(255, 255, 255, 0) 100%
     );
     transform: skewX(-25deg);
     pointer-events: none;
-    animation: badgeShine 5.5s ease-in-out infinite;
+    animation: badgeShine 4.5s ease-in-out infinite;
 }
 
 @keyframes badgeShine {
-    0% {
-        left: -150%;
-    }
-    18% {
-        left: 150%;
-    }
-    100% {
-        left: 150%;
-    }
+    0% { left: -150%; }
+    22% { left: 150%; }
+    100% { left: 150%; }
 }
 
 .hero-badge-widget:hover {
-    transform: translateY(-5px) scale(1.02);
-    border-color: rgba(255, 94, 0, 0.35);
-    box-shadow: 0 20px 40px rgba(255, 94, 0, 0.12), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px) scale(1.04);
+    border-color: #ff5e00;
+    box-shadow: 0 22px 50px rgba(255, 94, 0, 0.5);
 }
 
 .badge-content {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     position: relative;
     z-index: 2;
     width: 100%;
@@ -371,75 +380,113 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    background: rgba(255, 94, 0, 0.12);
-    border: 1px solid rgba(255, 94, 0, 0.25);
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 94, 0, 0.2);
+    border: 1.5px solid rgba(255, 94, 0, 0.5);
     border-radius: 50%;
-    color: var(--primary-color);
+    color: #ff5e00;
     flex-shrink: 0;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease;
+    animation: starBlink 1.4s ease-in-out infinite;
+}
+
+@keyframes starBlink {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(255, 94, 0, 0.9));
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(0.85);
+        filter: drop-shadow(0 0 2px rgba(255, 94, 0, 0.2));
+    }
 }
 
 .hero-badge-widget:hover .badge-icon {
-    transform: rotate(15deg) scale(1.08);
-    background: rgba(255, 94, 0, 0.2);
+    transform: rotate(15deg) scale(1.1);
 }
 
 .badge-text-box {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    text-align: left;
 }
 
 .badge-tag {
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 2px;
+    letter-spacing: 1.5px;
+    color: #ff5e00;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.blinking-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #ff5e00;
+    box-shadow: 0 0 10px #ff5e00;
+    animation: dotBlink 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes dotBlink {
+    0% {
+        opacity: 0.2;
+        transform: scale(0.7);
+        box-shadow: 0 0 2px #ff5e00;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.2);
+        box-shadow: 0 0 12px #ff5e00;
+    }
 }
 
 .badge-title {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 800;
     font-family: var(--font-heading);
-    color: var(--light);
+    color: #ffffff;
+    line-height: 1.3;
 }
 
 .badge-arrow {
     display: flex;
     align-items: center;
-    color: rgba(255, 255, 255, 0.35);
-    margin-left: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 12px;
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .hero-badge-widget:hover .badge-arrow {
-    transform: translateX(3px);
-    color: var(--primary-color);
+    transform: translateX(4px);
+    color: #ff5e00;
 }
 
-/* Badge Layout Queries */
-@media (min-width: 992px) {
+/* Badge Responsive Queries */
+@media (max-width: 767px) {
     .hero-badge-widget {
-        position: absolute;
-        left: -40px;
-        top: 38%;
-        transform: translateY(-50%);
-        max-width: 340px;
+        padding: 12px 20px;
+        max-width: 92%;
+        margin-bottom: 24px;
     }
-}
-
-@media (max-width: 991px) {
-    .hero-badge-widget {
-        display: inline-flex;
-        margin: 0 auto 40px;
-        max-width: 340px;
-        width: calc(100% - 32px);
-        justify-content: center;
-        padding: 14px 18px;
+    .badge-icon {
+        width: 36px;
+        height: 36px;
+    }
+    .badge-title {
+        font-size: 13px;
+    }
+    .badge-tag {
+        font-size: 10px;
     }
 }
 
