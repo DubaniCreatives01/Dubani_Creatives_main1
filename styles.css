@@ -2975,3 +2975,243 @@ body.light-mode .sidebar-close {
         will-change: transform;
     }
 }
+
+/* ==========================================================================
+   ULTRA-PREMIUM IMAGE STYLING, HOVER TILT-ZOOM & FULLSCREEN LIGHTBOX
+   ========================================================================== */
+
+/* Base Image & Photo Container Styles */
+.gallery-item,
+.project-image-box,
+.portfolio-slide-img,
+.personal-about-image-container,
+.contra-widget,
+.cv-photo-wrapper,
+.project-card-image-wrap,
+.photo-card {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 94, 0, 0.05);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.5s ease, 
+                filter 0.5s ease;
+    will-change: transform;
+    cursor: pointer;
+}
+
+/* Individual Image Element Styling */
+.gallery-item img,
+.gallery-item-img,
+.project-image,
+.portfolio-slide-img,
+.personal-portrait-img,
+.project-image-box img,
+.photo-card img,
+img.zoom-tilt {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                filter 0.5s ease;
+    will-change: transform;
+    cursor: pointer;
+}
+
+/* Hover Tilt-Zoom Effect */
+.gallery-item:hover img,
+.gallery-item-img:hover,
+.project-image-box:hover img,
+.portfolio-slide-img:hover,
+.personal-about-image-container:hover .personal-portrait-img,
+.project-card:hover .project-image,
+.photo-card:hover img,
+img.zoom-tilt:hover {
+    transform: scale(1.09) rotate(2deg) translateY(-2px);
+    filter: brightness(1.06) contrast(1.02);
+}
+
+/* Alternating tilt angle for multi-item grids/galleries */
+.gallery-item:nth-child(even):hover img,
+.portfolio-slide:nth-child(even):hover .portfolio-slide-img,
+.project-block:nth-child(even):hover .project-image {
+    transform: scale(1.09) rotate(-2deg) translateY(-2px);
+}
+
+/* Container Glow & Border highlight on hover */
+.gallery-item:hover,
+.project-image-box:hover,
+.personal-about-image-container:hover,
+.contra-widget:hover,
+.project-card-image-wrap:hover,
+.photo-card:hover {
+    border-color: rgba(255, 94, 0, 0.55);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 94, 0, 0.35);
+}
+
+/* Fullscreen Lightbox Overlay Styles */
+.dc-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.dc-lightbox-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.dc-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 8, 12, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.dc-lightbox-container {
+    position: relative;
+    z-index: 2;
+    max-width: 94vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.92);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dc-lightbox-overlay.active .dc-lightbox-container {
+    transform: scale(1);
+}
+
+.dc-lightbox-header {
+    position: absolute;
+    top: -55px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    color: #fff;
+    font-family: var(--font-heading, sans-serif);
+}
+
+.dc-lightbox-counter {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.5px;
+}
+
+.dc-lightbox-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dc-lightbox-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(10px);
+}
+
+.dc-lightbox-btn:hover {
+    background: #ff5e00;
+    border-color: #ff5e00;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 94, 0, 0.6);
+}
+
+.dc-lightbox-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 92vw;
+    max-height: 84vh;
+}
+
+.dc-lightbox-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 94, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.dc-lightbox-img.is-zoomed {
+    max-width: none;
+    max-height: none;
+    cursor: zoom-out;
+    transform: scale(1.4);
+}
+
+.dc-lightbox-caption {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    max-width: 600px;
+    font-family: var(--font-body, sans-serif);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.dc-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 32px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(10px);
+}
+
+.dc-nav-prev { left: -75px; }
+.dc-nav-next { right: -75px; }
+
+.dc-lightbox-nav:hover {
+    background: #ff5e00;
+    border-color: #ff5e00;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 94, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+    .dc-nav-prev { left: 10px; }
+    .dc-nav-next { right: 10px; }
+    .dc-lightbox-header { top: -45px; }
+}
+

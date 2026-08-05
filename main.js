@@ -746,5 +746,166 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initHeroStats();
 
+    // --- Fullscreen Image Lightbox Engine ---
+    const initImageLightbox = () => {
+        // Create modal element if missing
+        let modal = document.getElementById("dcLightboxModal");
+        if (!modal) {
+            modal = document.createElement("div");
+            modal.id = "dcLightboxModal";
+            modal.className = "dc-lightbox-overlay";
+            modal.setAttribute("role", "dialog");
+            modal.setAttribute("aria-hidden", "true");
+            modal.innerHTML = `
+                <div class="dc-lightbox-backdrop"></div>
+                <div class="dc-lightbox-container">
+                    <header class="dc-lightbox-header">
+                        <span class="dc-lightbox-counter" id="dcLightboxCounter">1 / 1</span>
+                        <div class="dc-lightbox-actions">
+                            <button class="dc-lightbox-btn dc-btn-zoom" id="dcLightboxZoomBtn" title="Toggle Zoom (Z)">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            </button>
+                            <button class="dc-lightbox-btn dc-btn-close" id="dcLightboxCloseBtn" title="Close (Esc)">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    </header>
+
+                    <button class="dc-lightbox-nav dc-nav-prev" id="dcLightboxPrevBtn" title="Previous (Left Arrow)">‹</button>
+                    <button class="dc-lightbox-nav dc-nav-next" id="dcLightboxNextBtn" title="Next (Right Arrow)">›</button>
+
+                    <div class="dc-lightbox-content">
+                        <img id="dcLightboxImage" class="dc-lightbox-img" src="" alt="">
+                        <div id="dcLightboxCaption" class="dc-lightbox-caption"></div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        const backdrop = modal.querySelector(".dc-lightbox-backdrop");
+        const closeBtn = document.getElementById("dcLightboxCloseBtn");
+        const zoomBtn = document.getElementById("dcLightboxZoomBtn");
+        const prevBtn = document.getElementById("dcLightboxPrevBtn");
+        const nextBtn = document.getElementById("dcLightboxNextBtn");
+        const imgEl = document.getElementById("dcLightboxImage");
+        const captionEl = document.getElementById("dcLightboxCaption");
+        const counterEl = document.getElementById("dcLightboxCounter");
+
+        let activeImagesList = [];
+        let currentIndex = 0;
+
+        const collectImages = () => {
+            const allImgs = Array.from(document.querySelectorAll("img"));
+            return allImgs.filter(img => {
+                if (!img.src || img.src.includes("data:image/svg+xml")) return false;
+                // Exclude logos, UI icons, badges, theme toggle
+                if (img.closest(".header-logo") || img.closest(".service-icon") || img.closest(".theme-toggle") || img.classList.contains("no-lightbox")) {
+                    return false;
+                }
+                // Exclude tiny icons < 60px
+                if (img.naturalWidth > 0 && img.naturalWidth < 60 && img.naturalHeight < 60) return false;
+                return true;
+            });
+        };
+
+        const openLightbox = (index) => {
+            activeImagesList = collectImages();
+            if (activeImagesList.length === 0) return;
+
+            if (index < 0) index = activeImagesList.length - 1;
+            if (index >= activeImagesList.length) index = 0;
+
+            currentIndex = index;
+            const targetImg = activeImagesList[currentIndex];
+
+            imgEl.src = targetImg.currentSrc || targetImg.src;
+            imgEl.alt = targetImg.alt || "Dubani Creatives Showcase";
+            imgEl.classList.remove("is-zoomed");
+
+            const parentTitle = targetImg.closest(".gallery-item, .project-card, .project-block, .portfolio-slide")?.querySelector("h3, h4, .project-title")?.textContent;
+            captionEl.textContent = parentTitle || targetImg.alt || "Dubani Creatives Showcase";
+
+            counterEl.textContent = `${currentIndex + 1} / ${activeImagesList.length}`;
+
+            modal.classList.add("active");
+            modal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        };
+
+        const closeLightbox = () => {
+            modal.classList.remove("active");
+            modal.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            imgEl.classList.remove("is-zoomed");
+        };
+
+        const showPrev = () => openLightbox(currentIndex - 1);
+        const showNext = () => openLightbox(currentIndex + 1);
+
+        const toggleZoom = () => {
+            imgEl.classList.toggle("is-zoomed");
+        };
+
+        // Attach click listeners to all valid images & containers
+        const bindImageClicks = () => {
+            const images = collectImages();
+            images.forEach((img) => {
+                img.style.cursor = "pointer";
+                img.removeEventListener("click", img._dcLightboxHandler);
+                img._dcLightboxHandler = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const list = collectImages();
+                    const idx = list.indexOf(img);
+                    openLightbox(idx >= 0 ? idx : 0);
+                };
+                img.addEventListener("click", img._dcLightboxHandler);
+            });
+        };
+
+        bindImageClicks();
+
+        // Event bindings for controls
+        backdrop.addEventListener("click", closeLightbox);
+        closeBtn.addEventListener("click", closeLightbox);
+        zoomBtn.addEventListener("click", toggleZoom);
+        prevBtn.addEventListener("click", showPrev);
+        nextBtn.addEventListener("click", showNext);
+
+        imgEl.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleZoom();
+        });
+
+        // Keyboard navigation
+        document.addEventListener("keydown", (e) => {
+            if (!modal.classList.contains("active")) return;
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowLeft") showPrev();
+            if (e.key === "ArrowRight") showNext();
+            if (e.key === "z" || e.key === "Z") toggleZoom();
+        });
+
+        // Touch Swipe Navigation for Mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        modal.addEventListener("touchstart", (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        modal.addEventListener("touchend", (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) showNext();
+            if (touchEndX - touchStartX > 50) showPrev();
+        }, { passive: true });
+
+        // Expose trigger for dynamic layout updates
+        window.initImageLightbox = bindImageClicks;
+    };
+
+    initImageLightbox();
+
 });
+
 
