@@ -783,8 +783,8 @@ body {
 }
 
 .marquee-track img {
-    height: 130px;
-    max-height: 130px;
+    height: 104px !important;
+    max-height: 104px !important;
     width: auto;
     object-fit: contain;
     filter: grayscale(100%) brightness(0.28) contrast(1.1);
@@ -926,18 +926,9 @@ body:not(.light-mode) .marquee-track img:nth-child(even):hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: transparent !important;
+    background-color: transparent !important;
 }
-
-/* Palette Rotation matching Out of the Blue style */
-.gallery-grid .gallery-item:nth-child(9n+1) { background: #f59e0b; }
-.gallery-grid .gallery-item:nth-child(9n+2) { background: #1d4ed8; }
-.gallery-grid .gallery-item:nth-child(9n+3) { background: #e11d48; }
-.gallery-grid .gallery-item:nth-child(9n+4) { background: #f472b6; }
-.gallery-grid .gallery-item:nth-child(9n+5) { background: #0284c7; }
-.gallery-grid .gallery-item:nth-child(9n+6) { background: #ffffff; }
-.gallery-grid .gallery-item:nth-child(9n+7) { background: #059669; }
-.gallery-grid .gallery-item:nth-child(9n+8) { background: #7c3aed; }
-.gallery-grid .gallery-item:nth-child(9n+9) { background: #ff5e00; }
 
 .gallery-grid .gallery-item img {
     width: 100%;
@@ -1478,31 +1469,9 @@ textarea {
 }
 
 /* --- Section Divider Lines --- */
-.section-divider-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 35px 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 10;
-}
+.section-divider-container,
 .section-divider-line {
-    width: 85%;
-    max-width: 1200px;
-    height: 8px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 94, 0, 0.25) 15%, var(--primary-color) 50%, rgba(255, 94, 0, 0.25) 85%, transparent 100%);
-    opacity: 1;
-    border-radius: 6px;
-    box-shadow: 0 0 20px rgba(255, 94, 0, 0.6);
-    transform: scaleX(0);
-    transform-origin: center;
-}
-body.light-mode .section-divider-line {
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 94, 0, 0.25) 15%, var(--primary-color) 50%, rgba(255, 94, 0, 0.25) 85%, transparent 100%);
-    opacity: 1;
-    box-shadow: 0 0 16px rgba(255, 94, 0, 0.5);
+    display: none !important;
 }
 
 /* --- Web Design & Development Section --- */
@@ -1865,20 +1834,11 @@ body.light-mode .section-divider-line {
     align-items: center;
     justify-content: center;
     transition: opacity 0.4s ease, filter 0.4s ease;
+    background: transparent !important;
+    background-color: transparent !important;
 }
 
 .gallery-grid-filter .gallery-item.hidden { display: none !important; }
-
-/* Vibrant Solid Color Palette Rotation (Out of the Blue Style) */
-.gallery-grid-filter .gallery-item:nth-child(9n+1) { background: #f59e0b; } /* Amber Gold */
-.gallery-grid-filter .gallery-item:nth-child(9n+2) { background: #1d4ed8; } /* Royal Blue */
-.gallery-grid-filter .gallery-item:nth-child(9n+3) { background: #e11d48; } /* Crimson Red */
-.gallery-grid-filter .gallery-item:nth-child(9n+4) { background: #f472b6; } /* Coral / Pink */
-.gallery-grid-filter .gallery-item:nth-child(9n+5) { background: #0284c7; } /* Cyan Blue */
-.gallery-grid-filter .gallery-item:nth-child(9n+6) { background: #ffffff; } /* Crisp White */
-.gallery-grid-filter .gallery-item:nth-child(9n+7) { background: #059669; } /* Emerald Green */
-.gallery-grid-filter .gallery-item:nth-child(9n+8) { background: #7c3aed; } /* Deep Purple */
-.gallery-grid-filter .gallery-item:nth-child(9n+9) { background: #ff5e00; } /* Dubani Orange */
 
 /* Mockup / Image inside the Vibrant Tile Block */
 .gallery-grid-filter .gallery-item-img {
@@ -2057,18 +2017,9 @@ body.light-mode .section-divider-line {
     aspect-ratio: 4/3;
     margin: 0 !important;
     cursor: pointer;
+    background: transparent !important;
+    background-color: transparent !important;
 }
-
-/* Palette Rotation for Portfolio Slider */
-.portfolio-slide:nth-child(9n+1) { background: #f59e0b; }
-.portfolio-slide:nth-child(9n+2) { background: #1d4ed8; }
-.portfolio-slide:nth-child(9n+3) { background: #e11d48; }
-.portfolio-slide:nth-child(9n+4) { background: #f472b6; }
-.portfolio-slide:nth-child(9n+5) { background: #0284c7; }
-.portfolio-slide:nth-child(9n+6) { background: #ffffff; }
-.portfolio-slide:nth-child(9n+7) { background: #059669; }
-.portfolio-slide:nth-child(9n+8) { background: #7c3aed; }
-.portfolio-slide:nth-child(9n+9) { background: #ff5e00; }
 
 .portfolio-slide-img {
     width: 100%;
