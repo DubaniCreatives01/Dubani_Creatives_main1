@@ -852,15 +852,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const images = collectImages();
             images.forEach((img) => {
                 img.style.cursor = "pointer";
-                img.removeEventListener("click", img._dcLightboxHandler);
-                img._dcLightboxHandler = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const list = collectImages();
-                    const idx = list.indexOf(img);
-                    openLightbox(idx >= 0 ? idx : 0);
-                };
-                img.addEventListener("click", img._dcLightboxHandler);
+                const parentCard = img.closest(".gallery-item, .project-image-box, .portfolio-slide, .project-card");
+                const targets = parentCard ? [img, parentCard] : [img];
+
+                targets.forEach(target => {
+                    target.style.cursor = "pointer";
+                    target.removeEventListener("click", img._dcLightboxHandler);
+                    img._dcLightboxHandler = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const list = collectImages();
+                        const idx = list.indexOf(img);
+                        openLightbox(idx >= 0 ? idx : 0);
+                    };
+                    target.addEventListener("click", img._dcLightboxHandler);
+                });
             });
         };
 
