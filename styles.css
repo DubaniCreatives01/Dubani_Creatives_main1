@@ -714,16 +714,43 @@ body {
 
 .marquee-track {
     display: flex;
-    gap: 80px;
+    gap: 90px;
     align-items: center;
-    padding-left: 80px;
+    padding-left: 90px;
 }
 
 .marquee-track img {
-    height: 90px;
+    height: 130px;
+    max-height: 130px;
+    width: auto;
     object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.8;
+    filter: grayscale(100%) brightness(0.28) contrast(1.1);
+    opacity: 0.88;
+    transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.4s ease;
+    will-change: transform, filter;
+    cursor: pointer;
+}
+
+/* Dark mode subtle grey contrast */
+body:not(.light-mode) .marquee-track img {
+    filter: grayscale(100%) brightness(0.4) contrast(1.2);
+}
+
+/* Hover Animation & Vibrant Orange Brand Color (#ff5e00) */
+.marquee-track img:hover,
+body.light-mode .marquee-track img:hover,
+body:not(.light-mode) .marquee-track img:hover {
+    filter: brightness(0) saturate(100%) invert(43%) sepia(98%) saturate(2311%) hue-rotate(1deg) brightness(102%) contrast(105%) drop-shadow(0 10px 22px rgba(255, 94, 0, 0.45)) !important;
+    opacity: 1 !important;
+    transform: scale(1.22) translateY(-8px) rotate(2deg);
+}
+
+.marquee-track img:nth-child(even):hover,
+body.light-mode .marquee-track img:nth-child(even):hover,
+body:not(.light-mode) .marquee-track img:nth-child(even):hover {
+    transform: scale(1.22) translateY(-8px) rotate(-2deg);
 }
 
 /* --- Media Queries --- */
@@ -2799,18 +2826,6 @@ body.is-personal .env-personal.flex-env {
     .service-title { font-size: 20px; }
     .service-icon { width: 60px; height: 60px; }
     .service-icon img { width: 30px; }
-    
-    .process-block { padding: 24px; }
-    .process-count { font-size: 32px; }
-    .process-heading { font-size: 20px; }
-    
-    .client-section { border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; padding: 20px 0; }
-    .marquee-track img { height: 50px; }
-    
-    .main-footer { padding: 30px 0; }
-    .footer-grid { gap: 24px; }
-    
-    .theme-btn { padding: 10px 24px; font-size: 14px; }
     
     /* Personal About */
     .personal-about-image-container { max-width: 100%; border-radius: 16px; }
