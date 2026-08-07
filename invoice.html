@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
-    <link rel="stylesheet" href="invoice-styles.css?v=26">
+    <link rel="stylesheet" href="invoice-styles.css?v=27">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -257,7 +257,10 @@
         <div class="modal" style="max-width: 680px;">
             <div class="modal-title">
                 <span>📁 Saved Invoices</span>
-                <button class="modal-close">×</button>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()">🔄 Restore Seed Data</button>
+                    <button class="modal-close">×</button>
+                </div>
             </div>
             <div class="form-group" style="margin-bottom: 16px;">
                 <input type="text" id="searchInvoicesInput" class="form-input" placeholder="🔍 Search saved invoices by client or invoice number...">
@@ -271,7 +274,10 @@
         <div class="modal">
             <div class="modal-title">
                 <span>👤 Saved Clients</span>
-                <button class="modal-close">×</button>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()">🔄 Restore Seed Data</button>
+                    <button class="modal-close">×</button>
+                </div>
             </div>
             <div class="saved-list" id="clientsList"></div>
             <h3 style="font-size:14px; margin-bottom:12px; color: var(--accent);">Add New Client</h3>
@@ -301,7 +307,10 @@
         <div class="modal">
             <div class="modal-title">
                 <span>📦 Saved Services & Prices</span>
-                <button class="modal-close">×</button>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()">🔄 Restore Seed Data</button>
+                    <button class="modal-close">×</button>
+                </div>
             </div>
             <div class="saved-list" id="servicesList"></div>
             <h3 style="font-size:14px; margin-bottom:12px; color: var(--accent);">Add New Service</h3>
@@ -360,9 +369,10 @@
             </div>
             <div style="margin: 16px 0; padding-top: 14px; border-top: 1px solid var(--border);">
                 <label class="form-label" style="margin-bottom: 8px;">Backup & Restore Data</label>
-                <div style="display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <button type="button" class="btn btn-secondary btn-sm" id="exportBackupBtn" style="flex:1;">📥 Export Backup</button>
                     <button type="button" class="btn btn-secondary btn-sm" id="importBackupBtn" style="flex:1;">📤 Import Backup</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()" style="flex:1;">🔄 Restore Seed Data</button>
                     <input type="file" id="importBackupFile" accept=".json" style="display:none;">
                 </div>
             </div>
@@ -370,7 +380,7 @@
         </div>
     </div>
 
-    <script src="invoice-app.js?v=26"></script>
+    <script src="invoice-app.js?v=27"></script>
 </body>
 </html>
 
