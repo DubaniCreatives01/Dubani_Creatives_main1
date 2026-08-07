@@ -70,8 +70,9 @@ const App = {
 
     // ---- LocalStorage & Seed Data Engine ----
     seedDefaults(force = false) {
-        // 1. Default Clients
+        // 1. Default Clients (Extracted from system browser storage)
         const defaultClients = [
+            { name: "Gugulethu Sports Council", email: "sandlananceba1@gmail.com", phone: "", address: "Gugulethu Sport Council Ny2, Gugulethu, 7750" },
             { name: "INGELOSI Employment Law", email: "info@ingelosi.co.za", phone: "+27 21 555 0192", address: "Cape Town, South Africa" },
             { name: "LUZANA Consulting Holdings", email: "admin@luzana.co.za", phone: "+27 11 432 8900", address: "Johannesburg, South Africa" },
             { name: "IRAZA Footwear", email: "orders@iraza.co.za", phone: "+27 82 491 2230", address: "Durban, South Africa" },
@@ -101,7 +102,13 @@ const App = {
             { name: "Social Media Graphics & Campaign Package", price: 3200 },
             { name: "Print & Merchandise Stationery Suite", price: 2200 },
             { name: "Company Profile & Brochure Design", price: 2800 },
-            { name: "Roll Up Banner & Marketing Signage", price: 1800 }
+            { name: "Roll Up Banner & Marketing Signage", price: 1800 },
+            { name: "Gazebo Special - 3x3m Economy Steel (Design)", price: 350 },
+            { name: "2250x3000mm Bannerwall complete - Full colour single sided (Design)", price: 350 },
+            { name: "2x0.850m PVC Economy Roll Up complete - Full colour (Design)", price: 250 },
+            { name: "3m Sharkfin Flag complete - Full colour single sided (Design)", price: 250 },
+            { name: "2000x1000mm PVC Banner - Full Color Print (Design)", price: 250 },
+            { name: "3000x2000mm Polytwirl Banner - Full Color Single Sided (Design)", price: 300 }
         ];
 
         const localServices = JSON.parse(localStorage.getItem("dc_services") || "[]");
@@ -115,26 +122,38 @@ const App = {
         }
         localStorage.setItem("dc_services", JSON.stringify(mergedServices));
 
-        // 3. Default Previous Invoices History
+        // 3. Default Invoices (Exact user invoices recovered from system storage)
         const defaultInvoices = [
             {
                 invoiceNumber: 389,
-                invoiceDate: "2026-08-05",
-                dueDate: "2026-08-10",
-                clientName: "LUZANA Consulting Holdings",
-                client: { name: "LUZANA Consulting Holdings", email: "admin@luzana.co.za", phone: "+27 11 432 8900", address: "Johannesburg, South Africa" },
-                items: [{ service: "Custom Website Design & Development", description: "Responsive high-converting brand site", qty: 1, rate: 8500 }],
+                invoiceDate: "2026-08-07",
+                dueDate: "2026-08-31",
+                clientName: "Gugulethu Sports Council",
+                client: {
+                    name: "Gugulethu Sports Council",
+                    email: "sandlananceba1@gmail.com",
+                    phone: "",
+                    address: "Gugulethu Sport Council Ny2, Gugulethu, 7750"
+                },
+                items: [
+                    { service: "Gazebo Special - 3x3m Economy Steel (Design)", description: "", qty: 2, rate: 350 },
+                    { service: "2250x3000mm Bannerwall complete - Full colour single sided (Design)", description: "", qty: 1, rate: 350 },
+                    { service: "2x0.850m PVC Economy Roll Up complete - Full colour (Design)", description: "", qty: 1, rate: 250 },
+                    { service: "3m Sharkfin Flag complete - Full colour single sided (Design)", description: "", qty: 1, rate: 250 },
+                    { service: "2000x1000mm PVC Banner - Full Color Print (Design)", description: "", qty: 1, rate: 250 },
+                    { service: "3000x2000mm Polytwirl Banner - Full Color Single Sided (Design)", description: "", qty: 1, rate: 300 }
+                ],
                 taxRate: 0,
                 discount: 0,
                 discountType: "percent",
-                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project.",
-                total: 8500,
-                status: "PAID",
-                amountPaid: 8500,
-                balance: 0,
+                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project. Additional inter-est may be charged on payment received more than 5 days past its due date.",
+                total: 2100,
+                status: "UNPAID",
+                amountPaid: 0,
+                balance: 2100,
                 currency: "ZAR",
-                itemsCount: 1,
-                savedAt: "2026-08-05T12:00:00.000Z"
+                itemsCount: 6,
+                savedAt: "2026-08-07T09:48:41.433Z"
             },
             {
                 invoiceNumber: 388,
