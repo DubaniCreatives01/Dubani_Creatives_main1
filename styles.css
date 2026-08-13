@@ -2893,22 +2893,6 @@ img:not(.gallery-item-img):not(.project-image):not(.hero-bg-img):not(.portfolio-
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
-/* --- Fix the header padding on ultra-small screens --- */
-@media (max-width: 400px) {
-    .main-header { padding: 12px 16px; width: 96%; }
-    .header-logo img { height: 28px !important; }
-}
-
-/* --- Apps Sidebar --- */
-.apps-sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     z-index: 998;
     opacity: 0;
@@ -3383,5 +3367,154 @@ img.zoom-tilt:hover {
     .dc-nav-prev { left: 10px; }
     .dc-nav-next { right: 10px; }
     .dc-lightbox-header { top: -45px; }
+}
+
+/* --- APPS Password Protection Modal (Password: 4664) --- */
+.apps-pass-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apps-pass-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.apps-pass-modal-card {
+    background: rgba(18, 18, 24, 0.95);
+    border: 2px solid rgba(255, 94, 0, 0.4);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 94, 0, 0.2);
+    border-radius: 28px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apps-pass-modal-overlay.active .apps-pass-modal-card {
+    transform: scale(1) translateY(0);
+}
+
+.apps-pass-modal-card.shake {
+    animation: modalShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes modalShake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
+}
+
+.apps-pass-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 94, 0, 0.12);
+    border: 1px solid rgba(255, 94, 0, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    color: var(--primary-color);
+    font-size: 28px;
+}
+
+.apps-pass-title {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.apps-pass-desc {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 24px;
+}
+
+.apps-pass-input-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.apps-pass-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 22px;
+    letter-spacing: 6px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.apps-pass-input:focus {
+    border-color: #ff5e00;
+    box-shadow: 0 0 15px rgba(255, 94, 0, 0.3);
+}
+
+.apps-pass-error {
+    font-size: 13px;
+    color: #ff4444;
+    font-weight: 600;
+    min-height: 22px;
+    margin-bottom: 16px;
+}
+
+.apps-pass-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.apps-pass-btn-cancel {
+    flex: 1;
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.apps-pass-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.apps-pass-btn-submit {
+    flex: 2;
+    padding: 12px 18px;
+    background: #ff5e00;
+    border: none;
+    border-radius: 14px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255, 94, 0, 0.4);
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.apps-pass-btn-submit:hover {
+    transform: translateY(-2px);
+    background: #ff7300;
 }
 

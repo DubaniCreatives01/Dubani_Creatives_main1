@@ -652,6 +652,93 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // --- APPS Password Protection Logic (Password: 4664) ---
+    const APPS_PASSWORD = "4664";
+
+    const createAppsPasswordModal = () => {
+        if (document.getElementById('apps-pass-modal')) return;
+
+        const modalOverlay = document.createElement('div');
+        modalOverlay.id = 'apps-pass-modal';
+        modalOverlay.className = 'apps-pass-modal-overlay';
+        modalOverlay.innerHTML = `
+            <div class="apps-pass-modal-card" id="apps-pass-card">
+                <div class="apps-pass-icon">🔒</div>
+                <h3 class="apps-pass-title">Dubani Apps Locked</h3>
+                <p class="apps-pass-desc">Please enter password to access APPS tools.</p>
+                <div class="apps-pass-input-wrapper">
+                    <input type="password" id="apps-pass-input" class="apps-pass-input" placeholder="••••" maxlength="10" autocomplete="off">
+                </div>
+                <div class="apps-pass-error" id="apps-pass-error"></div>
+                <div class="apps-pass-actions">
+                    <button type="button" class="apps-pass-btn-cancel" id="apps-pass-cancel">Cancel</button>
+                    <button type="button" class="apps-pass-btn-submit" id="apps-pass-submit">Unlock APPS</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalOverlay);
+
+        const card = document.getElementById('apps-pass-card');
+        const input = document.getElementById('apps-pass-input');
+        const errorEl = document.getElementById('apps-pass-error');
+        const cancelBtn = document.getElementById('apps-pass-cancel');
+        const submitBtn = document.getElementById('apps-pass-submit');
+
+        let onUnlockSuccess = null;
+
+        window.openAppsPasswordModal = (callback) => {
+            onUnlockSuccess = callback;
+            errorEl.textContent = '';
+            input.value = '';
+            modalOverlay.classList.add('active');
+            setTimeout(() => input.focus(), 200);
+        };
+
+        const closePasswordModal = () => {
+            modalOverlay.classList.remove('active');
+            errorEl.textContent = '';
+            input.value = '';
+        };
+
+        const verifyPassword = () => {
+            const entered = input.value.trim();
+            if (entered === APPS_PASSWORD) {
+                sessionStorage.setItem('dc_apps_unlocked', 'true');
+                closePasswordModal();
+                if (onUnlockSuccess) onUnlockSuccess();
+            } else {
+                errorEl.textContent = '❌ Incorrect password. Access denied.';
+                card.classList.remove('shake');
+                void card.offsetWidth; // Force reflow
+                card.classList.add('shake');
+                input.value = '';
+                input.focus();
+            }
+        };
+
+        submitBtn.addEventListener('click', verifyPassword);
+        cancelBtn.addEventListener('click', closePasswordModal);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') verifyPassword();
+            if (e.key === 'Escape') closePasswordModal();
+        });
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closePasswordModal();
+        });
+    };
+
+    createAppsPasswordModal();
+
+    const isAppsUnlocked = () => sessionStorage.getItem('dc_apps_unlocked') === 'true';
+
+    const requestAppsAccess = (onSuccess) => {
+        if (isAppsUnlocked()) {
+            if (onSuccess) onSuccess();
+        } else if (window.openAppsPasswordModal) {
+            window.openAppsPasswordModal(onSuccess);
+        }
+    };
+
     // --- Apps Sidebar Toggle Logic ---
     const sidebar = document.getElementById('apps-sidebar');
     const sidebarOverlay = document.getElementById('apps-sidebar-overlay');
@@ -666,20 +753,39 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = isOpen ? 'hidden' : '';
     };
 
-    if (sidebarBtn) sidebarBtn.addEventListener('click', () => toggleSidebar(true));
+    if (sidebarBtn) sidebarBtn.addEventListener('click', () => {
+        requestAppsAccess(() => toggleSidebar(true));
+    });
+
     if (mobileSidebarBtn) mobileSidebarBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // Close mobile nav first
-        const mobileNav = document.getElementById('mobile-nav');
-        const hamburgerBtn = document.getElementById('hamburger-btn');
-        if (mobileNav && mobileNav.classList.contains('open')) {
-            if (hamburgerBtn) hamburgerBtn.classList.remove('active');
-            mobileNav.classList.remove('open');
-        }
-        toggleSidebar(true);
+        requestAppsAccess(() => {
+            // Close mobile nav first
+            const mobileNav = document.getElementById('mobile-nav');
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            if (mobileNav && mobileNav.classList.contains('open')) {
+                if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+                mobileNav.classList.remove('open');
+            }
+            toggleSidebar(true);
+        });
     });
+
     if (sidebarClose) sidebarClose.addEventListener('click', () => toggleSidebar(false));
     if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+    // Intercept any direct links to invoice.html or my-apps.html
+    document.querySelectorAll('a[href*="invoice.html"], a[href*="my-apps.html"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (!isAppsUnlocked()) {
+                e.preventDefault();
+                const targetUrl = link.href;
+                requestAppsAccess(() => {
+                    window.location.href = targetUrl;
+                });
+            }
+        });
+    });
 
     // Close sidebar on Escape key
     window.addEventListener('keydown', (e) => {

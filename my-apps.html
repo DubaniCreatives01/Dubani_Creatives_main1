@@ -372,5 +372,16 @@
         DUBANI CREATIVES &mdash; PRIVATE &mdash; DO NOT SHARE
     </footer>
 
+    <script>
+        if (sessionStorage.getItem("dc_apps_unlocked") !== "true") {
+            const pass = prompt("🔒 Dubani Apps is password protected.\nEnter password (4 digits) to access:");
+            if (pass === "4664") {
+                sessionStorage.setItem("dc_apps_unlocked", "true");
+            } else {
+                alert("❌ Incorrect password. Access denied.");
+                window.location.href = "index.html";
+            }
+        }
+    </script>
 </body>
 </html>
