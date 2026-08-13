@@ -703,7 +703,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const verifyPassword = () => {
             const entered = input.value.trim();
             if (entered === APPS_PASSWORD) {
-                sessionStorage.setItem('dc_apps_unlocked', 'true');
                 closePasswordModal();
                 if (onUnlockSuccess) onUnlockSuccess();
             } else {
@@ -729,12 +728,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createAppsPasswordModal();
 
-    const isAppsUnlocked = () => sessionStorage.getItem('dc_apps_unlocked') === 'true';
-
     const requestAppsAccess = (onSuccess) => {
-        if (isAppsUnlocked()) {
-            if (onSuccess) onSuccess();
-        } else if (window.openAppsPasswordModal) {
+        if (window.openAppsPasswordModal) {
             window.openAppsPasswordModal(onSuccess);
         }
     };
@@ -777,13 +772,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Intercept any direct links to invoice.html or my-apps.html
     document.querySelectorAll('a[href*="invoice.html"], a[href*="my-apps.html"]').forEach(link => {
         link.addEventListener('click', (e) => {
-            if (!isAppsUnlocked()) {
-                e.preventDefault();
-                const targetUrl = link.href;
-                requestAppsAccess(() => {
-                    window.location.href = targetUrl;
-                });
-            }
+            e.preventDefault();
+            const targetUrl = link.href;
+            requestAppsAccess(() => {
+                window.location.href = targetUrl;
+            });
         });
     });
 

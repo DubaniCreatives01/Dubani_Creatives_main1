@@ -36,15 +36,11 @@ const App = {
     cloudDbUrl: "https://jsonblob.com/api/jsonBlob/019fb7a8-8e8d-79f8-b9f8-8a28ac9722e8",
 
     init() {
-        if (sessionStorage.getItem("dc_apps_unlocked") !== "true") {
-            const pass = prompt("🔒 Dubani Apps is password protected.\nPlease enter password (4 digits) to access:");
-            if (pass === "4664") {
-                sessionStorage.setItem("dc_apps_unlocked", "true");
-            } else {
-                alert("❌ Incorrect password. Access denied.");
-                window.location.href = "index.html";
-                return;
-            }
+        const pass = prompt("🔒 Dubani Apps is password protected.\nPlease enter password (4 digits) to access:");
+        if (pass !== "4664") {
+            alert("❌ Incorrect password. Access denied.");
+            window.location.href = "index.html";
+            return;
         }
         this.loadData();
         this.setDefaultDates();
