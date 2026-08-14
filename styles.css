@@ -1953,12 +1953,11 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
+.gallery-view-btn {
     margin-top: 12px;
     text-decoration: none;
 }
 .gallery-view-btn svg { width: 14px; height: 14px; fill: var(--primary-color); }
-@media (max-width: 991px) { .gallery-grid-filter { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .gallery-grid-filter { grid-template-columns: 1fr; } }
 
 
 /* --- Portfolio Slider / Collage --- */
@@ -2074,9 +2073,6 @@ textarea {
 
 .slide-link {
     display: none !important;
-}
-    transform: translateY(20px);
-    transition: transform 0.4s ease;
 }
 .portfolio-slide:hover .slide-title { transform: translateY(0); }
 .slide-link {
@@ -2893,6 +2889,16 @@ img:not(.gallery-item-img):not(.project-image):not(.hero-bg-img):not(.portfolio-
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --- Apps Sidebar --- */
+.apps-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     z-index: 998;
     opacity: 0;
@@ -2904,7 +2910,6 @@ img:not(.gallery-item-img):not(.project-image):not(.hero-bg-img):not(.portfolio-
     opacity: 1;
     pointer-events: all;
 }
-
 .apps-sidebar {
     position: fixed;
     top: 0;
