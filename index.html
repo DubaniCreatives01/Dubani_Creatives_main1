@@ -9,7 +9,190 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260925-03" />
+  <link rel="stylesheet" href="styles.css?v=20260925-05" />
+  <style>
+    /* Direct Instant Overrides: 6 Featured Clients in 1 Single Row & Larger Text/Buttons */
+    .selected-work-grid {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 12px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .selected-work-grid .case-card {
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      background: var(--card-bg, #0d121c) !important;
+      border: 1px solid var(--card-border, rgba(255,255,255,0.08)) !important;
+      border-radius: 12px !important;
+      overflow: hidden !important;
+      text-decoration: none !important;
+      color: inherit !important;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+    }
+    .selected-work-grid .case-card:hover {
+      transform: translateY(-4px) !important;
+      border-color: rgba(56, 189, 248, 0.5) !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+    }
+    .selected-work-grid .case-thumb-wrap {
+      width: 100% !important;
+      height: 135px !important;
+      background: #090c12 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 10px !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    .selected-work-grid .case-thumb-img {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important;
+      transform: none !important;
+    }
+    .selected-work-grid .case-card-body {
+      padding: 12px 10px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 6px !important;
+      flex: 1 !important;
+    }
+    .selected-work-grid .case-card-title {
+      font-family: var(--font-heading) !important;
+      font-size: 14.5px !important;
+      font-weight: 700 !important;
+      color: #ffffff !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .selected-work-grid .case-card-desc {
+      font-size: 11.5px !important;
+      color: var(--text-muted, #94a3b8) !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 2 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+      margin-bottom: 4px !important;
+    }
+    .case-card-btn {
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: var(--orange, #ff6b00) !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      margin-top: auto !important;
+      transition: color 0.2s ease !important;
+    }
+    .selected-work-grid .case-card:hover .case-card-btn {
+      color: var(--cyan, #00d2ff) !important;
+    }
+
+    @media (max-width: 820px) {
+      .selected-work-grid {
+        overflow-x: auto !important;
+        padding-bottom: 12px !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      .selected-work-grid .case-card {
+        flex: 0 0 175px !important;
+        min-width: 175px !important;
+      }
+    }
+
+    /* Bigger Typography & Buttons */
+    .home-hero-title {
+      font-size: clamp(40px, 4.8vw, 62px) !important;
+      font-weight: 800 !important;
+      line-height: 1.1 !important;
+      letter-spacing: -1.5px !important;
+      margin-bottom: 22px !important;
+    }
+    .home-hero-text {
+      font-size: 19.5px !important;
+      color: rgba(255, 255, 255, 0.88) !important;
+      line-height: 1.7 !important;
+      margin-bottom: 32px !important;
+      max-width: 620px !important;
+    }
+    .section-eyebrow {
+      font-size: 13.5px !important;
+      letter-spacing: 2.5px !important;
+      font-weight: 700 !important;
+      margin-bottom: 14px !important;
+    }
+    .btn-primary, .btn-ghost, .btn-secondary {
+      font-size: 16px !important;
+      padding: 14px 32px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.3px !important;
+      border-radius: 9999px !important;
+    }
+    .home-hero-cta .btn-primary, .home-hero-cta .btn-ghost {
+      font-size: 17.5px !important;
+      padding: 16px 36px !important;
+    }
+    .top-bar-actions .btn-primary {
+      font-size: 14.5px !important;
+      padding: 11px 24px !important;
+    }
+    .btn-glass-pulse {
+      font-size: 14.5px !important;
+      padding: 12px 24px !important;
+      font-weight: 700 !important;
+    }
+    .weather-digital-clock {
+      font-size: 36px !important;
+      font-weight: 800 !important;
+    }
+    .weather-location {
+      font-size: 14px !important;
+    }
+    .hero-badge-widget .badge-title {
+      font-size: 15px !important;
+      font-weight: 700 !important;
+    }
+    .hero-badge-widget .badge-tag {
+      font-size: 12px !important;
+      font-weight: 700 !important;
+    }
+    .sidebar-nav-item {
+      font-size: 15.5px !important;
+      padding: 12px 18px !important;
+      font-weight: 600 !important;
+    }
+    .sidebar-nav-item .nav-icon {
+      width: 22px !important;
+      height: 22px !important;
+    }
+    .selected-work-title {
+      font-size: 15px !important;
+      letter-spacing: 2px !important;
+      font-weight: 800 !important;
+    }
+    .view-all-link {
+      font-size: 15px !important;
+      font-weight: 700 !important;
+    }
+    .section-title {
+      font-size: clamp(34px, 3.8vw, 46px) !important;
+      font-weight: 800 !important;
+    }
+    .section-desc {
+      font-size: 18px !important;
+      line-height: 1.65 !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -205,6 +388,7 @@
               <div class="case-card-body">
                 <h3 class="case-card-title">LUZANA Consulting</h3>
                 <p class="case-card-desc">Brand Identity • Print • Corporate System</p>
+                <span class="case-card-btn">View project →</span>
               </div>
             </a>
 
@@ -216,6 +400,7 @@
               <div class="case-card-body">
                 <h3 class="case-card-title">Dream Area</h3>
                 <p class="case-card-desc">Branding • Digital Platform & Experience</p>
+                <span class="case-card-btn">View project →</span>
               </div>
             </a>
 
@@ -227,6 +412,7 @@
               <div class="case-card-body">
                 <h3 class="case-card-title">Star Blox</h3>
                 <p class="case-card-desc">Brand Identity • Gaming & Web Assets</p>
+                <span class="case-card-btn">View project →</span>
               </div>
             </a>
 
@@ -238,6 +424,7 @@
               <div class="case-card-body">
                 <h3 class="case-card-title">INGELOSI Employment Law</h3>
                 <p class="case-card-desc">Legal Identity • Corporate Stationery</p>
+                <span class="case-card-btn">View project →</span>
               </div>
             </a>
 
@@ -249,6 +436,7 @@
               <div class="case-card-body">
                 <h3 class="case-card-title">CashWave Finance</h3>
                 <p class="case-card-desc">Brand Identity • FinTech & Print Rollout</p>
+                <span class="case-card-btn">View project →</span>
               </div>
             </a>
 
@@ -260,6 +448,7 @@
               <div class="case-card-body">
                 <h3 class="case-card-title">IRAZA Packaging</h3>
                 <p class="case-card-desc">Packaging Design • Custom Box & Label</p>
+                <span class="case-card-btn">View project →</span>
               </div>
             </a>
           </div>
