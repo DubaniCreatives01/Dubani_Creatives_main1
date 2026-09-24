@@ -343,4 +343,97 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, 400);
   });
+
+  // ==========================================================================
+  // 9. Live Weather & Time Glass Widget Engine (Cape Town, SAST)
+  // ==========================================================================
+  function initLiveClockAndWeather() {
+    const clockEl = document.getElementById('weather-clock');
+    const dateEl = document.getElementById('weather-date');
+    const tempEl = document.getElementById('weather-temp');
+    const conditionEl = document.getElementById('weather-condition');
+    const iconEl = document.getElementById('weather-icon');
+    const humidityEl = document.getElementById('weather-humidity');
+    const windEl = document.getElementById('weather-wind');
+
+    // Update Digital Clock Every Second (SAST - Africa/Johannesburg)
+    function updateClock() {
+      const now = new Date();
+      if (clockEl) {
+        clockEl.textContent = now.toLocaleTimeString('en-ZA', {
+          timeZone: 'Africa/Johannesburg',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        });
+      }
+      if (dateEl) {
+        dateEl.textContent = now.toLocaleDateString('en-ZA', {
+          timeZone: 'Africa/Johannesburg',
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+      }
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Weather Code to Readable Description and Icon
+    function getWeatherMeta(code) {
+      if (code === 0) return { text: 'Clear Sky', icon: '☀️' };
+      if (code === 1 || code === 2) return { text: 'Partly Cloudy', icon: '⛅' };
+      if (code === 3) return { text: 'Overcast', icon: '☁️' };
+      if ([45, 48].includes(code)) return { text: 'Misty / Fog', icon: '🌫️' };
+      if ([51, 53, 55, 61, 63, 65].includes(code)) return { text: 'Light Rain', icon: '🌦️' };
+      if ([80, 81, 82].includes(code)) return { text: 'Rain Showers', icon: '🌧️' };
+      if ([95, 96, 99].includes(code)) return { text: 'Thunderstorm', icon: '⛈️' };
+      return { text: 'Coastal Breeze', icon: '🌤️' };
+    }
+
+    // Fetch live weather from Open-Meteo API for Cape Town (-33.9249, 18.4241)
+    async function fetchCapeTownWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.9249&longitude=18.4241&current_weather=true&hourly=relativehumidity_2m');
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        const current = data.current_weather;
+        if (current) {
+          const temp = Math.round(current.temperature);
+          const wind = Math.round(current.windspeed);
+          const meta = getWeatherMeta(current.weathercode);
+
+          // Get approximate current hour humidity
+          let humidity = 64;
+          if (data.hourly && data.hourly.relativehumidity_2m && data.hourly.relativehumidity_2m.length) {
+            const currentHour = new Date().getHours();
+            humidity = data.hourly.relativehumidity_2m[currentHour] || 64;
+          }
+
+          if (tempEl) tempEl.textContent = `${temp}°C`;
+          if (conditionEl) conditionEl.textContent = meta.text;
+          if (iconEl) iconEl.textContent = meta.icon;
+          if (humidityEl) humidityEl.textContent = `${humidity}%`;
+          if (windEl) windEl.textContent = `${wind} km/h`;
+        }
+      } catch (err) {
+        // Fallback realistic Cape Town climate
+        if (tempEl && tempEl.textContent === '--°C') tempEl.textContent = '19°C';
+        if (conditionEl && conditionEl.textContent === 'Loading...') conditionEl.textContent = 'Partly Cloudy';
+        if (iconEl && iconEl.textContent === '🌤️') iconEl.textContent = '⛅';
+        if (humidityEl && humidityEl.textContent === '--%') humidityEl.textContent = '62%';
+        if (windEl && windEl.textContent === '-- km/h') windEl.textContent = '14 km/h';
+      }
+    }
+
+    fetchCapeTownWeather();
+    // Refresh weather every 15 minutes
+    setInterval(fetchCapeTownWeather, 15 * 60 * 1000);
+  }
+
+  initLiveClockAndWeather();
+
 });
