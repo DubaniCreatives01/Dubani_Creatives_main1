@@ -1,992 +1,817 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dubani Creatives | Brand &amp; Graphic Designer</title>
-    <meta name="description" content="Dubani is a versatile brand and graphic designer based in Cape Town, South Africa. Specializing in logo design, branding, and packaging.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- Preload Hero Backgrounds for faster LCP -->
-    <link rel="preload" href="images/Hero 03_mobile.jpg" as="image" type="image/jpeg" media="(max-width: 767px)">
-    <link rel="preload" href="images/Hero 02_mobile.jpg" as="image" type="image/jpeg" media="(max-width: 767px)">
-    <link rel="preload" href="images/Hero 03.jpg" as="image" type="image/jpeg" media="(min-width: 768px)">
-    <link rel="preload" href="images/Hero 02.jpg" as="image" type="image/jpeg" media="(min-width: 768px)">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-    <link rel="stylesheet" href="styles.css?v=35">
-    <link rel="stylesheet" href="theme-toggle.css?v=19">
-    <link rel="icon" type="image/png" href="images/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dubani Creatives | Strategic Brand Identity & Design Studio</title>
+  <meta name="description" content="Dubani Creatives is a South African brand and design studio helping ambitious brands turn ideas into powerful identities, engaging content and digital experiences." />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+
+  <!-- Typography: Inter & Outfit Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=20260924-02" />
 </head>
 <body>
 
-    <!-- Dark/Light Mode Toggle -->
-    <div class="theme-toggle-switch" id="theme-toggle">
-        <div class="theme-toggle-track" aria-label="Toggle dark/light mode" role="button" tabindex="0">
-            <div class="theme-toggle-icon moon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-            </div>
-            <div class="theme-toggle-icon sun">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
-            </div>
-        </div>
-        <div class="theme-mode-labels">
-            <span class="mode-label dark-label">DARK</span>
-            <span class="mode-label light-label">LIGHT</span>
-        </div>
-    </div>
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
-    <div class="page-wrapper">
-        <!-- Header -->
-        <header class="main-header">
-            <div class="container">
-                <div class="header-main-box">
-                    <a href="https://dubanicreatives.tech" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;" width="233" height="35"></a>
-                    <nav class="header-nav">
-                        <a href="#home" class="nav-link">Home</a>
-                        <a href="projects.html" class="nav-link env-business">Our work</a>
-                        <a href="projects.html" class="nav-link env-personal">Portfolio</a>
-                        <a href="services.html" class="nav-link env-business">Services</a>
-                        <a href="cv.html" class="nav-link env-personal">Resume / CV</a>
-                        <a href="packages.html" class="nav-link env-business">Packages</a>
-                        <a href="skills.html" class="nav-link env-personal">Skills</a>
-                    </nav>
-                    <div class="env-switcher">
-                        <button class="env-switch-btn" data-env="business">Business</button>
-                        <button class="env-switch-btn" data-env="personal">Personal</button>
-                    </div>
-                    <a href="brief.html" class="theme-btn env-business" style="margin-left: 20px;">
-                        <div class="btn-bg orange"></div>
-                        <span class="btn-text text-white">Start a Project</span>
-                    </a>
-                    <a href="contact.html" class="theme-btn env-personal" style="margin-left: 20px;">
-                        <div class="btn-bg"></div>
-                        <span class="btn-text">Get in touch</span>
-                    </a>
-                    <!-- Apps Sidebar Trigger -->
-                    <button class="theme-btn apps-sidebar-btn" id="apps-sidebar-btn" style="margin-left: 15px; cursor: pointer;">
-                        <div class="btn-bg" style="background-color: var(--secondary-color); border: 1px solid rgba(255,255,255,0.1);"></div>
-                        <span class="btn-text" style="display: flex; align-items: center; gap: 8px; color: #000000 !important;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                            Apps
-                        </span>
-                    </button>
-                    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </header>
+  <!-- App Layout Container -->
+  <div class="site-layout">
 
-        <!-- Mobile Nav Overlay -->
-        <div class="mobile-nav-overlay" id="mobile-nav">
-            <a href="#home" class="mobile-nav-link">Home</a>
-            <a href="projects.html" class="mobile-nav-link env-business">Our work</a>
-            <a href="projects.html" class="mobile-nav-link env-personal">Portfolio</a>
-            <a href="services.html" class="mobile-nav-link env-business">Services</a>
-            <a href="cv.html" class="mobile-nav-link env-personal">Resume / CV</a>
-            <a href="packages.html" class="mobile-nav-link env-business">Packages</a>
-            <a href="brief.html" class="mobile-nav-link env-business">Start a Project</a>
-            <a href="skills.html" class="mobile-nav-link env-personal">Skills</a>
-            <a href="contact.html" class="mobile-nav-link">Contact</a>
-            <a href="#" class="mobile-nav-link" id="mobile-apps-btn">Apps</a>
-            <div class="mobile-env-switcher">
-                <button class="env-switch-btn" data-env="business">Business</button>
-                <button class="env-switch-btn" data-env="personal">Personal</button>
-            </div>
-        </div>
+    <!-- ====================================================================
+         FIXED LEFT SIDEBAR (Panels Navigation + Archive + Apps)
+         ==================================================================== -->
+    <aside class="site-sidebar" id="site-sidebar">
+      <div>
+        <a href="#home" class="sidebar-brand">
+          <div class="brand-dc-badge">DC</div>
+          <div class="brand-name">
+            <span class="brand-name-main">Dubani</span>
+            <span class="brand-name-sub">Creatives</span>
+          </div>
+        </a>
 
-        <!-- Hero Section -->
-        <section class="hero-section" id="home">
-            <div class="hero-bg-img bg-business env-business"></div>
-            <div class="hero-bg-img bg-personal env-personal"></div>
-            <div class="hero-bg-overlay"></div>
-            <div class="container hero-container">
-                <div class="hero-content">
-                    <!-- Business Hero (Centered) -->
-                    <div class="hero-center env-business" style="width:100%; text-align:center; display:flex; flex-direction:column; align-items:center;">
-                        
-                        <!-- Contra Achievement Badge Widget (Top Position) -->
-                        <a href="https://contra.com/hire/adobe-xd-freelancers-in-western-cape-south-africa?featuredUserProfileId=WyJVc2VyUHJvZmlsZSIsMzU1NjMwMTRd" target="_blank" rel="noopener noreferrer" class="hero-badge-widget" onclick="window.open(this.href, '_blank'); return false;">
-                            <div class="badge-shine"></div>
-                            <div class="badge-content">
-                                <div class="badge-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                                    </svg>
-                                </div>
-                                <div class="badge-text-box">
-                                    <span class="badge-tag"><span class="blinking-dot"></span> Featured on Contra</span>
-                                    <span class="badge-title">Best Adobe XD Freelancer in Western Cape 2026</span>
-                                </div>
-                                <div class="badge-arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </div>
-                            </div>
-                        </a>
+        <nav class="sidebar-nav">
+          <a href="#home" class="sidebar-nav-item active" data-section="home">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </span>
+            <span>Home</span>
+          </a>
+          <a href="#work" class="sidebar-nav-item" data-section="work">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </span>
+            <span>Work</span>
+          </a>
+          <a href="#services" class="sidebar-nav-item" data-section="services">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </span>
+            <span>Services</span>
+          </a>
+          <a href="#about" class="sidebar-nav-item" data-section="about">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <span>About</span>
+          </a>
+          <a href="#packages" class="sidebar-nav-item" data-section="packages">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><line x1="1" y1="3" x2="23" y2="3"></line><path d="M10 12h4"></path></svg>
+            </span>
+            <span>Packages</span>
+          </a>
+          <a href="#contact" class="sidebar-nav-item" data-section="contact">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </span>
+            <span>Contact</span>
+          </a>
 
-                        <p class="hero-subtitle">Welcome to Dubani Creatives</p>
-                        <div class="hero-title-wrapper" style="position: relative; overflow: hidden;">
-                            <div class="biz-title-1" style="opacity:0; transform: translateY(100%);">
-                                <h1 class="hero-title biz-hero-title">Strategic Brand</h1>
-                            </div>
-                            <div class="biz-title-2" style="position: absolute; top: 0; left: 0; width: 100%; opacity:0; transform: translateY(100%);">
-                                <h1 class="hero-title biz-hero-title">Identity Agency</h1>
-                            </div>
-                        </div>
-                        <h2 class="hero-heading-two" style="margin-top: 30px; text-align: center;">Elevating Brand<br>Identities.</h2>
-                        <p class="hero-text" style="max-width: 650px; margin-top: 16px; font-size: 18px;">We help businesses stand out with strategic brand identity and compelling visuals. We craft powerful marketing assets that build lasting connections.</p>
-                        <div class="section-btn-box mt-4" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
-                            <a href="https://dubanicreatives.myportfolio.com/" target="_blank" rel="noopener noreferrer" class="theme-btn">
-                                <div class="btn-bg orange"></div>
-                                <span class="btn-text text-white">Design Portfolio</span>
-                            </a>
-                            <a href="https://www.behance.net/dubanicreatives1" target="_blank" rel="noopener noreferrer" class="theme-btn">
-                                <div class="btn-bg orange"></div>
-                                <span class="btn-text text-white">Behance Portfolio</span>
-                            </a>
-                        </div>
-                    </div>
+          <div class="sidebar-divider"></div>
 
-                    <!-- Personal Hero -->
-                    <div class="hero-left env-personal">
-                        <p class="hero-subtitle">Hey, I'm Dubani</p>
-                        <div class="hero-title-wrapper">
-                            <div class="title-mask title-one">
-                                <h1 class="hero-title">Brand &amp; Graphic</h1>
-                            </div>
-                            <div class="title-mask title-two">
-                                <h1 class="hero-title">Visual Designer</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hero-right env-personal">
-                        <h2 class="hero-heading-two">Crafting Exceptional<br>Visual Assets.</h2>
-                        <p class="hero-text">I help businesses stand out with strategic brand identity and compelling visuals. With over five years of experience, I craft marketing assets that bring brands to life.</p>
-                        <div class="section-btn-box mt-4" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                            <a href="https://dubanicreatives.myportfolio.com/" target="_blank" rel="noopener noreferrer" class="theme-btn">
-                                <div class="btn-bg orange"></div>
-                                <span class="btn-text text-white">Design Portfolio</span>
-                            </a>
-                            <a href="https://www.behance.net/dubanicreatives1" target="_blank" rel="noopener noreferrer" class="theme-btn">
-                                <div class="btn-bg orange"></div>
-                                <span class="btn-text text-white">Behance Portfolio</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+          <!-- Direct Subpage & Utilities -->
+          <a href="projects.html" class="sidebar-nav-item">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </span>
+            <span>Projects Archive</span>
+          </a>
+          <button type="button" class="sidebar-nav-item" id="sidebar-apps-link" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </span>
+            <span>Apps <small style="font-size:10px;opacity:0.85;margin-left:4px;color:var(--accent-orange);">(PIN 4664)</small></span>
+          </button>
+        </nav>
+      </div>
 
-                <!-- Hero Statistics Widget -->
-                <div class="hero-stats-widget">
-                    <div class="stat-item">
-                        <div class="stat-number"><span class="num" data-target="6">0</span><span class="plus">+</span></div>
-                        <div class="stat-label">Years<br>Experience</div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-number"><span class="num" data-target="400">0</span><span class="plus">+</span></div>
-                        <div class="stat-label">Projects<br>Delivered</div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-number"><span class="num" data-target="100">0</span><span class="plus">+</span></div>
-                        <div class="stat-label">Happy<br>Clients</div>
-                    </div>
-                </div>
-
-
-                <!-- Bottom Banner List -->
-                <div class="banner-list-container">
-                    <div class="banner-item">
-                        <p class="banner-number"><span>#</span>01</p>
-                        <p class="banner-text">Logo Design</p>
-                    </div>
-                    <div class="banner-item">
-                        <p class="banner-number"><span>#</span>02</p>
-                        <p class="banner-text">Brand Design</p>
-                    </div>
-                    <div class="banner-item">
-                        <p class="banner-number"><span>#</span>03</p>
-                        <p class="banner-text">Packaging Design</p>
-                    </div>
-                    <div class="banner-item">
-                        <p class="banner-number"><span>#</span>04</p>
-                        <p class="banner-text">Print Design</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Client Marquee Section -->
-        <section class="client-section">
-            <div class="client-box">
-                <div class="marquee-gradient left"></div>
-                <div class="marquee-gradient right"></div>
-                <div class="marquee-wrapper">
-                    <div class="marquee-track">
-                        <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client" width="136" height="59">
-                        <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client" width="136" height="59">
-                        <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client" width="121" height="48">
-                        <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client" width="136" height="59">
-                        <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client" width="136" height="59">
-                        <!-- Duplicate for smooth looping -->
-                        <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client" width="136" height="59">
-                        <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client" width="136" height="59">
-                        <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client" width="121" height="48">
-                        <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client" width="136" height="59">
-                        <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client" width="136" height="59">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Gallery / About Section -->
-        <section class="gallery-section">
-            <div class="container">
-                <div class="section-top env-business">
-                    <!-- Business About -->
-                    <div class="section-title-wrap env-business">
-                        <p class="section-subtitle">About Dubani Creatives</p>
-                        <h2 class="section-title">Beyond just design,<br>we build brands</h2>
-                    </div>
-                    <div class="section-desc-wrap env-business">
-                        <h3 class="section-heading-two">We are a specialized creative studio dedicated to helping businesses craft meaningful identities. Our team believes in strategic thinking, bold design, and flawless execution to give your brand a competitive edge.</h3>
-                        <div class="section-btn-box mt-4">
-                            <a href="contact.html" class="theme-btn">
-                                <div class="btn-bg"></div>
-                                <span class="btn-text">Get in touch</span>
-                            </a>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            <!-- Full-Width Edge-to-Edge Seamless Collage Grid -->
-            <div class="gallery-grid mt-24 env-business">
-                <div class="gallery-item"><img loading="lazy" src="images/Portfolio/Branding/INGELOSI/INGELOSI%20Employment%20Law_1771003275581.webp" alt="INGELOSI Branding 1"></div>
-                <div class="gallery-item"><img loading="lazy" src="images/Portfolio/Branding/INGELOSI/INGELOSI%20Employment%20Law_1771003275551.webp" alt="INGELOSI Branding 2"></div>
-                <div class="gallery-item"><img loading="lazy" src="images/Portfolio/Branding/INGELOSI/INGELOSI%20Employment%20Law_1771003276924.webp" alt="INGELOSI Branding 3"></div>
-            </div>
-
-            <div class="container">
-                <!-- Custom Personal About Layout -->
-                <div class="personal-about-wrapper env-personal" style="padding-top: 50px; padding-bottom: 50px;">
-                    <div class="personal-about-grid">
-                        <div class="personal-about-text">
-                            <p class="section-subtitle">A Little About Me</p>
-                            <h2 class="section-title">Beyond just design,<br>I build from scratch</h2>
-                            <h3 style="font-size: 24px; line-height: 1.6; color: rgba(255,255,255,0.85); font-weight: 400; margin-top: 30px; margin-bottom: 40px;">
-                                I've been creative for as long as I can remember. I love designing and building things from scratch. Beyond design, I'm a music lover, a book enthusiast, and a foodie. My faith as a Christian guides me.
-                            </h3>
-                            <div class="section-btn-box">
-                                <a href="contact.html" class="theme-btn">
-                                    <div class="btn-bg orange"></div>
-                                    <span class="btn-text text-white">Get in touch</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="personal-about-image-container">
-                            <img loading="lazy" src="images/about img.png" alt="Silulamele Dubani Portrait" class="personal-portrait-img" width="1000" height="1300">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Projects Section -->
-        <section class="project-section env-business" id="projects">
-            <div class="container">
-                <div class="section-top">
-                    <!-- Business Projects -->
-                    <div class="section-title-wrap env-business">
-                        <p class="section-subtitle">Our Portfolio</p>
-                        <h2 class="section-title">Crafting Strategic<br>Brand Experiences</h2>
-                    </div>
-                    <div class="section-desc-wrap env-business">
-                        <h3 class="section-heading-two">With a passion for clarity and aesthetics, our agency partners with founders and teams to create visual identities that drive growth and connect globally.</h3>
-                    </div>
-
-                    <!-- Personal Projects -->
-                    <div class="section-title-wrap env-personal">
-                        <p class="section-subtitle">Some of My Best Work</p>
-                        <h2 class="section-title">Crafting Exceptional<br>Visual Assets</h2>
-                    </div>
-                    <div class="section-desc-wrap env-personal">
-                        <h3 class="section-heading-two">With a passion for clarity, aesthetics, and emotion-driven design, I partner with founders and teams to create visual identities that truly connect.</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Business Portfolio Slider -->
-            <div class="portfolio-slider-wrapper env-business mt-12">
-                <div class="slider-nav">
-                    <button class="slider-btn prev-btn" aria-label="Previous">
-                        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                    </button>
-                    <button class="slider-btn next-btn" aria-label="Next">
-                        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                    </button>
-                </div>
-                <div class="portfolio-slider-track">
-
-                    <!-- Slide 1 -->
-                    <div class="portfolio-slide">
-                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
-                        <div class="portfolio-slide-content">
-                            <span class="slide-category">Branding</span>
-                            <h3 class="slide-title">LUZANA Consulting</h3>
-                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
-                        </div>
-                    </div>
-                    <!-- Slide 2 -->
-                    <div class="portfolio-slide">
-                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/499250828_1276640887802752_4351659506504074361_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
-                        <div class="portfolio-slide-content">
-                            <span class="slide-category">Logo Design</span>
-                            <h3 class="slide-title">LUZANA Consulting</h3>
-                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
-                        </div>
-                    </div>
-                    <!-- Slide 3 -->
-                    <div class="portfolio-slide">
-                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/500274309_1276640737802767_761438347564289657_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
-                        <div class="portfolio-slide-content">
-                            <span class="slide-category">Print / Merch</span>
-                            <h3 class="slide-title">LUZANA Consulting</h3>
-                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
-                        </div>
-                    </div>
-                    <!-- Slide 4 -->
-                    <div class="portfolio-slide">
-                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/501049846_1276640871136087_1276473322365407417_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
-                        <div class="portfolio-slide-content">
-                            <span class="slide-category">Social Media</span>
-                            <h3 class="slide-title">LUZANA Consulting</h3>
-                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
-                        </div>
-                    </div>
-                    <!-- Slide 5 -->
-                    <div class="portfolio-slide">
-                        <img loading="lazy" src="images/Portfolio/Branding/LUZANA%20Consulting%20Holdings/506526281_1276640541136120_2738207331665993664_n.jpg" alt="LUZANA Consulting Holdings" class="portfolio-slide-img" style="object-fit: cover;">
-                        <div class="portfolio-slide-content">
-                            <span class="slide-category">Web Design</span>
-                            <h3 class="slide-title">LUZANA Consulting</h3>
-                            <a href="projects.html" class="slide-link">View Case Study <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personal Portfolio List -->
-            <div class="container env-personal mt-12">
-                <!-- Project Item 1 -->
-                <div class="project-block mt-24">
-                    <div class="project-image-box">
-                        <img loading="lazy" src="images/imgi_13_68bd341e34845d434f3fb083_1.png" alt="Dream Area" class="project-image" width="800" height="600">
-                    </div>
-                    <div class="project-content-box">
-                        <div class="project-line"></div>
-                        <h3 class="project-title">Dream Area</h3>
-                        <p class="project-text">Flowing shapes in iridescent hues — from deep blues and purples to vibrant pinks and oranges — creating an ethereal brand identity.</p>
-                        <a href="projects.html" class="theme-btn gray-btn mt-4"><div class="btn-bg orange"></div><span class="btn-text">Read more</span></a>
-                    </div>
-                </div>
-
-                <!-- Project Item 2 (Reversed) -->
-                <div class="project-block reverse mt-24">
-                    <div class="project-image-box">
-                        <img loading="lazy" src="images/imgi_14_68bd33e0e57b111749f34daf_0.png" alt="Star Blox" class="project-image" width="800" height="800">
-                    </div>
-                    <div class="project-content-box">
-                        <div class="project-line"></div>
-                        <h3 class="project-title">Star Blox</h3>
-                        <p class="project-text">A bold packaging and identity system built to stand out on the shelf and communicate quality at first glance.</p>
-                        <a href="projects.html" class="theme-btn gray-btn mt-4"><div class="btn-bg orange"></div><span class="btn-text">Read more</span></a>
-                    </div>
-                </div>
-
-                <!-- View More Button -->
-                <div class="text-center mt-24" style="margin-bottom: 2rem;">
-                    <a href="projects.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View more</span></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Services Section -->
-        <section class="service-section" id="services">
-            <div class="container">
-                <div class="section-top mb-16">
-                    <!-- Business Services -->
-                    <div class="section-title-wrap env-business">
-                        <p class="section-subtitle">Services</p>
-                        <h2 class="section-title">How We Can<br>Help You</h2>
-                    </div>
-                    <div class="section-desc-wrap env-business">
-                        <h3 class="section-heading-two">From strategy to visuals, we offer agency-level services to help your brand grow with clarity and impact.</h3>
-                        <div class="section-btn-box mt-4">
-                            <a href="contact.html" class="theme-btn">
-                                <div class="btn-bg"></div>
-                                <span class="btn-text">Get in touch</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Personal Services -->
-                    <div class="section-title-wrap env-personal">
-                        <p class="section-subtitle">Services</p>
-                        <h2 class="section-title">How I Can<br>Help You</h2>
-                    </div>
-                    <div class="section-desc-wrap env-personal">
-                        <h3 class="section-heading-two">From strategy to visuals, I offer tailored services to help your brand grow with clarity and impact.</h3>
-                        <div class="section-btn-box mt-4">
-                            <a href="contact.html" class="theme-btn">
-                                <div class="btn-bg"></div>
-                                <span class="btn-text">Get in touch</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="service-grid mt-24">
-                    <div class="service-block">
-                        <div class="service-icon"><img loading="lazy" src="images/imgi_16_68d6c6b21fd29ee90bff6298_digital-graphic.png" alt="Logo Design" width="64" height="64"></div>
-                        <div class="service-content">
-                            <div class="service-line"></div>
-                            <p class="service-sub">Make Your Mark</p>
-                            <h3 class="service-title">Logo Design &amp; Brand Design</h3>
-                            <p class="service-text">We create logos and brand identities that feel honest, clear, and memorable — designed to reflect who you are and help people recognize you instantly.</p>
-                        </div>
-                    </div>
-                    <div class="service-block">
-                        <div class="service-icon"><img loading="lazy" src="images/imgi_17_68d6c66fc2b77dda70e5b0bf_strategy.png" alt="Marketing Design" width="64" height="64"></div>
-                        <div class="service-content">
-                            <div class="service-line"></div>
-                            <p class="service-sub">Design That Gets People to Act</p>
-                            <h3 class="service-title">Marketing &amp; Campaign Design</h3>
-                            <p class="service-text">Need a flyer, ad, or poster that actually works? We design with purpose so whether someone's scrolling by or walking past, they notice you.</p>
-                        </div>
-                    </div>
-                    <div class="service-block">
-                        <div class="service-icon"><img loading="lazy" src="images/imgi_18_68d6c5defc866f52b23a0656_consulting.png" alt="Social Content" width="64" height="64"></div>
-                        <div class="service-content">
-                            <div class="service-line"></div>
-                            <p class="service-sub">Graphics That Stop Thumbs in Their Tracks</p>
-                            <h3 class="service-title">Social &amp; Digital Content</h3>
-                            <p class="service-text">Social media moves fast. We design bold, eye-catching visuals made to grab attention and get people to engage wherever they see you.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- View More Button -->
-                <div class="text-center mt-24" style="margin-bottom: 2rem;">
-                    <a href="services.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View all services</span></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container env-personal">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Skills Section (Personal only) -->
-        <section class="skills-section env-personal pt-24 pb-24" id="skills">
-            <div class="container">
-                <p class="section-subtitle">My Capabilities</p>
-                <h2 class="section-title">Skills &amp; Expertise</h2>
-                
-                <div class="skills-grid">
-                    <!-- Core Design Skills -->
-                    <div class="skill-card">
-                        <h3>Core Design Skills</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Layouts &amp; Typography</span><span class="skill-percent">95%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95%"></div></div>
-                            <p class="skill-desc">I create visually compelling layouts using strong principles of typography, colour theory, hierarchy, and composition</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Brand Identities</span><span class="skill-percent">92%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92%"></div></div>
-                            <p class="skill-desc">I design cohesive brand identities including logos, colour palettes, and brand guidelines for businesses and organisations</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Colour Theory</span><span class="skill-percent">88%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88%"></div></div>
-                            <p class="skill-desc">I apply colour theory strategically to evoke emotion, reinforce brand personality, and guide the viewer's eye</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Structure &amp; Balance</span><span class="skill-percent">90%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%"></div></div>
-                            <p class="skill-desc">I craft clean, well-structured layouts with a sharp eye for balance, contrast, alignment, and use of negative space</p>
-                        </div>
-                    </div>
-
-                    <!-- Software Proficiency -->
-                    <div class="skill-card">
-                        <h3>Software Proficiency</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Adobe Creative Suite</span><span class="skill-percent">98%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="98%"></div></div>
-                            <p class="skill-desc">I am proficient in Adobe Illustrator, Photoshop, and InDesign for vector design, photo editing, and print layouts</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Figma</span><span class="skill-percent">85%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%"></div></div>
-                            <p class="skill-desc">I design and prototype digital interfaces using Figma for collaborative UI/UX projects</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">AI-Powered Workflows</span><span class="skill-percent">82%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="82%"></div></div>
-                            <p class="skill-desc">I integrate AI-powered design tools to accelerate ideation and production workflows</p>
-                        </div>
-                    </div>
-
-                    <!-- Technical Skills -->
-                    <div class="skill-card">
-                        <h3>Technical Skills</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Print-Ready Files</span><span class="skill-percent">94%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="94%"></div></div>
-                            <p class="skill-desc">I prepare print-ready files with correct bleed, colour modes (CMYK/RGB), and supplier specifications</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Responsive Graphics</span><span class="skill-percent">96%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="96%"></div></div>
-                            <p class="skill-desc">I design responsive, screen-optimised graphics tailored for web and digital platforms</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">HTML &amp; CSS</span><span class="skill-percent">80%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80%"></div></div>
-                            <p class="skill-desc">I write basic HTML and CSS, allowing me to implement and maintain designs directly in the browser</p>
-                        </div>
-                    </div>
-
-                    <!-- Creative & Strategic Skills -->
-                    <div class="skill-card">
-                        <h3>Creative &amp; Strategic</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Visual Concepts</span><span class="skill-percent">91%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="91%"></div></div>
-                            <p class="skill-desc">I translate client briefs into strong visual concepts through research, moodboarding, and ideation</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Original Artwork</span><span class="skill-percent">87%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="87%"></div></div>
-                            <p class="skill-desc">I create original illustrations and custom artwork for digital and print media</p>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span class="skill-name">Visual Communication</span><span class="skill-percent">93%</span></div>
-                            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="93%"></div></div>
-                            <p class="skill-desc">I solve visual communication challenges by balancing aesthetics with function and purpose</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Professional Skills -->
-                    <div class="skill-card" style="grid-column: 1 / -1;">
-                        <h3>Professional Skills</h3>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;">
-                            <div class="skill-item">
-                                <div class="skill-info"><span class="skill-name">Client Communication</span><span class="skill-percent">96%</span></div>
-                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="96%"></div></div>
-                                <p class="skill-desc">I communicate design concepts clearly to clients and collaborate effectively with developers and copywriters</p>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info"><span class="skill-name">Project Management</span><span class="skill-percent">92%</span></div>
-                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92%"></div></div>
-                                <p class="skill-desc">I manage multiple projects simultaneously, delivering quality work within agreed timelines</p>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info"><span class="skill-name">Portfolio Maintenance</span><span class="skill-percent">85%</span></div>
-                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%"></div></div>
-                                <p class="skill-desc">I maintain an up-to-date portfolio that showcases a diverse range of branding, web, and print projects</p>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info"><span class="skill-name">Industry Awareness</span><span class="skill-percent">90%</span></div>
-                                <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%"></div></div>
-                                <p class="skill-desc">I stay current with design trends, emerging tools, and industry best practices</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-24" style="margin-bottom: 2rem;">
-                    <a href="skills.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">View all skills</span></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container env-business">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container env-personal">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Web Design & Development Section (Business Only) -->
-        <section class="webdev-section env-business mt-24 mb-24">
-            <div class="container">
-                <div class="webdev-header">
-                    <p class="section-subtitle">What We Build</p>
-                    <h2 class="section-title">Web Design &amp;<br>Website Development</h2>
-                    <h3 class="section-heading-two mt-4" style="max-width: 680px; margin: 1rem auto 0;">
-                        We don't just design &mdash; we build custom, high-performing websites that look incredible and drive real results for your brand.
-                    </h3>
-                </div>
-
-                <div class="webdev-grid">
-                    <!-- Card 1: Unique Web Design -->
-                    <div class="webdev-card">
-                        <div class="webdev-icon">
-                            <svg width="40" height="40" fill="#ff5e00" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        </div>
-                        <h3>Unique Web Design</h3>
-                        <p>Because our team all have a strong background in design, we don't just put together a website willy-nilly. All our websites are custom designed according to your brand identity and specific requirements aimed at being user-friendly and visually appealing. This means your website is unique, doesn't have that "template" feel which makes it stand out from your competitors.</p>
-                    </div>
-
-                    <!-- Card 2: Custom Web Development -->
-                    <div class="webdev-card">
-                        <div class="webdev-icon">
-                            <svg width="40" height="40" fill="#ff5e00" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-                        </div>
-                        <h3>Custom Web Development</h3>
-                        <p>What makes us different is that not only can we design but we also have a strong development team who can custom code your website. This is the best of both worlds! Enticing design AND a well functioning website which drives results in terms of reaching your target market visually and engagement.</p>
-                    </div>
-
-                    <!-- Card 3: Easy to Update -->
-                    <div class="webdev-card">
-                        <div class="webdev-icon">
-                            <svg width="40" height="40" fill="#ff5e00" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                        </div>
-                        <h3>Easy to Update</h3>
-                        <p>We prefer using WordPress when building our websites as it is easy to customise as well as easy to update after it has been built. With a "What You See Is What You Get" (WYSIWYG) builder you don't have to ask us to make small text changes after the website has been completed. Which means you have more control over your own website.</p>
-                    </div>
-
-                    <!-- Card 4: Responsive & Mobile Friendly -->
-                    <div class="webdev-card">
-                        <div class="webdev-icon">
-                            <svg width="40" height="40" fill="#ff5e00" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
-                        </div>
-                        <h3>Responsive &amp; Mobile Friendly</h3>
-                        <p>More and more websites are being viewed on mobile phones first. Which means having your website optimised for mobile is crucial. All our websites are built to be responsive and adjust according to the device you are viewing it on.</p>
-                    </div>
-                </div>
-
-                <div class="text-center mt-24">
-                    <a href="contact.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">Start your web project</span></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container env-business">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Testimonials Section -->
-        <section class="testimonials-section pt-24 pb-24">
-            <div class="container">
-                <div class="section-top mb-16">
-                    <!-- Business Testimonials -->
-                    <div class="section-title-wrap env-business">
-                        <p class="section-subtitle">Kind Words</p>
-                        <h2 class="section-title">What Clients<br>Say About Us</h2>
-                    </div>
-                    <div class="section-desc-wrap env-business">
-                        <h3 class="section-heading-two">Real feedback from brands and founders we've had the pleasure of partnering with.</h3>
-                    </div>
-
-                    <!-- Personal Testimonials -->
-                    <div class="section-title-wrap env-personal">
-                        <p class="section-subtitle">Kind Words</p>
-                        <h2 class="section-title">What Clients<br>Say About Me</h2>
-                    </div>
-                    <div class="section-desc-wrap env-personal">
-                        <h3 class="section-heading-two">Real feedback from real people I've had the pleasure of working with.</h3>
-                    </div>
-                </div>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <p class="testimonial-quote">"Dubani completely transformed our brand. The logo feels exactly like us &mdash; clean, bold, and memorable. We get compliments on it constantly."</p>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">S</div>
-                            <div class="testimonial-info">
-                                <h4>Sarah M.</h4>
-                                <p>Founder, The Online Cake Shop</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <p class="testimonial-quote">"Working with Dubani was effortless. He understood the brief immediately and delivered packaging that truly made our product stand out on the shelf."</p>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">J</div>
-                            <div class="testimonial-info">
-                                <h4>James O.</h4>
-                                <p>Product Manager, Cape Craft Co.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <p class="testimonial-quote">"Our social media content now actually gets attention. The visuals Dubani designed are eye-catching and on-brand every single time."</p>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">A</div>
-                            <div class="testimonial-info">
-                                <h4>Amara N.</h4>
-                                <p>Marketing Lead, Bloom Studio</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <p class="testimonial-quote">"The pitch deck Dubani designed helped us close our funding round. It was polished, clear, and told our story in a way we never could have done alone."</p>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">K</div>
-                            <div class="testimonial-info">
-                                <h4>Kwame T.</h4>
-                                <p>CEO, TechStart Africa</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <p class="testimonial-quote">"Incredibly talented and easy to work with. Dubani delivered ahead of schedule and the quality exceeded our expectations. Highly recommended."</p>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">L</div>
-                            <div class="testimonial-info">
-                                <h4>Lerato D.</h4>
-                                <p>Creative Director, Vivid Agency</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <p class="testimonial-quote">"From the first call to the final files, everything was professional and smooth. Our brand now has a voice and a look that we're proud to show the world."</p>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">N</div>
-                            <div class="testimonial-info">
-                                <h4>Nadia R.</h4>
-                                <p>Owner, Roots &amp; Co.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section Divider -->
-        <div class="section-divider-container">
-            <div class="section-divider-line"></div>
-        </div>
-
-        <!-- Contact Section -->
-        <section class="contact-section" id="contact">
-            <div class="container pt-24 pb-24">
-                <div class="contact-grid">
-                    <!-- Business Contact -->
-                    <div class="contact-left env-business" style="margin-right: 40px;">
-                        <p class="section-subtitle">Contact us</p>
-                        <h2 class="section-title">Let's Create<br>Something Meaningful</h2>
-                        <h3 class="section-heading-two mt-4">Whether you're starting from scratch or need a brand refresh, our team is here to help bring your vision to life.</h3>
-                    </div>
-
-                    <!-- Personal Contact -->
-                    <div class="contact-left env-personal" style="margin-right: 40px;">
-                        <p class="section-subtitle">Contact me</p>
-                        <h2 class="section-title">Let's Create<br>Something Meaningful</h2>
-                        <h3 class="section-heading-two mt-4">Whether you're starting from scratch or need a brand refresh, I'm here to help bring your vision to life.</h3>
-                    </div>
-                    <div class="contact-form-box">
-                        <form class="contact-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>First Name</label>
-                                    <input type="text" placeholder="John" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" placeholder="Doe" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" placeholder="example@domain.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Message</label>
-                                <textarea placeholder="Type your message..." required></textarea>
-                            </div>
-                            <button type="submit" class="submit-btn theme-btn w-full"><div class="btn-bg orange"></div><span class="btn-text text-white">Submit</span></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="main-footer">
-            <div class="container">
-                <div class="footer-grid">
-                    <div class="footer-brand">
-                        <a href="https://dubanicreatives.tech" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;" width="233" height="35"></a>
-                        <h3 class="footer-heading mt-4">Let's build something remarkable together!</h3>
-                        <p class="footer-text mt-4">&copy; Copyright Dubani Creatives</p>
-                    </div>
-                    <div class="footer-links">
-                        <h4 class="footer-col-title">Menu</h4>
-                        <a href="#home">Home</a>
-                        <a href="projects.html">Projects</a>
-                        <a href="services.html">Services</a>
-                    </div>
-                    <div class="footer-links">
-                        <h4 class="footer-col-title">Pages</h4>
-                        <a href="contact.html">Contact</a>
-                    </div>
-                    <div class="footer-links">
-                        <h4 class="footer-col-title">Social</h4>
-                        <a href="https://www.linkedin.com/company/dubani-creatives" target="_blank" rel="noopener noreferrer" class="footer-social-link">
-                            <svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.83-48.3 93.97 0 111.28 61.9 111.28 142.3V448z"/></svg>
-                            LinkedIn
-                        </a>
-                        <a href="https://www.instagram.com/dubanicreatives/" target="_blank" rel="noopener noreferrer" class="footer-social-link">
-                            <svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
-                            Instagram
-                        </a>
-                        <a href="https://www.facebook.com/dubanicreativespage/" target="_blank" rel="noopener noreferrer" class="footer-social-link">
-                            <svg class="footer-social-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256c0 120 82.7 220.8 194.2 248.5V334.2h-56.6v-78.2h56.6v-61.3c0-56.4 33.5-87.3 84.6-87.3 24.5 0 50.2 4.4 50.2 4.4v55.4h-28.3c-27.8 0-36.5 17.3-36.5 35v42h62.3l-10 78.2h-52.3v170.3C429.3 476.8 512 376 512 256z"/></svg>
-                            Facebook
-                        </a>
-                        <a href="https://www.tiktok.com/@dubanicreatives" target="_blank" rel="noopener noreferrer" class="footer-social-link">
-                            <svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M448 209.9a210.1 210.1 0 0 1-122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3v89.9a74.6 74.6 0 1 0 52.2 71.2V0h88a121 121 0 0 0 1.9 22.2 122.2 122.2 0 0 0 53.9 80.2 121 121 0 0 0 67 20.1z"/></svg>
-                            TikTok
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js" defer></script>
-    <!-- Apps Sidebar -->
-    <div class="apps-sidebar-overlay" id="apps-sidebar-overlay"></div>
-    <aside class="apps-sidebar" id="apps-sidebar">
-        <div class="sidebar-header">
-            <h2 class="sidebar-title">Dubani <span>Apps</span></h2>
-            <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">&times;</button>
-        </div>
-        <div class="sidebar-content">
-            <p class="sidebar-desc">Explore our custom utility tools designed to streamline your business workflow.</p>
-            <div class="app-list">
-                <!-- Invoice App -->
-                <a href="invoice.html" class="app-item">
-                    <div class="app-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    </div>
-                    <div class="app-info">
-                        <h3 class="app-name">Invoice Generator</h3>
-                        <p class="app-tagline">Create & manage professional invoices.</p>
-                    </div>
-                    <div class="app-arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </div>
-                </a>
-                
-                <!-- Handscribe App -->
-                <a href="handscribe/" class="app-item">
-                    <div class="app-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path><path d="M15 5l4 4"></path></svg>
-                    </div>
-                    <div class="app-info">
-                        <h3 class="app-name">Handscribe</h3>
-                        <p class="app-tagline">Convert text to beautiful handwriting.</p>
-                    </div>
-                    <div class="app-arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </div>
-                </a>
-
-                <!-- PatternForge App -->
-                <a href="patternforge/" class="app-item">
-                    <div class="app-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                    </div>
-                    <div class="app-info">
-                        <h3 class="app-name">PatternForge</h3>
-                        <p class="app-tagline">Generate seamless SVG patterns.</p>
-                    </div>
-                    <div class="app-arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </div>
-                </a>
-
-                <!-- Placeholder for future apps -->
-                <div class="app-item disabled">
-                    <div class="app-icon" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
-                    </div>
-                    <div class="app-info">
-                        <h3 class="app-name">Content Planner</h3>
-                        <p class="app-tagline">Coming Soon</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="sidebar-footer">
-            <p>&copy; 2026 Dubani Creatives</p>
-        </div>
+      <div class="sidebar-footer">
+        <p class="sidebar-footer-tagline">Creative ideas <span>Real impact</span></p>
+        <p class="sidebar-footer-loc">📍 Cape Town, South Africa</p>
+        <p class="sidebar-footer-copy">© 2026 Dubani Creatives. All rights reserved.</p>
+      </div>
     </aside>
 
-    <script src="main.js?v=35" defer></script>
+    <!-- ====================================================================
+         MAIN CONTENT AREA
+         ==================================================================== -->
+    <main class="site-content">
 
-    <!-- WhatsApp Chat Widget -->
-    <div class="wa-widget-container">
-        <div class="wa-tooltip">Chat with me on WhatsApp 💬</div>
-        <div class="wa-bot-and-btn">
-            <!-- Animated Chatbot Robot SVG -->
-            <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
-                <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
-                <circle cx="28" cy="20" r="2.5" fill="#fff"/>
-                <circle cx="36" cy="20" r="2.5" fill="#fff"/>
-                <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
-                <circle cx="32" cy="6" r="3" fill="#25D366"/>
-                <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
-                <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
-                <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
-            </svg>
-            <!-- WhatsApp Button -->
-            <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-            </a>
+      <!-- Sticky Top Header Bar -->
+      <header class="top-nav-bar">
+        <div class="top-bar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation">☰</button>
+          <span class="panel-section-indicator" id="panel-indicator">01. HOME</span>
+          <span class="top-bar-domain">dubanicreatives.tech</span>
         </div>
+        <div class="top-bar-actions">
+          <a href="#contact" class="btn-primary">Start a project →</a>
+        </div>
+      </header>
+
+      <!-- ==================================================================
+           01. HOME SECTION (Panel 01)
+           ================================================================== -->
+      <section class="page-section" id="home">
+        <div class="home-hero-grid">
+          <div class="home-hero-content">
+            <span class="section-eyebrow">SOUTH AFRICAN BRAND & DESIGN STUDIO</span>
+            <h1 class="home-hero-title">Strategic <span class="brand-gradient">brand identity</span> for a bolder tomorrow.</h1>
+            <p class="home-hero-text">We help ambitious brands turn ideas into powerful identities, engaging content and digital experiences that create real impact.</p>
+            <div class="home-hero-cta">
+              <a href="#work" class="btn-primary">View Case Studies ↓</a>
+              <a href="#contact" class="btn-ghost">Start a Project →</a>
+            </div>
+          </div>
+
+          <div class="home-hero-visual">
+            <div class="hero-image-card">
+              <!-- Contra Achievement Badge Widget -->
+              <a href="https://contra.com/hire/adobe-xd-freelancers-in-western-cape-south-africa?featuredUserProfileId=WyJVc2VyUHJvZmlsZSIsMzU1NjMwMTRd" target="_blank" rel="noopener noreferrer" class="hero-badge-widget" onclick="window.open(this.href, '_blank'); return false;">
+                <div class="badge-shine"></div>
+                <div class="badge-content">
+                  <div class="badge-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                  </div>
+                  <div class="badge-text-box">
+                    <span class="badge-tag"><span class="blinking-dot"></span> Featured on Contra</span>
+                    <span class="badge-title">Best Adobe XD Freelancer in Western Cape</span>
+                  </div>
+                  <div class="badge-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+
+              <img src="images/Hero 03.jpg" alt="Dubani Creatives - Founder & Creative Director" class="hero-portrait-img" />
+              <div class="hero-graphic-badge">
+                <p class="hero-badge-tagline">Ideas<br>Brands<br>People<br>Progress</p>
+                <p class="hero-badge-sub">CREATIVE FOR A BRIGHTER SOUTH AFRICA</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Work Strip -->
+        <div class="selected-work-section">
+          <div class="selected-work-header">
+            <span class="selected-work-title">SELECTED WORK</span>
+            <a href="#work" class="view-all-link">View all →</a>
+          </div>
+
+          <div class="selected-work-grid">
+            <!-- Card 1: Luzana -->
+            <a href="#work" class="case-card" data-case="luzana">
+              <div class="case-thumb-wrap">
+                <img src="images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Consulting" class="case-thumb-img" />
+              </div>
+              <div class="case-card-body">
+                <h3 class="case-card-title">LUZANA Consulting</h3>
+                <p class="case-card-desc">Brand Identity • Print • Digital</p>
+              </div>
+            </a>
+
+            <!-- Card 2: Dream Area -->
+            <a href="#work" class="case-card" data-case="dream">
+              <div class="case-thumb-wrap">
+                <img src="images/imgi_13_68bd341e34845d434f3fb083_1.png" alt="Dream Area" class="case-thumb-img" />
+              </div>
+              <div class="case-card-body">
+                <h3 class="case-card-title">Dream Area</h3>
+                <p class="case-card-desc">Branding • Digital Experience</p>
+              </div>
+            </a>
+
+            <!-- Card 3: Star Blox -->
+            <a href="#work" class="case-card" data-case="star">
+              <div class="case-thumb-wrap">
+                <img src="images/imgi_14_68bd33e0e57b111749f34daf_0.png" alt="Star Blox" class="case-thumb-img" />
+              </div>
+              <div class="case-card-body">
+                <h3 class="case-card-title">Star Blox</h3>
+                <p class="case-card-desc">Brand Identity • Gaming & Web</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Client Partner Marquee Section -->
+        <div class="client-section" style="margin-top: 24px; padding-top: 10px;">
+          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 12px; font-weight: 600;">TRUSTED BY AMBITIOUS BUSINESSES & FOUNDERS</p>
+          <div class="client-box">
+            <div class="marquee-gradient left"></div>
+            <div class="marquee-gradient right"></div>
+            <div class="marquee-wrapper">
+              <div class="marquee-track">
+                <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client Partner" width="136" height="59" />
+                <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client Partner" width="136" height="59" />
+                <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client Partner" width="121" height="48" />
+                <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client Partner" width="136" height="59" />
+                <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client Partner" width="136" height="59" />
+                <!-- Loop duplicates -->
+                <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client Partner" width="136" height="59" />
+                <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client Partner" width="136" height="59" />
+                <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client Partner" width="121" height="48" />
+                <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client Partner" width="136" height="59" />
+                <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client Partner" width="136" height="59" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           02. WORK / CASE STUDIES SECTION (Panel 02)
+           ================================================================== -->
+      <section class="page-section" id="work">
+        <div class="case-studies-header-row">
+          <div>
+            <span class="section-eyebrow">OUR WORK</span>
+            <h2 class="section-title">Case Studies</h2>
+            <p class="section-desc">Real brands. Real results. Designed in South Africa.</p>
+          </div>
+          <div class="case-studies-filter-wrap">
+            <select class="select-filter-dropdown" id="case-filter-dropdown" aria-label="Filter case studies">
+              <option value="all">All Projects</option>
+              <option value="brand">Brand Identity</option>
+              <option value="digital">Digital & Web</option>
+              <option value="print">Print & Collateral</option>
+            </select>
+            <a href="projects.html" class="btn-ghost">Browse Archive (50+) →</a>
+          </div>
+        </div>
+
+        <div class="case-studies-main-grid">
+          <!-- Case 1: LUZANA Consulting -->
+          <article class="case-card" data-category="brand print digital">
+            <div class="case-thumb-wrap">
+              <img src="images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Consulting Holdings Case Study" class="case-thumb-img" />
+            </div>
+            <div class="case-card-body">
+              <div class="case-tags-row">
+                <span class="case-tag">Brand Identity</span>
+                <span class="case-tag">Print</span>
+                <span class="case-tag">Corporate</span>
+              </div>
+              <h3 class="case-card-title">LUZANA Consulting Holdings</h3>
+              <p class="case-card-desc">A professional brand identity system, stationery, and collateral for a premier advisory firm.</p>
+              <a href="#" class="case-card-link" data-case="luzana">View case study →</a>
+            </div>
+          </article>
+
+          <!-- Case 2: Dream Area -->
+          <article class="case-card" data-category="brand digital">
+            <div class="case-thumb-wrap">
+              <img src="images/imgi_13_68bd341e34845d434f3fb083_1.png" alt="Dream Area Creative Platform Case Study" class="case-thumb-img" />
+            </div>
+            <div class="case-card-body">
+              <div class="case-tags-row">
+                <span class="case-tag">Branding</span>
+                <span class="case-tag">Digital Experience</span>
+                <span class="case-tag">Community</span>
+              </div>
+              <h3 class="case-card-title">Dream Area</h3>
+              <p class="case-card-desc">A vibrant brand and digital experience created for an innovative creative platform.</p>
+              <a href="#" class="case-card-link" data-case="dream">View case study →</a>
+            </div>
+          </article>
+
+          <!-- Case 3: Star Blox -->
+          <article class="case-card" data-category="brand digital">
+            <div class="case-thumb-wrap">
+              <img src="images/imgi_14_68bd33e0e57b111749f34daf_0.png" alt="Star Blox Case Study" class="case-thumb-img" />
+            </div>
+            <div class="case-card-body">
+              <div class="case-tags-row">
+                <span class="case-tag">Brand Identity</span>
+                <span class="case-tag">Gaming & Web</span>
+                <span class="case-tag">Art Direction</span>
+              </div>
+              <h3 class="case-card-title">Star Blox</h3>
+              <p class="case-card-desc">Energetic visual identity, custom typography, and web assets tailored for interactive entertainment.</p>
+              <a href="#" class="case-card-link" data-case="star">View case study →</a>
+            </div>
+          </article>
+
+          <!-- Case 4: INGELOSI Employment Law -->
+          <article class="case-card" data-category="brand print">
+            <div class="case-thumb-wrap">
+              <img src="images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp" alt="INGELOSI Employment Law Case Study" class="case-thumb-img" />
+            </div>
+            <div class="case-card-body">
+              <div class="case-tags-row">
+                <span class="case-tag">Legal Identity</span>
+                <span class="case-tag">Stationery</span>
+                <span class="case-tag">Branding</span>
+              </div>
+              <h3 class="case-card-title">INGELOSI Employment Law</h3>
+              <p class="case-card-desc">Authoritative, trustworthy legal brand architecture, business stationery, and professional collateral.</p>
+              <a href="#" class="case-card-link" data-case="ingelosi">View case study →</a>
+            </div>
+          </article>
+        </div>
+
+        <!-- Archive Banner Strip -->
+        <div class="cta-banner-strip" style="margin-top: 32px;">
+          <div class="cta-banner-left">
+            <span class="cta-banner-eyebrow">PORTFOLIO ARCHIVE</span>
+            <h3 class="cta-banner-title">Want to see more of our 50+ projects?</h3>
+            <p class="cta-banner-desc">Explore our comprehensive archive spanning logos, packaging, web design, and campaigns.</p>
+          </div>
+          <a href="projects.html" class="btn-primary">Browse Full Projects Archive (50+) →</a>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           03. SERVICES SECTION (Panel 03)
+           ================================================================== -->
+      <section class="page-section" id="services">
+        <div class="services-header-row">
+          <div>
+            <span class="section-eyebrow">WHAT WE DO</span>
+            <h2 class="section-title">Services</h2>
+            <p class="section-desc">End-to-end creative solutions from initial concept to live execution.</p>
+          </div>
+          <a href="#contact" class="btn-primary">Start a project →</a>
+        </div>
+
+        <div class="services-grid-3x2">
+          <!-- Service 1: Brand Identity -->
+          <div class="service-card">
+            <div class="service-icon-top">
+              <svg class="service-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+              <span class="service-arrow-corner">↗</span>
+            </div>
+            <h3 class="service-card-title">Brand Identity</h3>
+            <p class="service-card-desc">Logos, visual systems, color palettes, and comprehensive guidelines that make you unforgettable.</p>
+            <a href="#contact" class="service-card-link">Learn more →</a>
+          </div>
+
+          <!-- Service 2: Marketing & Campaign Design -->
+          <div class="service-card">
+            <div class="service-icon-top">
+              <svg class="service-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span class="service-arrow-corner">↗</span>
+            </div>
+            <h3 class="service-card-title">Marketing & Campaign Design</h3>
+            <p class="service-card-desc">From concept to rollout, we create high-converting marketing collateral and campaigns that connect.</p>
+            <a href="#contact" class="service-card-link">Learn more →</a>
+          </div>
+
+          <!-- Service 3: Social Content -->
+          <div class="service-card">
+            <div class="service-icon-top">
+              <svg class="service-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              <span class="service-arrow-corner">↗</span>
+            </div>
+            <h3 class="service-card-title">Social Content & Assets</h3>
+            <p class="service-card-desc">Scroll-stopping social templates, carousel designs, and digital assets tailored for maximum engagement.</p>
+            <a href="#contact" class="service-card-link">Learn more →</a>
+          </div>
+
+          <!-- Service 4: Web Design & Development -->
+          <div class="service-card">
+            <div class="service-icon-top">
+              <svg class="service-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+              <span class="service-arrow-corner">↗</span>
+            </div>
+            <h3 class="service-card-title">Web Design & Development</h3>
+            <p class="service-card-desc">Modern, responsive websites, landing pages, and interactive digital experiences that convert.</p>
+            <a href="#contact" class="service-card-link">Learn more →</a>
+          </div>
+
+          <!-- Service 5: Print-ready Production -->
+          <div class="service-card">
+            <div class="service-icon-top">
+              <svg class="service-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span class="service-arrow-corner">↗</span>
+            </div>
+            <h3 class="service-card-title">Print-ready Production</h3>
+            <p class="service-card-desc">Packaging, business cards, brochures, billboards, merchandise, and publication print prep.</p>
+            <a href="#contact" class="service-card-link">Learn more →</a>
+          </div>
+
+          <!-- Service 6: Creative Strategy -->
+          <div class="service-card">
+            <div class="service-icon-top">
+              <svg class="service-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+              <span class="service-arrow-corner">↗</span>
+            </div>
+            <h3 class="service-card-title">Creative Strategy</h3>
+            <p class="service-card-desc">Brand positioning, market research, and strategic direction to help your business stand out.</p>
+            <a href="#contact" class="service-card-link">Learn more →</a>
+          </div>
+        </div>
+
+        <!-- Banner Strip -->
+        <div class="cta-banner-strip">
+          <div class="cta-banner-left">
+            <span class="cta-banner-eyebrow">LET'S BUILD SOMETHING GREAT</span>
+            <h3 class="cta-banner-title">Ready to bring your vision to life?</h3>
+            <p class="cta-banner-desc">Start a project today and let's create real impact together.</p>
+          </div>
+          <a href="#contact" class="btn-primary">Start a project →</a>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           04. ABOUT / PROFILE SECTION (Panel 04)
+           ================================================================== -->
+      <section class="page-section" id="about">
+        <div class="about-top-grid">
+          <div>
+            <span class="section-eyebrow">ABOUT DUBANI CREATIVES</span>
+            <h2 class="section-title">Design-driven.<br>People-focused.</h2>
+            <p class="section-desc">Dubani Creatives is a South African brand and graphic design studio helping businesses and organisations build meaningful brands through strategic design, engaging content and digital experiences.</p>
+          </div>
+          <div class="about-studio-card">
+            <img src="images/studio_workspace.jpg" alt="Dubani Creatives Studio - Good Ideas Build Brighter Tomorrows" class="about-studio-img" />
+          </div>
+        </div>
+
+        <!-- Live Stats Row -->
+        <div class="about-stats-row">
+          <div class="stat-item-box">
+            <p class="stat-number">+50</p>
+            <p class="stat-label">Projects completed</p>
+          </div>
+          <div class="stat-item-box">
+            <p class="stat-number">+30</p>
+            <p class="stat-label">Happy clients</p>
+          </div>
+          <div class="stat-item-box">
+            <p class="stat-number">6+</p>
+            <p class="stat-label">Years experience</p>
+          </div>
+          <div class="stat-item-box">
+            <p class="stat-number">ZA</p>
+            <p class="stat-label">Proudly South African</p>
+          </div>
+        </div>
+
+        <!-- Founder Profile & Quote -->
+        <div class="about-founder-grid">
+          <div class="founder-profile-card">
+            <div class="founder-avatar-wrap">
+              <img src="images/about img.png" alt="Xhanti Tinzi - Founder & Lead Designer" class="founder-avatar-img" />
+            </div>
+            <div class="founder-info-text">
+              <h3 class="founder-info-title">Meet the Founder</h3>
+              <p style="color: var(--accent-orange); font-weight: 600; font-size: 13px; margin-bottom: 8px;">Xhanti Tinzi • Founder & Lead Designer</p>
+              <p class="founder-info-bio">I've been creative for as long as I can remember. I love designing and building things from scratch. Beyond design, I'm a music lover, a book enthusiast, and a foodie. My faith as a Christian guides me.</p>
+              <div style="margin-top: 14px;">
+                <a href="cv.html" class="case-card-link" style="display: inline-flex; align-items: center; gap: 6px;">View Full CV & Background →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-quote-card">
+            <span class="quote-mark-icon">“</span>
+            <p class="quote-body-text">Beyond just design, we build brands that leave a lasting mark. Strategic thinking, bold design, and flawless execution.</p>
+            <p class="founder-sign" style="margin-top: 16px; font-size: 13px; color: var(--accent-orange); font-weight: 600;">— Dubani Creatives Studio Philosophy</p>
+          </div>
+        </div>
+
+        <!-- Core Values Strip -->
+        <div class="core-values-strip">
+          <div class="value-pill-card">
+            <span class="value-icon">🎯</span>
+            <div class="value-text">
+              <h4>Design with purpose</h4>
+              <p>Brands that create real change.</p>
+            </div>
+          </div>
+          <div class="value-pill-card">
+            <span class="value-icon">🤝</span>
+            <div class="value-text">
+              <h4>Collaborative approach</h4>
+              <p>Your goals, our creativity.</p>
+            </div>
+          </div>
+          <div class="value-pill-card">
+            <span class="value-icon">🇿🇦</span>
+            <div class="value-text">
+              <h4>Proudly South African</h4>
+              <p>Local talent. Global standards.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           05. PACKAGES & PROCESS SECTION (Panel 05)
+           ================================================================== -->
+      <section class="page-section" id="packages">
+        <div>
+          <span class="section-eyebrow">PACKAGES & PROCESS</span>
+          <h2 class="section-title">Simple. Transparent. Effective.</h2>
+          <p class="section-desc">Flexible packages for different needs, plus a clear process from concept to launch.</p>
+        </div>
+
+        <div class="packages-toggle-row">
+          <button class="package-tab-btn active" data-tab="packages">Our Packages</button>
+          <button class="package-tab-btn" data-tab="process">Our Process</button>
+        </div>
+
+        <!-- Packages Tiers Grid -->
+        <div class="packages-tier-grid" id="packages-tier-grid">
+          <!-- Tier 1: Start -->
+          <div class="pricing-card">
+            <div class="pricing-card-header">
+              <div class="pricing-icon">🚀</div>
+              <h3 class="pricing-title">Start</h3>
+              <p class="pricing-sub">Essential branding for new businesses.</p>
+            </div>
+            <p class="pricing-amount">R4,500</p>
+            <ul class="pricing-features-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Custom logo design concepts</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Curated brand colors & fonts</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Basic brand guideline (PDF)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 2 dedicated design revisions</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> High-resolution print & web files</li>
+            </ul>
+            <a href="#contact" class="btn-ghost">Get started →</a>
+          </div>
+
+          <!-- Tier 2: Growth (Popular) -->
+          <div class="pricing-card popular-tier">
+            <span class="popular-badge">Most popular</span>
+            <div class="pricing-card-header">
+              <div class="pricing-icon">📊</div>
+              <h3 class="pricing-title">Growth</h3>
+              <p class="pricing-sub">For established brands ready to level up.</p>
+            </div>
+            <p class="pricing-amount">R9,500</p>
+            <ul class="pricing-features-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete brand identity system</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Social media post & story templates</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Marketing collateral (print/digital)</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Comprehensive brand book</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 5 design revision rounds</li>
+            </ul>
+            <a href="#contact" class="btn-primary">Get started →</a>
+          </div>
+
+          <!-- Tier 3: Scale -->
+          <div class="pricing-card">
+            <div class="pricing-card-header">
+              <div class="pricing-icon">💎</div>
+              <h3 class="pricing-title">Scale</h3>
+              <p class="pricing-sub">For larger projects and ongoing support.</p>
+            </div>
+            <p class="pricing-amount">R18,000+</p>
+            <ul class="pricing-features-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Brand strategy workshop & positioning</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Full visual identity & asset library</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Full campaign design & art direction</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Modern web design & development</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Priority ongoing creative retainers</li>
+            </ul>
+            <a href="#contact" class="btn-ghost">Get in touch →</a>
+          </div>
+        </div>
+
+        <!-- Process 3 Steps (Toggled) -->
+        <div class="process-steps-row" id="process-steps-row" style="display: none;">
+          <div class="process-step-card">
+            <div class="process-step-icon">🔍</div>
+            <div class="process-step-text">
+              <h4>1. Discover</h4>
+              <p>Understand your brand goals, target audience, and competitive market.</p>
+            </div>
+          </div>
+          <div class="process-step-card">
+            <div class="process-step-icon">🎨</div>
+            <div class="process-step-text">
+              <h4>2. Create</h4>
+              <p>Iterative design concepts, typography, color systems, and refinements.</p>
+            </div>
+          </div>
+          <div class="process-step-card">
+            <div class="process-step-icon">🚀</div>
+            <div class="process-step-text">
+              <h4>3. Deliver</h4>
+              <p>Comprehensive production assets, brand style guides, and launch support.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           06. CONTACT SECTION (Panel 06)
+           ================================================================== -->
+      <section class="page-section" id="contact">
+        <div class="contact-main-grid">
+          <!-- Left Column: Contact Details -->
+          <div class="contact-info-col">
+            <div>
+              <span class="section-eyebrow">GET IN TOUCH</span>
+              <h2 class="section-title">Let's create something great.</h2>
+              <p class="section-desc">Have a project in mind, a question, or just want to say hi? We'd love to hear from you.</p>
+            </div>
+
+            <div class="contact-info-list">
+              <div class="contact-info-item">
+                <div class="contact-icon-box">✉</div>
+                <div class="contact-item-text">
+                  <p>Email</p>
+                  <a href="mailto:dubanicreatives@gmail.com">dubanicreatives@gmail.com</a>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-icon-box">📞</div>
+                <div class="contact-item-text">
+                  <p>Phone / WhatsApp</p>
+                  <a href="https://wa.link/rs6bee" target="_blank" rel="noopener noreferrer">+27 61 248 1113</a>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-icon-box">📍</div>
+                <div class="contact-item-text">
+                  <p>Location</p>
+                  <span>Cape Town & Johannesburg, South Africa</span>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-icon-box">🕒</div>
+                <div class="contact-item-text">
+                  <p>Availability</p>
+                  <span>Mon – Fri, 9am – 5pm (SAST)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-social-row">
+              <a href="https://wa.link/rs6bee" class="social-icon-btn" title="WhatsApp" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+              </a>
+              <a href="https://contra.com/hire/adobe-xd-freelancers-in-western-cape-south-africa?featuredUserProfileId=WyJVc2VyUHJvZmlsZSIsMzU1NjMwMTRd" class="social-icon-btn" title="Contra Profile" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </a>
+              <a href="https://www.linkedin.com/company/dubani-creatives" class="social-icon-btn" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              </a>
+              <a href="https://www.instagram.com/dubanicreatives/" class="social-icon-btn" title="Instagram" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+              <a href="https://www.tiktok.com/@dubanicreatives" class="social-icon-btn" title="TikTok" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M448 209.9a210.1 210.1 0 0 1-122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3v89.9a74.6 74.6 0 1 0 52.2 71.2V0h88a121 121 0 0 0 1.9 22.2 122.2 122.2 0 0 0 53.9 80.2 121 121 0 0 0 67 20.1z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Project Inquiry Form -->
+          <div class="contact-form-wrap">
+            <form id="contact-form">
+              <div class="form-group">
+                <label class="form-label" for="contact-name">Your name</label>
+                <input type="text" id="contact-name" class="form-input" placeholder="e.g. Thabo Mokoena" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="contact-email">Your email</label>
+                <input type="email" id="contact-email" class="form-input" placeholder="you@example.com" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="contact-project">Project type</label>
+                <select id="contact-project" class="form-select" required>
+                  <option value="" disabled selected>Select a service</option>
+                  <option value="Brand Identity (Logo & Guidelines)">Brand Identity (Logo & Guidelines)</option>
+                  <option value="Marketing & Campaign Design">Marketing & Campaign Design</option>
+                  <option value="Web Design & Development">Web Design & Development</option>
+                  <option value="Social Media Content & Templates">Social Media Content & Templates</option>
+                  <option value="Print Production & Packaging">Print Production & Packaging</option>
+                  <option value="Full Retainer / Custom Project">Full Retainer / Custom Project</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="contact-message">Tell us about your project</label>
+                <textarea id="contact-message" class="form-textarea" placeholder="A few details about your vision, timeline, and goals..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary form-submit-btn">Send Project Inquiry →</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Contact Bottom Banner -->
+        <div class="cta-banner-strip">
+          <div class="cta-banner-left">
+            <span class="cta-banner-eyebrow">BIG IDEAS START HERE</span>
+            <h3 class="cta-banner-title">Ready to build your next brand?</h3>
+            <p class="cta-banner-desc">Let's turn your vision into real impact.</p>
+          </div>
+          <a href="https://wa.link/rs6bee" target="_blank" rel="noopener noreferrer" class="btn-primary">Chat on WhatsApp Now →</a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Interactive Case Study Detail Modal -->
+  <div class="case-modal" id="case-modal" role="dialog" aria-modal="true">
+    <div class="case-modal-content">
+      <button class="case-modal-close" id="case-modal-close" aria-label="Close dialog">✕</button>
+      <div id="case-modal-body"></div>
     </div>
+  </div>
+
+  <!-- Apps Sidebar Overlay & Aside -->
+  <div class="apps-sidebar-overlay" id="apps-sidebar-overlay"></div>
+  <aside class="apps-sidebar" id="apps-sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Dubani <span>Apps</span></h2>
+      <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">&times;</button>
+    </div>
+    <div class="sidebar-content">
+      <p class="sidebar-desc">Explore our custom utility tools designed to streamline your business workflow.</p>
+      <div class="app-list">
+        <!-- Invoice App -->
+        <a href="invoice.html" class="app-item">
+          <div class="app-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          <div class="app-info">
+            <h3 class="app-name">Invoice Generator</h3>
+            <p class="app-tagline">Create & manage professional invoices.</p>
+          </div>
+          <div class="app-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </a>
+
+        <!-- Handscribe App -->
+        <a href="handscribe/" class="app-item">
+          <div class="app-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path><path d="M15 5l4 4"></path></svg>
+          </div>
+          <div class="app-info">
+            <h3 class="app-name">Handscribe</h3>
+            <p class="app-tagline">Convert text to beautiful handwriting.</p>
+          </div>
+          <div class="app-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </a>
+
+        <!-- PatternForge App -->
+        <a href="patternforge/" class="app-item">
+          <div class="app-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </div>
+          <div class="app-info">
+            <h3 class="app-name">PatternForge</h3>
+            <p class="app-tagline">Generate seamless SVG patterns.</p>
+          </div>
+          <div class="app-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <p>&copy; 2026 Dubani Creatives</p>
+    </div>
+  </aside>
+
+  <!-- WhatsApp Chat Widget with Robot SVG -->
+  <div class="wa-widget-container">
+    <div class="wa-tooltip">Chat with me on WhatsApp 👋</div>
+    <div class="wa-bot-and-btn">
+      <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
+        <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
+        <circle cx="28" cy="20" r="2.5" fill="#fff"/>
+        <circle cx="36" cy="20" r="2.5" fill="#fff"/>
+        <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
+        <circle cx="32" cy="6" r="3" fill="#25D366"/>
+        <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
+        <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+        <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+      </svg>
+      <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Core Javascript Engine -->
+  <script src="main.js?v=20260924-02"></script>
 </body>
 </html>
-
