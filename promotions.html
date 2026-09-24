@@ -1,261 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Current Promotions & Offers | Dubani Creatives</title>
-  <meta name="description" content="Explore current deals, special bundles, and limited-time design promotions by Dubani Creatives." />
-  <link rel="icon" type="image/png" href="images/favicon.png" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260924-01" />
-
-  <style>
-    .promos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    .promo-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    .promo-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(255, 107, 0, 0.5);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-    .promo-card.featured-deal {
-      border-color: var(--orange);
-      box-shadow: 0 0 25px rgba(255, 107, 0, 0.15);
-    }
-    .promo-badge-tag {
-      display: inline-block;
-      align-self: flex-start;
-      background: rgba(255, 107, 0, 0.15);
-      border: 1px solid var(--orange);
-      color: var(--orange);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      margin-bottom: 1rem;
-    }
-    .promo-discount-num {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--text-white);
-      font-family: var(--font-heading);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-    }
-    .promo-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 0.75rem;
-    }
-    .promo-description {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-    .promo-perks-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 2rem;
-    }
-    .promo-perks-list li {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-    .promo-perks-list li svg {
-      width: 16px;
-      height: 16px;
-      stroke: var(--orange);
-      flex-shrink: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotions - Dubani Creatives</title>
+    <meta name="description" content="Check out current deals and special offers from Dubani Creatives. Limited-time design packages at unbeatable value.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=35">
+    <link rel="stylesheet" href="theme-toggle.css?v=19">
+    <style>
+        .promo-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+        .promo-full-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-top: 60px;
+        }
+        .promo-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 36px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-card.featured {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 30px rgba(232, 124, 42, 0.15);
+        }
+        .promo-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .promo-card.featured:hover {
+            box-shadow: 0 12px 40px rgba(232, 124, 42, 0.25);
+        }
+        .promo-discount {
+            font-size: 48px;
+            font-weight: 900;
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+            line-height: 1;
+            margin: 8px 0;
+        }
+        .promo-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--light);
+        }
+        .promo-card .promo-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .promo-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+            flex-grow: 1;
+        }
+        .promo-features p {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .promo-features p::before {
+            content: '✓';
+            color: var(--primary-color);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .promo-expiry {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+        .promo-ribbon {
+            position: absolute;
+            top: 20px;
+            right: -28px;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 5px 36px;
+            transform: rotate(45deg);
+        }
+        .promo-divider {
+            width: 40px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            margin: 8px 0;
+        }
+        @media (max-width: 991px) {
+            .promo-full-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .promo-full-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-
-  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-
-  <div class="site-layout">
-    <!-- Sidebar -->
-    <aside class="site-sidebar" id="site-sidebar">
-      <div>
-        <a href="index.html" class="sidebar-brand">
-          <div class="brand-dc-badge">DC</div>
-          <div class="brand-name">
-            <span class="brand-name-main">Dubani</span>
-            <span class="brand-name-sub">Creatives</span>
-          </div>
-        </a>
-
-        <nav class="sidebar-nav">
-          <a href="index.html#home" class="sidebar-nav-item">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            </span>
-            <span>Home</span>
-          </a>
-          <a href="projects.html" class="sidebar-nav-item">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            </span>
-            <span>Work</span>
-          </a>
-          <a href="services.html" class="sidebar-nav-item">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            </span>
-            <span>Services</span>
-          </a>
-          <a href="cv.html" class="sidebar-nav-item">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </span>
-            <span>About</span>
-          </a>
-          <a href="packages.html" class="sidebar-nav-item active">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><line x1="1" y1="3" x2="23" y2="3"></line><path d="M10 12h4"></path></svg>
-            </span>
-            <span>Packages</span>
-          </a>
-          <a href="contact.html" class="sidebar-nav-item">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            </span>
-            <span>Contact</span>
-          </a>
-        </nav>
-      </div>
-
-      <div class="sidebar-footer">
-        <p class="sidebar-footer-tagline">Creative ideas <span>Real impact</span></p>
-        <p class="sidebar-footer-loc">📍 Cape Town, South Africa</p>
-        <p class="sidebar-footer-copy">© 2026 Dubani Creatives. All rights reserved.</p>
-      </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="site-content">
-      <header class="top-nav-bar">
-        <div class="top-bar-left">
-          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation">☰</button>
-          <span class="top-bar-domain">dubanicreatives.tech · <span>SPECIAL OFFERS</span></span>
-        </div>
-        <div class="top-bar-actions">
-          <a href="packages.html" class="btn-ghost">Standard Packages</a>
-          <a href="contact.html" class="btn-primary">Claim Offer →</a>
-        </div>
-      </header>
-
-      <section class="page-section" style="padding-top: 2rem;">
-        <div>
-          <span class="section-eyebrow">LIMITED-TIME OFFERS</span>
-          <h1 class="section-title">Current Deals &amp; Bundles</h1>
-          <p class="section-desc">Exceptional design crafted to deliver maximum market impact for your investment.</p>
-        </div>
-
-        <div class="promos-grid">
-          <!-- Deal 1 -->
-          <div class="promo-card">
-            <div>
-              <span class="promo-badge-tag">Startup Identity</span>
-              <div class="promo-discount-num">20% OFF</div>
-              <h3 class="promo-title">Starter Brand Package</h3>
-              <p class="promo-description">Complete initial visual identity for new ventures and launching businesses.</p>
-              <ul class="promo-perks-list">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 3 distinct logo concepts</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Typography system & palette</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Business card design ready to print</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 2 dedicated revision rounds</li>
-              </ul>
+    <!-- Dark/Light Mode Toggle -->
+    <div class="theme-toggle-switch" id="theme-toggle">
+        <div class="theme-toggle-track" aria-label="Toggle dark/light mode" role="button" tabindex="0">
+            <div class="theme-toggle-icon moon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
             </div>
-            <a href="contact.html" class="btn-primary">Claim This Offer →</a>
-          </div>
-
-          <!-- Deal 2 (Featured) -->
-          <div class="promo-card featured-deal">
-            <div>
-              <span class="promo-badge-tag" style="background: var(--orange); color: #fff;">Most Popular</span>
-              <div class="promo-discount-num" style="color: var(--orange);">BUY 5 GET 2</div>
-              <h3 class="promo-title">Social Content Pack</h3>
-              <p class="promo-description">High-impact feed and story assets designed to capture attention and convert followers.</p>
-              <ul class="promo-perks-list">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 5 custom feed templates</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 2 bonus animated story designs</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Brand-aligned color schemes & fonts</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Fast 48-hour delivery</li>
-              </ul>
+            <div class="theme-toggle-knob"></div>
+            <div class="theme-toggle-icon sun">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
             </div>
-            <a href="contact.html" class="btn-primary">Claim This Offer →</a>
-          </div>
+        </div>
+        <div class="theme-mode-labels">
+            <span class="mode-label dark-label">DARK</span>
+            <span class="mode-label light-label">LIGHT</span>
+        </div>
+    </div>
 
-          <!-- Deal 3 -->
-          <div class="promo-card">
-            <div>
-              <span class="promo-badge-tag">Investor Ready</span>
-              <div class="promo-discount-num">15% OFF</div>
-              <h3 class="promo-title">Pitch Deck Design</h3>
-              <p class="promo-description">Turn complex ideas and financial data into clean, persuasive slide presentations.</p>
-              <ul class="promo-perks-list">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Up to 15 bespoke branded slides</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Custom infographics and charts</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Fully editable PowerPoint / PDF files</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Investor-ready visual polish</li>
-              </ul>
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container">
+                <div class="header-main-box">
+                    <a href="https://dubanicreatives.tech" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;"></a>
+                    <nav class="header-nav">
+                        <a href="https://dubanicreatives.tech" class="nav-link">Home</a>
+                        <a href="projects.html" class="nav-link env-business">Our work</a>
+                        <a href="projects.html" class="nav-link env-personal">Portfolio</a>
+                        <a href="services.html" class="nav-link env-business">Services</a>
+                        <a href="cv.html" class="nav-link env-personal">Resume / CV</a>
+                        <a href="https://dubanicreatives.tech#process" class="nav-link">Process</a>
+                        <a href="promotions.html" class="nav-link active env-business">Promotions</a>
+                        <a href="packages.html" class="nav-link env-business">Packages</a>
+                        <a href="skills.html" class="nav-link env-personal">Skills</a>
+                    </nav>
+                    <div class="env-switcher">
+                        <button class="env-switch-btn" data-env="business">Business</button>
+                        <button class="env-switch-btn" data-env="personal">Personal</button>
+                    </div>
+                    <a href="brief.html" class="theme-btn env-business" style="margin-left: 20px;">
+                        <div class="btn-bg orange"></div>
+                        <span class="btn-text text-white">Start a Project</span>
+                    </a>
+                    <a href="contact.html" class="theme-btn env-personal" style="margin-left: 20px;">
+                        <div class="btn-bg"></div>
+                        <span class="btn-text">Get in touch</span>
+                    </a>
+                    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </div>
-            <a href="contact.html" class="btn-primary">Claim This Offer →</a>
-          </div>
-        </div>
-      </section>
+        </header>
 
-      <!-- Footer -->
-      <footer class="site-footer">
-        <div class="footer-top">
-          <div class="footer-brand">
-            <span class="footer-logo">DUBANI CREATIVES</span>
-            <p class="footer-bio">Strategic brand identity, marketing campaigns, and digital design for forward-thinking brands.</p>
-          </div>
-          <div class="footer-links-group">
-            <a href="index.html#home">Home</a>
-            <a href="projects.html">Work</a>
-            <a href="services.html">Services</a>
-            <a href="cv.html">About</a>
-            <a href="packages.html">Packages</a>
-            <a href="contact.html">Contact</a>
-          </div>
+        <!-- Mobile Nav Overlay -->
+        <div class="mobile-nav-overlay" id="mobile-nav">
+            <a href="https://dubanicreatives.tech" class="mobile-nav-link">Home</a>
+            <a href="projects.html" class="mobile-nav-link env-business">Our work</a>
+            <a href="projects.html" class="mobile-nav-link env-personal">Portfolio</a>
+            <a href="services.html" class="mobile-nav-link env-business">Services</a>
+            <a href="cv.html" class="mobile-nav-link env-personal">Resume / CV</a>
+            <a href="https://dubanicreatives.tech#process" class="mobile-nav-link">Process</a>
+            <a href="promotions.html" class="mobile-nav-link env-business">Promotions</a>
+            <a href="packages.html" class="mobile-nav-link env-business">Packages</a>
+            <a href="brief.html" class="mobile-nav-link env-business">Start a Project</a>
+            <a href="skills.html" class="mobile-nav-link env-personal">Skills</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+            <div class="mobile-env-switcher">
+                <button class="env-switch-btn" data-env="business">Business</button>
+                <button class="env-switch-btn" data-env="personal">Personal</button>
+            </div>
         </div>
-        <div class="footer-bottom">
-          <p>© 2026 Dubani Creatives. All rights reserved. Cape Town, South Africa.</p>
-        </div>
-      </footer>
-    </main>
-  </div>
 
-  <script src="main.js"></script>
+        <!-- Page Header -->
+        <section style="padding-top: 150px; padding-bottom: 20px;">
+            <div class="container text-center">
+                <p class="section-subtitle">Limited Time Only</p>
+                <h1 class="section-title" style="font-size: 56px;">Current Deals &amp;<br>Special Offers</h1>
+                <h3 class="section-heading-two mt-4" style="max-width: 700px; margin: 1rem auto 0;">
+                    Great design shouldn't break the bank. These promotions are built to give you the most impact for your budget &mdash; but they won't last forever.
+                </h3>
+            </div>
+        </section>
+
+        <!-- Promotions Grid -->
+        <section style="padding-bottom: 80px;">
+            <div class="container">
+                <div class="promo-full-grid">
+
+                    <!-- Promo 1 -->
+                    <div class="promo-card">
+                        <span class="promo-badge">Brand Package</span>
+                        <div>
+                            <div class="promo-discount">20% OFF</div>
+                            <div class="promo-divider"></div>
+                            <h3>Starter Brand Pack</h3>
+                        </div>
+                        <p class="promo-desc">Perfect for new businesses and startups who need a strong, professional brand identity from day one.</p>
+                        <div class="promo-features">
+                            <p>Logo design (3 initial concepts)</p>
+                            <p>Brand colour &amp; font guide</p>
+                            <p>Business card design</p>
+                            <p>2 rounds of revisions</p>
+                            <p>Final files in all formats</p>
+                        </div>
+                        <p class="promo-expiry">&#128197; Limited availability &mdash; contact to confirm</p>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Claim This Offer</span></a>
+                    </div>
+
+                    <!-- Promo 2 (Featured) -->
+                    <div class="promo-card featured">
+                        <div class="promo-ribbon">Popular</div>
+                        <span class="promo-badge">Social Bundle</span>
+                        <div>
+                            <div class="promo-discount">Buy 5</div>
+                            <div class="promo-divider"></div>
+                            <h3>Social Media Bundle &mdash; Get 2 Free</h3>
+                        </div>
+                        <p class="promo-desc">Stock up on bold, brand-consistent social graphics. Perfect for brands who post regularly and need content that stops the scroll.</p>
+                        <div class="promo-features">
+                            <p>5 custom social media graphics</p>
+                            <p>2 bonus story templates (free)</p>
+                            <p>Consistent brand styling throughout</p>
+                            <p>Ready-to-post files included</p>
+                            <p>Fast 48-hour turnaround</p>
+                        </div>
+                        <p class="promo-expiry">&#128197; Ongoing offer &mdash; available now</p>
+                        <a href="contact.html" class="theme-btn w-full mt-4"><div class="btn-bg orange"></div><span class="btn-text">Claim This Offer</span></a>
+                    </div>
+
+                    <!-- Promo 3 -->
+                    <div class="promo-card">
+                        <span class="promo-badge">Pitch Decks</span>
+                        <div>
+                            <div class="promo-discount">15% OFF</div>
+                            <div class="promo-divider"></div>
+                            <h3>Pitch Deck Special</h3>
+                        </div>
+                        <p class="promo-desc">Whether you're pitching to investors, clients, or your team &mdash; make your presentation unforgettable and professional.</p>
+                        <div class="promo-features">
+                            <p>Up to 15 custom-designed slides</p>
+                            <p>Custom layout, icons &amp; infographics</p>
+                            <p>Brand-aligned visual system</p>
+                            <p>Fully editable source file</p>
+                            <p>1 revision round included</p>
+                        </div>
+                        <p class="promo-expiry">&#128197; Limited spots available</p>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Claim This Offer</span></a>
+                    </div>
+
+                    <!-- Promo 4 -->
+                    <div class="promo-card">
+                        <span class="promo-badge">Packaging</span>
+                        <div>
+                            <div class="promo-discount">10% OFF</div>
+                            <div class="promo-divider"></div>
+                            <h3>Product Packaging Deal</h3>
+                        </div>
+                        <p class="promo-desc">Make your product impossible to ignore. This deal is for businesses launching or rebranding a physical product.</p>
+                        <div class="promo-features">
+                            <p>Label or box packaging design</p>
+                            <p>Print-ready &amp; production files</p>
+                            <p>2 initial design directions</p>
+                            <p>Mockup preview included</p>
+                        </div>
+                        <p class="promo-expiry">&#128197; Limited availability &mdash; contact to confirm</p>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Claim This Offer</span></a>
+                    </div>
+
+                    <!-- Promo 5 -->
+                    <div class="promo-card">
+                        <span class="promo-badge">Illustration</span>
+                        <div>
+                            <div class="promo-discount">Free Add-On</div>
+                            <div class="promo-divider"></div>
+                            <h3>Custom Graphic Bonus</h3>
+                        </div>
+                        <p class="promo-desc">Book any brand package and get a free custom illustration or graphic element added to your project &mdash; no strings attached.</p>
+                        <div class="promo-features">
+                            <p>1 custom illustration or icon set</p>
+                            <p>Unique to your brand identity</p>
+                            <p>Available on any brand package</p>
+                            <p>SVG &amp; PNG formats included</p>
+                        </div>
+                        <p class="promo-expiry">&#128197; Available with any brand package</p>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Claim This Offer</span></a>
+                    </div>
+
+                    <!-- Promo 6 -->
+                    <div class="promo-card">
+                        <span class="promo-badge">Referral</span>
+                        <div>
+                            <div class="promo-discount">R250 OFF</div>
+                            <div class="promo-divider"></div>
+                            <h3>Refer a Friend Discount</h3>
+                        </div>
+                        <p class="promo-desc">Know someone who needs great design? Send them my way and you'll both get a discount on your next project. It's that simple.</p>
+                        <div class="promo-features">
+                            <p>R250 off your next project</p>
+                            <p>Your referral gets 10% off theirs</p>
+                            <p>No limit on referrals</p>
+                            <p>Just mention your name when they reach out</p>
+                        </div>
+                        <p class="promo-expiry">&#128197; Ongoing &mdash; no expiry</p>
+                        <a href="contact.html" class="theme-btn dark-btn w-full mt-4"><span class="btn-text">Learn More</span></a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Invoice Generator Promo -->
+        <section class="invoice-promo-section pt-12 pb-24 text-center">
+            <div class="container">
+                <div style="background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 48px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div style="width: 60px; height: 60px; background: rgba(255, 94, 0, 0.1); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px;">
+                        📄
+                    </div>
+                    <h2 class="section-title" style="font-size: 32px; margin-bottom: 16px;">Generate invoices</h2>
+                    <p class="section-text" style="color: var(--text-muted); max-width: 500px; margin-bottom: 32px;">Create, preview, and share invoices in seconds. Manage/ preview your invoice history seamlessly.</p>
+                    <a href="invoice.html" class="theme-btn" target="_blank">
+                        <div class="btn-bg orange"></div>
+                        <span class="btn-text text-white">Open Invoice App</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Strip -->
+        <section class="pt-24 pb-24 text-center" style="background: var(--secondary-color); border-radius: 40px; margin: 0 20px 80px;">
+            <div class="container">
+                <p class="section-subtitle">Not sure which deal suits you?</p>
+                <h2 class="section-title">Let's figure it out together</h2>
+                <h3 class="section-heading-two mt-4" style="max-width: 600px; margin: 1rem auto 2rem;">
+                    Send me a message and I'll help you find the right offer for where you're at right now.
+                </h3>
+                <a href="contact.html" class="theme-btn"><div class="btn-bg orange"></div><span class="btn-text text-white">Get in touch</span></a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="https://dubanicreatives.tech" class="header-logo"><img src="images/logo.png" alt="Dubani Creatives" style="height: 35px; width: auto;"></a>
+                        <h3 class="footer-heading mt-4">Let's build something remarkable together!</h3>
+                        <p class="footer-text mt-4">&copy; Copyright Dubani Creatives</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Menu</h4>
+                        <a href="https://dubanicreatives.tech">Home</a>
+                        <a href="projects.html">Projects</a>
+                        <a href="services.html">Services</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Pages</h4>
+                        <a href="promotions.html">Promotions</a>
+                        <a href="https://dubanicreatives.tech#process">Process</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4 class="footer-col-title">Social</h4>
+                        <a href="https://www.linkedin.com/company/dubani-creatives" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.83-48.3 93.97 0 111.28 61.9 111.28 142.3V448z"/></svg> LinkedIn</a>
+                        <a href="https://www.instagram.com/dubanicreatives/" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg> Instagram</a>
+                        <a href="https://www.facebook.com/dubanicreativespage/" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256c0 120 82.7 220.8 194.2 248.5V334.2h-56.6v-78.2h56.6v-61.3c0-56.4 33.5-87.3 84.6-87.3 24.5 0 50.2 4.4 50.2 4.4v55.4h-28.3c-27.8 0-36.5 17.3-36.5 35v42h62.3l-10 78.2h-52.3v170.3C429.3 476.8 512 376 512 256z"/></svg> Facebook</a>
+                        <a href="https://www.tiktok.com/@dubanicreatives" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg class="footer-social-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M448 209.9a210.1 210.1 0 0 1-122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3v89.9a74.6 74.6 0 1 0 52.2 71.2V0h88a121 121 0 0 0 1.9 22.2 122.2 122.2 0 0 0 53.9 80.2 121 121 0 0 0 67 20.1z"/></svg> TikTok</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js" defer></script>
+    <script src="main.js?v=35" defer></script>
+
+    <!-- WhatsApp Chat Widget -->
+    <div class="wa-widget-container">
+        <div class="wa-tooltip">Chat with me on WhatsApp 💬</div>
+        <div class="wa-bot-and-btn">
+            <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
+                <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
+                <circle cx="28" cy="20" r="2.5" fill="#fff"/>
+                <circle cx="36" cy="20" r="2.5" fill="#fff"/>
+                <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
+                <circle cx="32" cy="6" r="3" fill="#25D366"/>
+                <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
+                <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+                <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
+            </svg>
+            <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
+
