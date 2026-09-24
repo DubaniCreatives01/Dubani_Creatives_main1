@@ -174,7 +174,19 @@ document.addEventListener('DOMContentLoaded', () => {
       tags: 'Legal Identity • Stationery • Branding',
       desc: 'Authoritative, trustworthy legal brand architecture, business stationery, and professional collateral engineered for corporate legal representation.',
       image: 'images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp'
-    }
+    },
+cashwave: {
+      title: 'CashWave Short-Term Finance',
+      tags: 'Brand Identity • FinTech • Print Rollout',
+      desc: 'Complete corporate visual identity system, brand mark, credit stationery, and marketing collateral designed for a modern South African short-term finance provider.',
+      image: 'images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp'
+    },
+    iraza: {
+      title: 'IRAZA Footwear Packaging',
+      tags: 'Packaging Design • Product Box & Label',
+      desc: 'Premium packaging design, shoe box architecture, custom labels, and retail display assets crafted for a contemporary South African footwear brand.',
+      image: 'images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg'
+    },
   };
 
   document.querySelectorAll('[data-case]').forEach(btn => {

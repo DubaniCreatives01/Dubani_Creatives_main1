@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260925-01" />
+  <link rel="stylesheet" href="styles.css?v=20260925-03" />
 </head>
 <body>
 
@@ -17,16 +17,12 @@
 
   <div class="site-layout">
     <!-- ====================================================================
-         FIXED LEFT SIDEBAR (Consistent across all pages)
+         FIXED LEFT SIDEBAR (About placed right under Home)
          ==================================================================== -->
     <aside class="site-sidebar" id="site-sidebar">
       <div>
         <a href="index.html" class="sidebar-brand">
-          <div class="brand-dc-badge">DC</div>
-          <div class="brand-name">
-            <span class="brand-name-main">Dubani</span>
-            <span class="brand-name-sub">Creatives</span>
-          </div>
+          <img src="images/dubanicreatives_logo.png" alt="Dubani Creatives" class="sidebar-logo-img" />
         </a>
 
         <nav class="sidebar-nav">
@@ -35,6 +31,13 @@
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             </span>
             <span>Home</span>
+          </a>
+          <!-- About moved to directly under Home -->
+          <a href="about.html" class="sidebar-nav-item " data-section="about">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <span>About</span>
           </a>
           <a href="portfolio.html" class="sidebar-nav-item " data-section="portfolio">
             <span class="nav-icon">
@@ -47,12 +50,6 @@
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             </span>
             <span>Services</span>
-          </a>
-          <a href="about.html" class="sidebar-nav-item " data-section="about">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </span>
-            <span>About</span>
           </a>
           <a href="packages.html" class="sidebar-nav-item " data-section="packages">
             <span class="nav-icon">
@@ -93,12 +90,17 @@
     </aside>
 
     <main class="site-content">
-      <!-- Sticky Top Header Bar -->
+      <!-- Sticky Top Header Bar (with Center DubaniCreatives Logo) -->
       <header class="top-nav-bar">
         <div class="top-bar-left">
           <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation">☰</button>
-          <span class="panel-section-indicator" id="panel-indicator">03. SERVICES</span>
+          <span class="panel-section-indicator" id="panel-indicator">04. SERVICES</span>
           <span class="top-bar-domain">dubanicreatives.tech</span>
+        </div>
+        <div class="top-bar-center">
+          <a href="index.html" class="top-bar-logo-link" title="Dubani Creatives Home">
+            <img src="images/dubanicreatives_logo.png" alt="Dubani Creatives Logo" class="top-bar-logo-img" />
+          </a>
         </div>
         <div class="top-bar-actions">
           <a href="contact.html" class="btn-primary">Start a project →</a>
@@ -180,35 +182,6 @@
             <h3 class="service-card-title">Creative Strategy & Direction</h3>
             <p class="service-card-desc">Ideas, brand positioning, audience analysis, and creative direction to help your business stand out from competitors. We help founders articulate their authentic voice and connect meaningfully with their target markets.</p>
             <a href="contact.html" class="service-card-link">Inquire about Strategy →</a>
-          </div>
-        </div>
-
-        <!-- Process 3 Steps -->
-        <div style="margin-top: 40px;">
-          <span class="section-eyebrow">OUR METHODOLOGY</span>
-          <h2 class="section-title">How We Work Together</h2>
-          <div class="process-steps-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;">
-            <div class="process-step-card">
-              <div class="process-step-icon">🔍</div>
-              <div class="process-step-text">
-                <h4>1. Discover & Align</h4>
-                <p>We dive deep into your brand values, target audience, and business goals through a strategic creative brief.</p>
-              </div>
-            </div>
-            <div class="process-step-card">
-              <div class="process-step-icon">🎨</div>
-              <div class="process-step-text">
-                <h4>2. Design & Refine</h4>
-                <p>We explore bold design directions, refine concepts based on collaborative feedback, and perfect every detail.</p>
-              </div>
-            </div>
-            <div class="process-step-card">
-              <div class="process-step-icon">🚀</div>
-              <div class="process-step-text">
-                <h4>3. Deliver & Launch</h4>
-                <p>We hand over organized, production-ready assets, brand guidelines, and provide support for a confident rollout.</p>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -314,6 +287,6 @@
   </div>
 
   <!-- Core Javascript Engine -->
-  <script src="main.js?v=20260925-01"></script>
+  <script src="main.js?v=20260925-03"></script>
 </body>
 </html>

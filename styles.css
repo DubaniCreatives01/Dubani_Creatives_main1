@@ -3194,3 +3194,78 @@ img.zoom-tilt:hover,
   font-size: 12px;
   color: var(--accent-orange);
 }
+
+
+/* ==========================================================================
+   WIDGETS VERTICAL STACKING & TOP BAR LOGO (2026-09-25)
+   ========================================================================== */
+
+/* Right Hero Visual: Contra widget ON TOP, Weather widget directly BELOW */
+.home-hero-visual {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 16px !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  justify-self: end !important;
+}
+
+.home-hero-visual .hero-badge-widget {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+.home-hero-visual .glass-weather-widget {
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Top Nav Bar Logo Placement */
+.top-bar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.top-bar-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.top-bar-logo-img {
+  height: 25px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.top-bar-logo-img:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 10px rgba(255, 99, 36, 0.45));
+}
+
+.sidebar-logo-img {
+  height: 30px;
+  width: auto;
+  max-width: 185px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .top-bar-center {
+    display: none;
+  }
+}
