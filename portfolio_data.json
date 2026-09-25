@@ -8,7 +8,7 @@
     "title": "Enkosi Gqunube Foundation",
     "client": "Enkosi Gqunube Foundation",
     "image": "images/Portfolio/Logo Design/Enkosi Gqunube Foundation Logo Design_1771002702188.webp",
-    "desc": "Emblematic community foundation brand mark celebrating grassroots unity, cultural heritage, and youth empowerment in the Eastern Cape."
+    "desc": "Community empowerment brand mark celebrating grassroots unity, cultural heritage, and youth upliftment in the Eastern Cape."
   },
   {
     "id": "b-logo-2",
@@ -30,7 +30,7 @@
     "title": "Lelu's Kitchen Interiors Logo",
     "client": "Lelu's Kitchen Interiors",
     "image": "images/Portfolio/Logo Design/Lelu_s Kitchen Interiors Branding_1771003297997.jpg",
-    "desc": "Bespoke culinary and interior architecture brand emblem with minimalist linework."
+    "desc": "Bespoke culinary and interior architecture brand emblem featuring minimalist linework and warmth."
   },
   {
     "id": "b-logo-4",
@@ -41,7 +41,7 @@
     "title": "Makhulela Holdings Logo",
     "client": "Makhulela Holdings",
     "image": "images/Portfolio/Logo Design/Makhulela Holdings Branding_1771003091146.jpg",
-    "desc": "Distinguished corporate holdings emblem symbolizing growth, strength, and integrity."
+    "desc": "Distinguished corporate holdings emblem symbolizing sustainable growth, financial strength, and governance."
   },
   {
     "id": "b-logo-5",
@@ -52,7 +52,7 @@
     "title": "PK MEDIA Brand Mark",
     "client": "PK Media Group",
     "image": "images/Portfolio/Logo Design/PK MEDIA logo Design_1771003102704.webp",
-    "desc": "Dynamic visual media and broadcasting logo designed for digital streaming platforms."
+    "desc": "Dynamic visual media and broadcasting logo designed for digital streaming platforms and creative productions."
   },
   {
     "id": "b-logo-6",
@@ -61,9 +61,42 @@
     "subcategory": "logos",
     "subcategoryName": "Logos",
     "title": "THE FIG FOUNDATION Logo",
-    "client": "The FIG Foundation",
+    "client": "The Fig Foundation",
     "image": "images/Portfolio/Logo Design/THE FIG FOUNDATION Branding_1771002978028.webp",
-    "desc": "Nurturing community empowerment foundation logo with symbolic organic motifs."
+    "desc": "Botanical and philanthropic brand emblem crafted for human development and nutritional charity initiatives."
+  },
+  {
+    "id": "b-logo-7",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "logos",
+    "subcategoryName": "Logos",
+    "title": "Bathandwa Foundation Logo",
+    "client": "Bathandwa Foundation",
+    "image": "images/Portfolio/Logo Design/Bathandwa_Foundation_Logo.png",
+    "desc": "Grassroots community non-profit emblem celebrating social care, youth support, and community welfare."
+  },
+  {
+    "id": "b-logo-8",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "logos",
+    "subcategoryName": "Logos",
+    "title": "Makinzi Building Solutions Logo Mockup",
+    "client": "Makinzi Building Solutions",
+    "image": "images/Portfolio/Logo Design/Makinzi_Building_Solutions_Logo_Mockup.jpg",
+    "desc": "Industrial construction and infrastructure identity mark featuring geometric precision and solid durability."
+  },
+  {
+    "id": "b-logo-9",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "logos",
+    "subcategoryName": "Logos",
+    "title": "Zanengoma Heritage Trust Logo",
+    "client": "Zanengoma Heritage Trust",
+    "image": "images/Portfolio/Logo Design/Zanengoma_Heritage_Trust_Logo.jpg",
+    "desc": "Cultural preservation and historical documentation trust emblem reflecting indigenous wisdom and literature."
   },
   {
     "id": "b-id-1",
@@ -74,7 +107,7 @@
     "title": "LUZANA Executive Identity Suite",
     "client": "LUZANA Consulting Holdings",
     "image": "images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg",
-    "desc": "Comprehensive visual system including corporate letterhead, folders, business cards, pitch decks, and brand guidelines."
+    "desc": "Complete corporate brand architecture, executive stationery, typography rules, and gold-foiled identity suite."
   },
   {
     "id": "b-id-2",
@@ -85,7 +118,7 @@
     "title": "INGELOSI Corporate Stationery",
     "client": "INGELOSI Employment Law",
     "image": "images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp",
-    "desc": "Prestige corporate stationery folders, legal briefs, letterheads, and executive business cards with refined gold detailing."
+    "desc": "Formal legal firm stationery suite, business cards, official seal formats, and letterhead layouts."
   },
   {
     "id": "b-id-3",
@@ -94,9 +127,9 @@
     "subcategory": "identity",
     "subcategoryName": "Brand Identity Systems",
     "title": "IMM MABOTE Executive Suite",
-    "client": "IMM MABOTE",
+    "client": "IMM Mabote Group",
     "image": "images/Portfolio/Branding/IMM MABOTE/514350235_1293736032759904_2702461927603542805_n.jpg",
-    "desc": "Executive stationery, business cards, and corporate presentation suite."
+    "desc": "High-tier corporate collateral package encompassing identity guidelines, folder kits, and business cards."
   },
   {
     "id": "b-id-4",
@@ -107,7 +140,7 @@
     "title": "CashWave Digital Collateral",
     "client": "CashWave Finance",
     "image": "images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp",
-    "desc": "Credit stationery, branded application forms, promotional handouts, and mobile digital finance banners."
+    "desc": "Modern FinTech identity system, payment card designs, visual assets, and cross-channel brand language."
   },
   {
     "id": "b-ban-1",
@@ -115,10 +148,10 @@
     "categoryName": "BRANDING",
     "subcategory": "banners-signage",
     "subcategoryName": "Banners & Signages",
-    "title": "TheUnlimitedExperience Rollup",
-    "client": "TheUnlimitedExperience",
+    "title": "TheUnlimitedExperience Rollup Banner",
+    "client": "The Unlimited Experience",
     "image": "images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp",
-    "desc": "High-impact exhibition pull-up banner designed for brand activations, industry expos, and live demonstrations."
+    "desc": "High-visibility luxury event roll-up banner engineered for conference stages and red carpet receptions."
   },
   {
     "id": "b-ban-2",
@@ -129,7 +162,7 @@
     "title": "IRAZA Footwear Pop-up Banner",
     "client": "IRAZA Footwear",
     "image": "images/Portfolio/Banners/IRAZA footwear package design_1771003524777.jpg",
-    "desc": "Dynamic retail and pop-up marketing banner announcing product drops and footwear launches across flagship stores."
+    "desc": "Retail activation pop-up banner showcasing premium bespoke footwear craft and brand aesthetics."
   },
   {
     "id": "b-ban-3",
@@ -137,10 +170,10 @@
     "categoryName": "BRANDING",
     "subcategory": "banners-signage",
     "subcategoryName": "Banners & Signages",
-    "title": "Corporate Facility Directional Signage",
-    "client": "Commercial Property Signage",
-    "image": "images/Portfolio/Signage/1.jpg",
-    "desc": "Architectural directional wayfinding and exterior sign systems engineered for modern industrial and business parks."
+    "title": "CashWave Teardrop Outdoor Flag",
+    "client": "CashWave Finance",
+    "image": "images/Portfolio/Banners/CashWave_Teardrop_Flag.jpg",
+    "desc": "Durable all-weather outdoor promotional teardrop flag for retail branch road frontage and outdoor events."
   },
   {
     "id": "b-ban-4",
@@ -148,10 +181,54 @@
     "categoryName": "BRANDING",
     "subcategory": "banners-signage",
     "subcategoryName": "Banners & Signages",
+    "title": "AA Connections Pull Up Banner",
+    "client": "AA Connections",
+    "image": "images/Portfolio/Banners/AA_Connections_Pull_Up_Banner.jpg",
+    "desc": "Executive retractable pull-up banner designed for corporate networking and exhibition expo booths."
+  },
+  {
+    "id": "b-ban-5",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "banners-signage",
+    "subcategoryName": "Banners & Signages",
+    "title": "Zanengoma Book Launch Banner",
+    "client": "Zanengoma Heritage Trust",
+    "image": "images/Portfolio/Banners/Zanengoma_Heritage_Trust_Rollup_Banner.jpg",
+    "desc": "Cultural book launch presentation banner honoring historical heritage and public author sessions."
+  },
+  {
+    "id": "b-ban-6",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "banners-signage",
+    "subcategoryName": "Banners & Signages",
+    "title": "CashWave Front Store 3D Signage",
+    "client": "CashWave Finance",
+    "image": "images/Portfolio/Signage/CashWave_Front_Store_3D_Signage.jpg",
+    "desc": "Architectural 3D fabricated storefront signage rendering featuring illuminated acrylic lettering."
+  },
+  {
+    "id": "b-ban-7",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "banners-signage",
+    "subcategoryName": "Banners & Signages",
+    "title": "Corporate Facility Directional Signage",
+    "client": "Metropolitan Workspace",
+    "image": "images/Portfolio/Signage/1.jpg",
+    "desc": "Architectural wayfinding system designed for multi-tenant commercial offices and campuses."
+  },
+  {
+    "id": "b-ban-8",
+    "category": "branding",
+    "categoryName": "BRANDING",
+    "subcategory": "banners-signage",
+    "subcategoryName": "Banners & Signages",
     "title": "3D Fabricated Entrance Sign",
-    "client": "Corporate Facility Signage",
+    "client": "TechHub Innovation Center",
     "image": "images/Portfolio/Signage/2.jpg",
-    "desc": "High-contrast 3D fabricated building entrance signage with weather-resistant brushed composite finishes."
+    "desc": "Precision-cut acrylic and brushed metal dimensional wall logo installation with backlighting."
   },
   {
     "id": "p-evt-1",
@@ -160,9 +237,9 @@
     "subcategory": "event-posters",
     "subcategoryName": "Event Posters",
     "title": "Live Music & Arts Showcase",
-    "client": "Creative Nights Live",
+    "client": "Vibrant Sessions",
     "image": "images/Portfolio/Posters/494218292_1229844952482346_1116606363651595572_n.jpg",
-    "desc": "Electrifying typographical concert and performance poster designed for maximum engagement across Instagram and TikTok."
+    "desc": "Electric weekend concert artwork combining bold typography and dynamic live performance imagery."
   },
   {
     "id": "p-evt-2",
@@ -171,9 +248,9 @@
     "subcategory": "event-posters",
     "subcategoryName": "Event Posters",
     "title": "Urban Youth Festival Poster",
-    "client": "Cape Creative Collective",
+    "client": "Metro Youth Culture",
     "image": "images/Portfolio/Posters/494314046_1230341949099313_5073685672330890678_n.jpg",
-    "desc": "Vibrant street culture festival and music showcase promotional poster built for viral community sharing."
+    "desc": "High-energy festival announcement poster featuring neon gradients and modern street culture elements."
   },
   {
     "id": "p-evt-3",
@@ -182,9 +259,53 @@
     "subcategory": "event-posters",
     "subcategoryName": "Event Posters",
     "title": "Creative Summit Keynote Poster",
-    "client": "Future Design Forum",
+    "client": "Cape Creative Con",
     "image": "images/Portfolio/Posters/494905437_1229756509157857_9077725963076676636_n.jpg",
-    "desc": "Modern minimalist keynote presentation poster emphasizing speaker authority, date prominence, and venue clarity."
+    "desc": "Editorial conference poster promoting pan-African innovation, creative enterprise, and keynote talks."
+  },
+  {
+    "id": "p-evt-4",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "event-posters",
+    "subcategoryName": "Event Posters",
+    "title": "Bathandwa Foundation 10 Year Anniversary",
+    "client": "Bathandwa Foundation",
+    "image": "images/Portfolio/Posters/Bathandwa_Foundation_10_Year_Anniversary.jpg",
+    "desc": "Commemorative milestone poster celebrating ten years of community dedication, youth upliftment, and joy."
+  },
+  {
+    "id": "p-evt-5",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "event-posters",
+    "subcategoryName": "Event Posters",
+    "title": "Club Night Live Sessions",
+    "client": "NightLife Entertainment",
+    "image": "images/Portfolio/Posters/Club_Night_Live_Poster.jpg",
+    "desc": "Ultra-sleek club night promotional artwork with moody atmospheric lighting and DJ lineup focus."
+  },
+  {
+    "id": "p-evt-6",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "event-posters",
+    "subcategoryName": "Event Posters",
+    "title": "Camada Music Festival Poster",
+    "client": "Camada Entertainment",
+    "image": "images/Portfolio/Posters/Camada_Music_Festival_Poster.jpg",
+    "desc": "Outdoor summer festival creative with rhythmic color contrasts and large headliner typography."
+  },
+  {
+    "id": "p-evt-7",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "event-posters",
+    "subcategoryName": "Event Posters",
+    "title": "Pagodinn Live Music Session",
+    "client": "Pagodinn Sessions",
+    "image": "images/Portfolio/Posters/Pagodinn_Live_Music_Poster.jpg",
+    "desc": "Celebratory live music session poster with rich tropical color palette and artist spotlight."
   },
   {
     "id": "p-fly-1",
@@ -193,9 +314,9 @@
     "subcategory": "digital-flyers",
     "subcategoryName": "Digital Flyers",
     "title": "Paygas Digital Community Flyer",
-    "client": "Paygas South Africa",
+    "client": "Paygas SA",
     "image": "images/Portfolio/Flyer/Paygas Flyers_1771003144872.webp",
-    "desc": "High-impact mobile and print promotional flyer for affordable clean cooking gas accessibility."
+    "desc": "Clean, educational social flyer illustrating clean cooking gas credits and community safety benefits."
   },
   {
     "id": "p-fly-2",
@@ -206,7 +327,7 @@
     "title": "Lelu's Kitchen Promotional Flyer",
     "client": "Lelu's Kitchen Interiors",
     "image": "images/Portfolio/Flyer/Lelu_s Kitchen Interiors Branding_1771003307155.jpg",
-    "desc": "Refined lifestyle promotional flyer highlighting artisanal kitchen installations."
+    "desc": "Sophisticated interior decor promotional social flyer showcasing custom kitchen designs."
   },
   {
     "id": "p-fly-3",
@@ -215,9 +336,31 @@
     "subcategory": "digital-flyers",
     "subcategoryName": "Digital Flyers",
     "title": "Metro Social Night Flyer",
-    "client": "Metro Events Cape Town",
+    "client": "Metro Lounge & Dining",
     "image": "images/Portfolio/Flyer/515364281_1307781548022019_3160041811554924075_n.jpg",
-    "desc": "Eye-catching social media digital flyer crafted for Instagram and WhatsApp broadcasts."
+    "desc": "Weekend social gathering digital flyer designed for Instagram Stories and WhatsApp broadcast."
+  },
+  {
+    "id": "p-fly-4",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "digital-flyers",
+    "subcategoryName": "Digital Flyers",
+    "title": "CashWave Student Loan Digital Flyer",
+    "client": "CashWave Finance",
+    "image": "images/Portfolio/Flyer/CashWave_Student_Loan_Flyer.jpg",
+    "desc": "Accessible student loan flyer designed for social media feeds, highlighting quick approvals and student benefits."
+  },
+  {
+    "id": "p-fly-5",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "digital-flyers",
+    "subcategoryName": "Digital Flyers",
+    "title": "CashWave Instagram Promo Flyer",
+    "client": "CashWave Finance",
+    "image": "images/Portfolio/Flyer/CashWave_Instagram_Promo_Flyer.jpg",
+    "desc": "High-conversion Instagram promotional campaign flyer with bold call-to-action and clear financial terms."
   },
   {
     "id": "p-cam-1",
@@ -226,9 +369,9 @@
     "subcategory": "campaigns",
     "subcategoryName": "Campaigns",
     "title": "Community Drive Youth Campaign",
-    "client": "Community Drive SA",
+    "client": "Foundation Initiatives",
     "image": "images/Portfolio/Posters/502504943_1255465876586920_3732486807857411753_n.jpg",
-    "desc": "Provocative social awareness campaign addressing youth skills development and digital literacy across Western Cape communities."
+    "desc": "Community empowerment drive poster with compelling photojournalistic focus and call-to-action."
   },
   {
     "id": "p-cam-2",
@@ -237,9 +380,20 @@
     "subcategory": "campaigns",
     "subcategoryName": "Campaigns",
     "title": "Dubani Design Lab Workshop Series",
-    "client": "Dubani Creatives Lab",
+    "client": "Dubani Creatives Academy",
     "image": "images/Portfolio/Posters/506214624_1266785332121641_8393783487578973254_n.jpg",
-    "desc": "Engaging multi-slide educational workshop promotion helping emerging founders elevate their visual brand identities."
+    "desc": "Educational campaign poster recruiting aspiring graphic designers for intensive UI/UX masterclasses."
+  },
+  {
+    "id": "p-cam-3",
+    "category": "posters",
+    "categoryName": "SOCIAL MEDIA POSTERS",
+    "subcategory": "campaigns",
+    "subcategoryName": "Campaigns",
+    "title": "Agricultural Summit Campaign Poster",
+    "client": "Eastern Cape Agri-Summit",
+    "image": "images/Portfolio/Posters/Agricultural_Summit_Campaign_Poster.jpg",
+    "desc": "Regional agricultural enterprise and sustainable farming forum awareness campaign poster."
   },
   {
     "id": "dp-pkg-1",
@@ -250,7 +404,7 @@
     "title": "IRAZA Luxury Footwear Box",
     "client": "IRAZA Footwear",
     "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg",
-    "desc": "Signature custom rigid shoebox dieline with soft-touch matte lamination, spot UV, and structural strength."
+    "desc": "Rigid bespoke shoe packaging box with matte soft-touch finish and custom branded magnetic closure."
   },
   {
     "id": "dp-pkg-2",
@@ -261,7 +415,7 @@
     "title": "IRAZA Dieline & Labeling",
     "client": "IRAZA Footwear",
     "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003505996.jpg",
-    "desc": "Manufacturing dielines, barcode placement, size grid typography, and eco-certified packaging specifications."
+    "desc": "Production-ready structural dieline, foil stamping specifications, and barcode placement."
   },
   {
     "id": "dp-pkg-3",
@@ -272,7 +426,7 @@
     "title": "IRAZA Premium Retail Unboxing",
     "client": "IRAZA Footwear",
     "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003507973.jpg",
-    "desc": "Custom patterned tissue paper wrap, authentication certificate card, and branded sticker seal for customer unboxing."
+    "desc": "Luxury unboxing presentation with branded tissue paper, custom insoles, and certificates of authenticity."
   },
   {
     "id": "dp-bro-1",
@@ -283,7 +437,7 @@
     "title": "FCICHS Corporate Capabilities Profile",
     "client": "FCICHS (Foundation Community Initiative)",
     "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp",
-    "desc": "Full 24-page landscape corporate profile detailing social housing projects, accreditation metrics, and healthcare partnerships."
+    "desc": "Institutional social housing development brochure highlighting Cape Town housing project milestones."
   },
   {
     "id": "dp-bro-2",
@@ -292,9 +446,9 @@
     "subcategory": "brochures",
     "subcategoryName": "Brochures & Booklets",
     "title": "THE FIG FOUNDATION Donor Brochure",
-    "client": "The FIG Foundation",
+    "client": "The Fig Foundation",
     "image": "images/Portfolio/Brochure/THE FIG FOUNDATION Branding_1771002984093.jpg",
-    "desc": "Philanthropic donor brochure balancing emotional beneficiary portraits with audited financial allocation charts."
+    "desc": "High-impact non-profit donor advocacy booklet with inflected editorial charts and program data."
   },
   {
     "id": "dp-bro-3",
@@ -303,9 +457,20 @@
     "subcategory": "brochures",
     "subcategoryName": "Brochures & Booklets",
     "title": "Commemorative Tribute Booklet",
-    "client": "Mrs B Family Trust",
+    "client": "B Memorial Trust",
     "image": "images/Portfolio/Brochure/Mrs B Funeral_1771002911896.jpg",
-    "desc": "Dignified and timeless heirloom memorial booklet with gold foil accents, full-color archival photography, and premium paper stock."
+    "desc": "Prestige biographical celebration booklet designed with archival typography and gold-accented borders."
+  },
+  {
+    "id": "dp-bro-4",
+    "category": "print",
+    "categoryName": "DESIGN & PRINT",
+    "subcategory": "brochures",
+    "subcategoryName": "Brochures & Booklets",
+    "title": "Makinzi Building Solutions Business Profile",
+    "client": "Makinzi Building Solutions",
+    "image": "images/Portfolio/Brochure/Makinzi_Building_Solutions_Business_Profile.jpg",
+    "desc": "Comprehensive corporate construction profile detailing commercial projects, equipment, and accreditations."
   },
   {
     "id": "dp-sta-1",
@@ -314,9 +479,9 @@
     "subcategory": "stationery",
     "subcategoryName": "Stationery Collateral",
     "title": "KCT Executive Embossed Notebook",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/Notebook_Mockup_2.jpg",
-    "desc": "Hardcover embossed executive notebook and annual corporate planner for board members and strategic stakeholders."
+    "desc": "Leatherette hardcover executive journal featuring debossed metallic foil emblem for board directors."
   },
   {
     "id": "dp-sta-2",
@@ -325,9 +490,9 @@
     "subcategory": "stationery",
     "subcategoryName": "Stationery Collateral",
     "title": "KCT Sublimated Lanyards",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/Lanyard_Mockup_1.jpg",
-    "desc": "Durable full-color sublimated satin conference lanyards with metal lobster claw clips and safety breakaways."
+    "desc": "Dual-sided satin finish sublimated lanyards equipped with safety breakaway clasps and branded clips."
   },
   {
     "id": "dp-sta-3",
@@ -336,9 +501,9 @@
     "subcategory": "stationery",
     "subcategoryName": "Stationery Collateral",
     "title": "KCT Laser-Engraved USB Flash Drives",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/Pendrive_Mockup_1.jpg",
-    "desc": "Branded metal swivel USB 3.0 flash drives loaded with audited annual reports, video presentations, and press kits."
+    "desc": "Branded metallic swivel thumb drives pre-loaded with digital annual financial disclosures."
   },
   {
     "id": "dp-sta-4",
@@ -347,9 +512,9 @@
     "subcategory": "stationery",
     "subcategoryName": "Stationery Collateral",
     "title": "KCT Executive Ballpoint Pen Suite",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/Pen_Mockup_1.jpg",
-    "desc": "Matte black metal executive pens with laser-etched KCT branding for institutional gifting and signature ceremonies."
+    "desc": "Matte black twist-action rollerball pens with laser-etched insignia for AGM delegates."
   },
   {
     "id": "ap-tsh-1",
@@ -358,9 +523,9 @@
     "subcategory": "tshirts",
     "subcategoryName": "Custom T-Shirts",
     "title": "Signature Street Graphic Tee",
-    "client": "Street District Apparel",
+    "client": "Dubani Originals",
     "image": "images/Portfolio/Aparel/480582002_1034364905404769_8803467143722299735_n.jpg",
-    "desc": "Heavyweight 240gsm combed cotton t-shirt featuring bespoke high-density typography and back screen print artwork."
+    "desc": "Heavyweight 240gsm oversized cotton graphic t-shirt with screen-printed urban illustration."
   },
   {
     "id": "ap-tsh-2",
@@ -369,9 +534,9 @@
     "subcategory": "tshirts",
     "subcategoryName": "Custom T-Shirts",
     "title": "Heritage Crewneck T-Shirt",
-    "client": "Kulture Kolektive",
+    "client": "Cape Heritage Apparel",
     "image": "images/Portfolio/Aparel/480876761_1034953375345922_8660859334893525078_n.jpg",
-    "desc": "Modern cut crewneck t-shirt with precision chest embroidery and custom neck-tape woven branding."
+    "desc": "Minimalist chest embroidery with cultural typography on premium combed organic cotton."
   },
   {
     "id": "ap-tsh-3",
@@ -380,9 +545,20 @@
     "subcategory": "tshirts",
     "subcategoryName": "Custom T-Shirts",
     "title": "Dubani Creatives Studio Tee",
-    "client": "Dubani Studio Merch",
+    "client": "Dubani Creatives Internal",
     "image": "images/Portfolio/Aparel/481098107_1044816791026247_2216861155745790659_n.jpg",
-    "desc": "Official studio cotton tee featuring the signature orange and cyan contrast emblem and motivational typography."
+    "desc": "Custom in-house team apparel featuring technical vector design specs and high-density ink."
+  },
+  {
+    "id": "ap-tsh-4",
+    "category": "apparel",
+    "categoryName": "APPAREL / CLOTHING",
+    "subcategory": "tshirts",
+    "subcategoryName": "Custom T-Shirts",
+    "title": "Bathandwa Foundation Custom Tee",
+    "client": "Bathandwa Foundation",
+    "image": "images/Portfolio/Aparel/Bathandwa_Foundation_Tshirt.jpg",
+    "desc": "Community outreach branded t-shirt designed for charity volunteers and celebration events."
   },
   {
     "id": "ap-cap-1",
@@ -391,9 +567,9 @@
     "subcategory": "headwear",
     "subcategoryName": "Headwear & Caps",
     "title": "Structured 3D Puff Snapback",
-    "client": "Apex Urban Gear",
+    "client": "Street Culture SA",
     "image": "images/Portfolio/Aparel/481468607_1046882124153047_8284986740349321572_n.jpg",
-    "desc": "6-panel structured snapback with high-relief 3D puff embroidery, green undervisor, and custom inner seam binding."
+    "desc": "Six-panel wool blend flat-brim cap with dimensional puff embroidery and custom internal taping."
   },
   {
     "id": "ap-cap-2",
@@ -402,9 +578,9 @@
     "subcategory": "headwear",
     "subcategoryName": "Headwear & Caps",
     "title": "Vintage Washed Cotton Dad Hat",
-    "client": "Coastline Club",
+    "client": "Coastal Goods",
     "image": "images/Portfolio/Aparel/494165052_1229756649157843_6245972667023574482_n.jpg",
-    "desc": "Unstructured low-profile washed cotton cap with subtle brass closure buckle and micro-embroidered crest."
+    "desc": "Unstructured low-profile cap with brass buckle strap and subtle tonal front branding."
   },
   {
     "id": "ap-wrk-1",
@@ -415,7 +591,7 @@
     "title": "Corporate Staff Uniform Polo",
     "client": "Metro Operations",
     "image": "images/Portfolio/Aparel/494196211_1229756655824509_5868124905933162260_n.jpg",
-    "desc": "Durable anti-fade pique knit corporate polo shirts engineered for daily operational staff, site managers, and events."
+    "desc": "Durable moisture-wicking pique polo shirts embroidered with corporate staff identity."
   },
   {
     "id": "ar-kct-1",
@@ -426,7 +602,7 @@
     "title": "KCT Annual Report 2024/25",
     "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp",
-    "desc": "The flagship audited publication detailing socio-economic investments, youth empowerment metrics, and major commercial property milestones."
+    "desc": "Comprehensive 120-page governance and audited financial review document with infographic data visualizations."
   },
   {
     "id": "ar-kct-2",
@@ -437,7 +613,7 @@
     "title": "KCT Community Report Vol 3",
     "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Brochure/KCT Annual report 3_1771002862247.jpg",
-    "desc": "Comprehensive community impact assessment publication featuring governance statements, trustee reports, and localized case studies."
+    "desc": "Stakeholder impact publication spotlighting retail precinct expansion and local job creation."
   },
   {
     "id": "ar-kct-3",
@@ -448,7 +624,7 @@
     "title": "KCT Development Report Vol 2",
     "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Brochure/KCT Annual report 2_1771002875065.jpg",
-    "desc": "Detailed financial and infrastructural breakdown with infographics, audited balance sheets, and capital expenditure diagrams."
+    "desc": "Infrastructure project delivery report highlighting township economic transformation."
   },
   {
     "id": "ar-kct-4",
@@ -459,7 +635,7 @@
     "title": "KCT Foundation Report Vol 1",
     "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Brochure/KCT Annual report 1_1771002891340.jpg",
-    "desc": "Inaugural community trust governance volume laying the foundation for transparent public sector reporting and donor stewardship."
+    "desc": "Foundational community charter document with historical photography and executive statements."
   },
   {
     "id": "ar-fci-1",
@@ -468,9 +644,9 @@
     "subcategory": "fci-profiles",
     "subcategoryName": "FCI Company Profiles",
     "title": "FCICHS Corporate Profile & Impact",
-    "client": "FCICHS (Community Health Solutions)",
+    "client": "FCICHS (Foundation Community Initiative)",
     "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp",
-    "desc": "Institutional publication documenting accreditation with SHRA, NHBRC, CIDB, and Western Cape Department of Human Settlements."
+    "desc": "Institutional profile covering Cape Town social housing developments, governance, and tenant support."
   },
   {
     "id": "ar-fci-2",
@@ -479,9 +655,9 @@
     "subcategory": "fci-profiles",
     "subcategoryName": "FCI Company Profiles",
     "title": "Goodwood Housing Project Portfolio",
-    "client": "FCICHS (Community Health Solutions)",
+    "client": "FCICHS (Foundation Community Initiative)",
     "image": "images/Portfolio/Web Design/FCICHS/Main-Entrance.jpg",
-    "desc": "Multimillion-rand social housing architectural showcase publication detailing tenant accommodation and community wellness facilities."
+    "desc": "Architectural development review documenting multi-million rand urban housing facilities."
   },
   {
     "id": "ar-pub-1",
@@ -490,9 +666,9 @@
     "subcategory": "gov-publications",
     "subcategoryName": "Corporate Publications",
     "title": "KCT Dual-Language Calendar (English)",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/KCT Calendar Mockup (English).jpg",
-    "desc": "Large-format corporate wall calendar distributed to government departments, corporate partners, and civic leaders."
+    "desc": "Prestige corporate wall calendar featuring institutional project photography and governance dates."
   },
   {
     "id": "ar-pub-2",
@@ -501,9 +677,9 @@
     "subcategory": "gov-publications",
     "subcategoryName": "Corporate Publications",
     "title": "KCT Dual-Language Calendar (isiXhosa)",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/KCT Calendar Mockup (isiXhosa).jpg",
-    "desc": "Official corporate calendar celebrating indigenous language preservation and community grassroots leadership."
+    "desc": "Indigenous language edition celebrating local township culture, milestones, and civic initiatives."
   },
   {
     "id": "ar-pub-3",
@@ -512,9 +688,9 @@
     "subcategory": "gov-publications",
     "subcategoryName": "Corporate Publications",
     "title": "KCT Graduate Achievement Certificates",
-    "client": "Khayelitsha Community Trust",
+    "client": "Khayelitsha Community Trust (KCT)",
     "image": "images/Portfolio/Stationery/KCT certificates_1771003667052.webp",
-    "desc": "Gold-foiled security certificates awarded to graduates of the KCT community business incubation initiatives."
+    "desc": "Official foil-stamped graduation certificates honoring youth leadership and skills participants."
   },
   {
     "id": "w-cor-1",
@@ -522,10 +698,10 @@
     "categoryName": "WEB DESIGN",
     "subcategory": "corporate-portals",
     "subcategoryName": "Corporate & NGO Portals",
-    "title": "FCICHS Social Housing Portal",
-    "client": "FCICHS (Foundation Community Initiative)",
-    "image": "images/Portfolio/Web Design/FCICHS/newLogo.png",
-    "desc": "Full corporate digital portal featuring online social housing tenant applications, property directories, and stakeholder reports."
+    "title": "FCICHS Property Development Portal",
+    "client": "FCICHS Social Housing",
+    "image": "images/Portfolio/Web Design/FCICHS/property.jpg",
+    "desc": "Responsive web interface presenting residential housing opportunities, applications, and tenant portals."
   },
   {
     "id": "w-cor-2",
@@ -533,10 +709,10 @@
     "categoryName": "WEB DESIGN",
     "subcategory": "corporate-portals",
     "subcategoryName": "Corporate & NGO Portals",
-    "title": "KCT Community Trust Portal",
-    "client": "Khayelitsha Community Trust (KCT)",
-    "image": "images/Portfolio/Web Design/KCT/logo.webp",
-    "desc": "Accessible institutional website with tender downloads, governance library, project tracking, and community event schedules."
+    "title": "Xwazi Foundation Community Web Portal",
+    "client": "Dr Mandiluve Xwazi Foundation",
+    "image": "images/Portfolio/Web Design/Xwazi Foundation/534224564_1326220812844759_4889749808702556810_n.jpg",
+    "desc": "Modern philanthropic platform designed for social impact outreach, donor engagement, and community news."
   },
   {
     "id": "w-cor-3",
@@ -547,7 +723,7 @@
     "title": "Dream Area Cultural Platform",
     "client": "Dream Area",
     "image": "images/imgi_13_68bd341e34845d434f3fb083_1.png",
-    "desc": "High-performance web app and immersive multimedia platform engineered for youth creators and cultural events."
+    "desc": "Immersive digital community hub connecting creatives, events, and cultural exhibitions."
   },
   {
     "id": "w-cor-4",
@@ -558,7 +734,7 @@
     "title": "Star Blox Gaming Studio Hub",
     "client": "Star Blox Studio",
     "image": "images/imgi_14_68bd33e0e57b111749f34daf_0.png",
-    "desc": "Dark-mode gaming web hub with interactive game asset previews, creator tools, and community forum integrations."
+    "desc": "High-octane gaming studio web presence with dark UI theme, game showcases, and community integrations."
   },
   {
     "id": "w-cul-1",
@@ -569,7 +745,7 @@
     "title": "Chef Lungelo Fine Dining Web App",
     "client": "Chef Lungelo",
     "image": "images/Portfolio/Web Design/Chef Lungelo/509758564_1275713811228793_8836691374578379249_n.jpg",
-    "desc": "Luxury culinary portfolio featuring private chef bookings, tasting menus, and interactive masterclass ticket checkout."
+    "desc": "Luxury culinary web experience with online booking, bespoke chef menus, and private event catering."
   },
   {
     "id": "w-cul-2",
@@ -580,7 +756,7 @@
     "title": "Chef Lungelo Gourmet Experiences",
     "client": "Chef Lungelo",
     "image": "images/Portfolio/Web Design/Chef Lungelo/510804046_1275714121228762_565188796764469855_n.jpg",
-    "desc": "Visual storytelling web platform highlighting Afro-fusion dining, private events, and editorial press coverage."
+    "desc": "Visual storytelling web interface spotlighting African fine dining craftsmanship and masterclasses."
   },
   {
     "id": "w-med-1",
@@ -591,7 +767,7 @@
     "title": "Regimed Medical Practice Portal",
     "client": "Regimed Healthcare",
     "image": "images/Portfolio/Web Design/Regimed/510442613_1275715857895255_5442613084655942366_n.jpg",
-    "desc": "Clean clinical telemedicine website with secure patient intake forms, doctor directories, and prescription refills."
+    "desc": "Streamlined patient appointment booking, doctor schedules, and digital health consultation portal."
   },
   {
     "id": "w-med-2",
@@ -602,6 +778,6 @@
     "title": "Regimed Mobile Health Platform",
     "client": "Regimed Healthcare",
     "image": "images/Portfolio/Web Design/Regimed/511887185_1275715454561962_1162762411983906702_n.jpg",
-    "desc": "Fast, lightweight mobile interface optimized for low-bandwidth healthcare access across South Africa."
+    "desc": "Mobile-first responsive telemedicine UI enabling rapid patient triage and clinical management."
   }
 ]

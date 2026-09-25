@@ -9,16 +9,32 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260925-07" />
+  <link rel="stylesheet" href="styles.css?v=20260925-08" />
 
   <style>
-    /* Sleek Visual-First Portfolio: 1:1 Thumbnails, Zero Clutter, Hover Overlay with Regular/Light Font */
+    /* Bigger Logos Override */
+    .top-bar-logo-img {
+      height: 44px !important;
+      width: auto !important;
+      max-width: 290px !important;
+      object-fit: contain !important;
+      display: block !important;
+    }
+    .sidebar-logo-img {
+      height: 52px !important;
+      width: auto !important;
+      max-width: 230px !important;
+      object-fit: contain !important;
+      display: block !important;
+    }
+
+    /* Sleek Visual-First Portfolio: 1:1 Thumbnails, 4 Per Row, Hover Overlay with Regular/Light Font */
     .portfolio-hero-wrap {
-      margin-bottom: 28px;
+      margin-bottom: 26px;
     }
     .portfolio-main-title {
       font-family: var(--font-heading, 'Outfit', sans-serif);
-      font-size: clamp(34px, 4vw, 50px) !important;
+      font-size: clamp(34px, 4.2vw, 52px) !important;
       font-weight: 800 !important;
       line-height: 1.15 !important;
       letter-spacing: -1.2px !important;
@@ -28,9 +44,9 @@
     .portfolio-main-desc {
       font-size: 16.5px !important;
       font-weight: 300 !important;
-      color: rgba(255, 255, 255, 0.75) !important;
+      color: rgba(255, 255, 255, 0.78) !important;
       line-height: 1.6 !important;
-      max-width: 660px !important;
+      max-width: 680px !important;
       margin-bottom: 22px !important;
     }
 
@@ -99,8 +115,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .category-group-title-wrap {
@@ -134,7 +150,7 @@
     .group-subcat-nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 7px;
+      gap: 8px;
       align-items: center;
     }
     .group-subcat-btn {
@@ -162,7 +178,7 @@
       font-weight: 500;
     }
 
-    /* 1:1 Responsive Thumbnail Grid - 4 Bigger Images Per Row */
+    /* 4 Bigger Images in a Row Grid */
     .portfolio-thumb-grid {
       display: grid !important;
       grid-template-columns: repeat(4, 1fr) !important;
@@ -176,22 +192,22 @@
       width: 100%;
       background: #090d16;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
+      border-radius: 16px;
       overflow: hidden;
       position: relative;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 14px;
+      padding: 16px;
       box-sizing: border-box;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
       transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
     }
     .portfolio-thumb-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
       border-color: rgba(0, 210, 255, 0.45);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 210, 255, 0.15);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 210, 255, 0.15);
     }
     .portfolio-thumb-card:focus-visible {
       outline: 2px solid #00d2ff;
@@ -230,7 +246,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 16px 14px;
+      padding: 18px 16px;
       transition: opacity 0.22s ease;
       pointer-events: none;
       box-sizing: border-box;
@@ -293,172 +309,69 @@
       letter-spacing: 0.2px;
     }
 
-    /* Lightbox Modal (View Function) */
-    .lightbox-modal {
+    /* =====================================================================
+       FULL VIEW LIGHTBOX MODAL WITH PROMINENT NAVIGATION BUTTONS
+       ===================================================================== */
+    .fullview-lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(4, 7, 14, 0.94);
-      backdrop-filter: blur(14px);
-      z-index: 1000;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(3, 6, 12, 0.96);
+      backdrop-filter: blur(16px);
+      z-index: 9999;
       display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      flex-direction: column;
       opacity: 0;
-      transition: opacity 0.28s ease;
+      transition: opacity 0.25s ease;
+      box-sizing: border-box;
     }
-    .lightbox-modal.active {
+    .fullview-lightbox.active {
       display: flex;
       opacity: 1;
     }
-    .lightbox-content-card {
-      background: #0d121c;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      max-width: 880px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 210, 255, 0.1);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-    .lightbox-preview-box {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      max-height: 500px;
-      background: radial-gradient(circle at center, #131a29 0%, #080b12 100%);
+
+    /* Lightbox Top Control Bar */
+    .lightbox-top-bar {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
-      box-sizing: border-box;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
-    }
-    .lightbox-preview-img {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      border-radius: 8px;
-      transition: transform 0.3s ease;
-    }
-    .lightbox-preview-img.zoomed {
-      transform: scale(1.4);
-      cursor: zoom-out;
-    }
-    .lightbox-preview-img:not(.zoomed) {
-      cursor: zoom-in;
-    }
-    .lightbox-details {
-      padding: 28px 32px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .lightbox-header-row {
-      display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      padding: 16px 24px;
+      background: rgba(8, 12, 20, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 10;
     }
-    .lightbox-title {
-      font-family: var(--font-heading, 'Outfit', sans-serif);
-      font-size: 26px;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 0;
-      line-height: 1.25;
-    }
-    .lightbox-badges {
+    .lightbox-counter-badge {
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 13px;
+      font-weight: 400;
+      color: #94a3b8;
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
     }
-    .lightbox-cat-badge {
-      background: rgba(0, 210, 255, 0.15);
-      border: 1px solid #00d2ff;
+    .lightbox-tag-pill {
+      background: rgba(0, 210, 255, 0.12);
+      border: 1px solid rgba(0, 210, 255, 0.35);
       color: #00d2ff;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 9999px;
     }
-    .lightbox-subcat-badge {
-      background: rgba(255, 107, 0, 0.15);
-      border: 1px solid #ff6b00;
-      color: #ff6b00;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 9999px;
-    }
-    .lightbox-client-line {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--text-muted, #94a3b8);
-      margin: 0;
-    }
-    .lightbox-client-line strong {
-      color: #e2e8f0;
-      font-weight: 600;
-    }
-    .lightbox-desc {
-      font-size: 15px;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.8);
-      line-height: 1.6;
-      margin: 0;
-    }
-    .lightbox-actions-row {
+    .lightbox-top-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-top: 10px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      flex-wrap: wrap;
+      gap: 12px;
     }
-    .lightbox-close-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
+    .lightbox-btn-icon {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: rgba(13, 18, 28, 0.85);
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ffffff;
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: all 0.2s ease;
-    }
-    .lightbox-close-btn:hover {
-      background: var(--orange, #ff6b00);
-      border-color: var(--orange, #ff6b00);
-      transform: scale(1.08);
-    }
-    .lightbox-nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      background: rgba(9, 13, 22, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 50%;
       color: #ffffff;
       font-size: 18px;
       display: flex;
@@ -466,19 +379,139 @@
       justify-content: center;
       cursor: pointer;
       transition: all 0.2s ease;
-      z-index: 5;
     }
-    .lightbox-nav-arrow:hover {
+    .lightbox-btn-icon:hover {
+      background: rgba(255, 107, 0, 0.9);
+      border-color: #ff6b00;
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+
+    /* Main Full-View Stage */
+    .lightbox-main-stage {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 80px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .lightbox-full-img {
+      max-width: 90vw;
+      max-height: 75vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 210, 255, 0.1);
+      transition: transform 0.28s ease;
+      user-select: none;
+    }
+    .lightbox-full-img.zoomed {
+      transform: scale(1.45);
+      cursor: zoom-out;
+    }
+    .lightbox-full-img:not(.zoomed) {
+      cursor: zoom-in;
+    }
+
+    /* Big Prominent Navigation Buttons */
+    .lightbox-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(13, 18, 28, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 20;
+      user-select: none;
+      line-height: 1;
+      padding-bottom: 4px;
+    }
+    .lightbox-nav-btn:hover {
       background: #00d2ff;
-      color: #070a12;
+      color: #060a12;
       border-color: #00d2ff;
-      transform: translateY(-50%) scale(1.1);
+      transform: translateY(-50%) scale(1.12);
+      box-shadow: 0 0 24px rgba(0, 210, 255, 0.5);
     }
-    .lightbox-nav-prev {
-      left: 14px;
+    .lightbox-nav-btn.prev-btn {
+      left: 20px;
     }
-    .lightbox-nav-next {
-      right: 14px;
+    .lightbox-nav-btn.next-btn {
+      right: 20px;
+    }
+
+    /* Lightbox Bottom Info Bar */
+    .lightbox-bottom-bar {
+      padding: 14px 28px;
+      background: rgba(8, 12, 20, 0.85);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      z-index: 10;
+    }
+    .lightbox-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .lightbox-info-title {
+      font-family: var(--font-heading, 'Outfit', sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+    .lightbox-info-meta {
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 12.5px;
+      font-weight: 300;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+    .lightbox-info-client {
+      color: #38bdf8;
+      font-weight: 400;
+    }
+    .lightbox-wa-cta {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      color: #ffffff;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 9999px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+      white-space: nowrap;
+    }
+    .lightbox-wa-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
     }
 
     @media (max-width: 1100px) {
@@ -506,11 +539,25 @@
       .thumb-hover-meta {
         font-size: 10px !important;
       }
-      .lightbox-details {
-        padding: 20px;
+      .lightbox-main-stage {
+        padding: 16px 20px !important;
       }
-      .lightbox-title {
-        font-size: 20px;
+      .lightbox-nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+      }
+      .lightbox-nav-btn.prev-btn {
+        left: 8px;
+      }
+      .lightbox-nav-btn.next-btn {
+        right: 8px;
+      }
+      .lightbox-bottom-bar {
+        padding: 12px 16px;
+      }
+      .lightbox-info-title {
+        font-size: 15px;
       }
     }
   </style>
@@ -603,25 +650,25 @@
         <div class="portfolio-hero-wrap">
           <span class="section-eyebrow">CURATED DESIGN ARCHIVE</span>
           <h1 class="portfolio-main-title">Visual Showcase. <span class="brand-gradient">Engineered for Impact.</span></h1>
-          <p class="portfolio-main-desc">Explore authentic work grouped across 6 disciplines. Filter by category to view dedicated designs, or inspect full-resolution artwork via the interactive viewer.</p>
+          <p class="portfolio-main-desc">Explore 71 authentic projects organized across 6 core disciplines. Click any category to view only that discipline, or click any image to open the full-view gallery.</p>
         </div>
 
         <!-- Master Category Filter Tabs Bar -->
         <nav class="category-tabs-nav" aria-label="Filter by Category">
           <button class="cat-tab-btn active" data-category="all">
-            <span class="cat-tab-dot"></span> All Categories (55)
+            <span class="cat-tab-dot"></span> All Categories (71)
           </button>
           <button class="cat-tab-btn" data-category="branding">
-            <span class="cat-tab-dot"></span> BRANDING (14)
+            <span class="cat-tab-dot"></span> BRANDING (21)
           </button>
           <button class="cat-tab-btn" data-category="posters">
-            <span class="cat-tab-dot"></span> SOCIAL MEDIA POSTERS (8)
+            <span class="cat-tab-dot"></span> SOCIAL MEDIA POSTERS (15)
           </button>
           <button class="cat-tab-btn" data-category="print">
-            <span class="cat-tab-dot"></span> DESIGN &amp; PRINT (10)
+            <span class="cat-tab-dot"></span> DESIGN &amp; PRINT (11)
           </button>
           <button class="cat-tab-btn" data-category="apparel">
-            <span class="cat-tab-dot"></span> APPAREL / CLOTHING (6)
+            <span class="cat-tab-dot"></span> APPAREL / CLOTHING (7)
           </button>
           <button class="cat-tab-btn" data-category="reports">
             <span class="cat-tab-dot"></span> ANNUAL REPORTS (9)
@@ -638,7 +685,7 @@
         <div class="category-group-header">
           <div class="category-group-title-wrap">
             <h2 class="category-group-title"><span>💎</span> BRANDING</h2>
-            <span class="category-group-count">14 Designs</span>
+            <span class="category-group-count">21 Designs</span>
           </div>
           <div class="group-subcat-nav">
             <button class="group-subcat-btn active" data-sub="all">All Branding</button>
@@ -667,7 +714,7 @@
                   <span class="thumb-hover-client">Enkosi Gqunube Foundation</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -691,7 +738,7 @@
                   <span class="thumb-hover-client">INGELOSI Employment Law</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -715,7 +762,7 @@
                   <span class="thumb-hover-client">Lelu&#x27;s Kitchen Interiors</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -739,7 +786,7 @@
                   <span class="thumb-hover-client">Makhulela Holdings</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -763,7 +810,7 @@
                   <span class="thumb-hover-client">PK Media Group</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -784,10 +831,82 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Logos</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">The FIG Foundation</span>
+                  <span class="thumb-hover-client">The Fig Foundation</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-logo-7" 
+               data-category="branding" 
+               data-subcategory="logos" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Bathandwa Foundation Logo">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Logo Design/Bathandwa_Foundation_Logo.png" alt="Bathandwa Foundation Logo" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Bathandwa Foundation Logo</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Logos</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Bathandwa Foundation</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-logo-8" 
+               data-category="branding" 
+               data-subcategory="logos" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Makinzi Building Solutions Logo Mockup">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Logo Design/Makinzi_Building_Solutions_Logo_Mockup.jpg" alt="Makinzi Building Solutions Logo Mockup" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Makinzi Building Solutions Logo Mockup</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Logos</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Makinzi Building Solutions</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-logo-9" 
+               data-category="branding" 
+               data-subcategory="logos" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Zanengoma Heritage Trust Logo">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Logo Design/Zanengoma_Heritage_Trust_Logo.jpg" alt="Zanengoma Heritage Trust Logo" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Zanengoma Heritage Trust Logo</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Logos</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Zanengoma Heritage Trust</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -811,7 +930,7 @@
                   <span class="thumb-hover-client">LUZANA Consulting Holdings</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -835,7 +954,7 @@
                   <span class="thumb-hover-client">INGELOSI Employment Law</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -856,10 +975,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Brand Identity Systems</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">IMM MABOTE</span>
+                  <span class="thumb-hover-client">IMM Mabote Group</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -883,7 +1002,7 @@
                   <span class="thumb-hover-client">CashWave Finance</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -894,20 +1013,20 @@
                data-subcategory="banners-signage" 
                tabindex="0" 
                role="button" 
-               aria-label="TheUnlimitedExperience Rollup">
+               aria-label="TheUnlimitedExperience Rollup Banner">
             <div class="thumb-img-wrap">
-              <img src="images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp" alt="TheUnlimitedExperience Rollup" class="thumb-img" loading="lazy" />
+              <img src="images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp" alt="TheUnlimitedExperience Rollup Banner" class="thumb-img" loading="lazy" />
             </div>
             <div class="thumb-hover-overlay">
               <div class="thumb-hover-text">
-                <h4 class="thumb-hover-title">TheUnlimitedExperience Rollup</h4>
+                <h4 class="thumb-hover-title">TheUnlimitedExperience Rollup Banner</h4>
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Banners &amp; Signages</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">TheUnlimitedExperience</span>
+                  <span class="thumb-hover-client">The Unlimited Experience</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -931,13 +1050,109 @@
                   <span class="thumb-hover-client">IRAZA Footwear</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="portfolio-thumb-card" 
                data-id="b-ban-3" 
+               data-category="branding" 
+               data-subcategory="banners-signage" 
+               tabindex="0" 
+               role="button" 
+               aria-label="CashWave Teardrop Outdoor Flag">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Banners/CashWave_Teardrop_Flag.jpg" alt="CashWave Teardrop Outdoor Flag" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">CashWave Teardrop Outdoor Flag</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Banners &amp; Signages</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">CashWave Finance</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-ban-4" 
+               data-category="branding" 
+               data-subcategory="banners-signage" 
+               tabindex="0" 
+               role="button" 
+               aria-label="AA Connections Pull Up Banner">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Banners/AA_Connections_Pull_Up_Banner.jpg" alt="AA Connections Pull Up Banner" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">AA Connections Pull Up Banner</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Banners &amp; Signages</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">AA Connections</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-ban-5" 
+               data-category="branding" 
+               data-subcategory="banners-signage" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Zanengoma Book Launch Banner">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Banners/Zanengoma_Heritage_Trust_Rollup_Banner.jpg" alt="Zanengoma Book Launch Banner" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Zanengoma Book Launch Banner</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Banners &amp; Signages</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Zanengoma Heritage Trust</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-ban-6" 
+               data-category="branding" 
+               data-subcategory="banners-signage" 
+               tabindex="0" 
+               role="button" 
+               aria-label="CashWave Front Store 3D Signage">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Signage/CashWave_Front_Store_3D_Signage.jpg" alt="CashWave Front Store 3D Signage" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">CashWave Front Store 3D Signage</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Banners &amp; Signages</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">CashWave Finance</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="b-ban-7" 
                data-category="branding" 
                data-subcategory="banners-signage" 
                tabindex="0" 
@@ -952,16 +1167,16 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Banners &amp; Signages</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Commercial Property Signage</span>
+                  <span class="thumb-hover-client">Metropolitan Workspace</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="portfolio-thumb-card" 
-               data-id="b-ban-4" 
+               data-id="b-ban-8" 
                data-category="branding" 
                data-subcategory="banners-signage" 
                tabindex="0" 
@@ -976,10 +1191,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Banners &amp; Signages</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Corporate Facility Signage</span>
+                  <span class="thumb-hover-client">TechHub Innovation Center</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -992,7 +1207,7 @@
         <div class="category-group-header">
           <div class="category-group-title-wrap">
             <h2 class="category-group-title"><span>📱</span> SOCIAL MEDIA POSTERS</h2>
-            <span class="category-group-count">8 Designs</span>
+            <span class="category-group-count">15 Designs</span>
           </div>
           <div class="group-subcat-nav">
             <button class="group-subcat-btn active" data-sub="all">All Posters</button>
@@ -1018,10 +1233,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Event Posters</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Creative Nights Live</span>
+                  <span class="thumb-hover-client">Vibrant Sessions</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1042,10 +1257,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Event Posters</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Cape Creative Collective</span>
+                  <span class="thumb-hover-client">Metro Youth Culture</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1066,10 +1281,106 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Event Posters</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Future Design Forum</span>
+                  <span class="thumb-hover-client">Cape Creative Con</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-evt-4" 
+               data-category="posters" 
+               data-subcategory="event-posters" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Bathandwa Foundation 10 Year Anniversary">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Posters/Bathandwa_Foundation_10_Year_Anniversary.jpg" alt="Bathandwa Foundation 10 Year Anniversary" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Bathandwa Foundation 10 Year Anniversary</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Event Posters</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Bathandwa Foundation</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-evt-5" 
+               data-category="posters" 
+               data-subcategory="event-posters" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Club Night Live Sessions">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Posters/Club_Night_Live_Poster.jpg" alt="Club Night Live Sessions" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Club Night Live Sessions</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Event Posters</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">NightLife Entertainment</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-evt-6" 
+               data-category="posters" 
+               data-subcategory="event-posters" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Camada Music Festival Poster">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Posters/Camada_Music_Festival_Poster.jpg" alt="Camada Music Festival Poster" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Camada Music Festival Poster</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Event Posters</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Camada Entertainment</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-evt-7" 
+               data-category="posters" 
+               data-subcategory="event-posters" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Pagodinn Live Music Session">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Posters/Pagodinn_Live_Music_Poster.jpg" alt="Pagodinn Live Music Session" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Pagodinn Live Music Session</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Event Posters</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Pagodinn Sessions</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1090,10 +1401,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Digital Flyers</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Paygas South Africa</span>
+                  <span class="thumb-hover-client">Paygas SA</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1117,7 +1428,7 @@
                   <span class="thumb-hover-client">Lelu&#x27;s Kitchen Interiors</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1138,10 +1449,58 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Digital Flyers</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Metro Events Cape Town</span>
+                  <span class="thumb-hover-client">Metro Lounge &amp; Dining</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-fly-4" 
+               data-category="posters" 
+               data-subcategory="digital-flyers" 
+               tabindex="0" 
+               role="button" 
+               aria-label="CashWave Student Loan Digital Flyer">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Flyer/CashWave_Student_Loan_Flyer.jpg" alt="CashWave Student Loan Digital Flyer" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">CashWave Student Loan Digital Flyer</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Digital Flyers</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">CashWave Finance</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-fly-5" 
+               data-category="posters" 
+               data-subcategory="digital-flyers" 
+               tabindex="0" 
+               role="button" 
+               aria-label="CashWave Instagram Promo Flyer">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Flyer/CashWave_Instagram_Promo_Flyer.jpg" alt="CashWave Instagram Promo Flyer" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">CashWave Instagram Promo Flyer</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Digital Flyers</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">CashWave Finance</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1162,10 +1521,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Campaigns</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Community Drive SA</span>
+                  <span class="thumb-hover-client">Foundation Initiatives</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1186,10 +1545,34 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Campaigns</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Dubani Creatives Lab</span>
+                  <span class="thumb-hover-client">Dubani Creatives Academy</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="p-cam-3" 
+               data-category="posters" 
+               data-subcategory="campaigns" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Agricultural Summit Campaign Poster">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Posters/Agricultural_Summit_Campaign_Poster.jpg" alt="Agricultural Summit Campaign Poster" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Agricultural Summit Campaign Poster</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Campaigns</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Eastern Cape Agri-Summit</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1202,7 +1585,7 @@
         <div class="category-group-header">
           <div class="category-group-title-wrap">
             <h2 class="category-group-title"><span>📦</span> DESIGN &amp; PRINT</h2>
-            <span class="category-group-count">10 Designs</span>
+            <span class="category-group-count">11 Designs</span>
           </div>
           <div class="group-subcat-nav">
             <button class="group-subcat-btn active" data-sub="all">All Print</button>
@@ -1231,7 +1614,7 @@
                   <span class="thumb-hover-client">IRAZA Footwear</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1255,7 +1638,7 @@
                   <span class="thumb-hover-client">IRAZA Footwear</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1279,7 +1662,7 @@
                   <span class="thumb-hover-client">IRAZA Footwear</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1303,7 +1686,7 @@
                   <span class="thumb-hover-client">FCICHS (Foundation Community Initiative)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1324,10 +1707,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Brochures &amp; Booklets</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">The FIG Foundation</span>
+                  <span class="thumb-hover-client">The Fig Foundation</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1348,10 +1731,34 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Brochures &amp; Booklets</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Mrs B Family Trust</span>
+                  <span class="thumb-hover-client">B Memorial Trust</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="dp-bro-4" 
+               data-category="print" 
+               data-subcategory="brochures" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Makinzi Building Solutions Business Profile">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Brochure/Makinzi_Building_Solutions_Business_Profile.jpg" alt="Makinzi Building Solutions Business Profile" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Makinzi Building Solutions Business Profile</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Brochures &amp; Booklets</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Makinzi Building Solutions</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1372,10 +1779,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Stationery Collateral</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1396,10 +1803,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Stationery Collateral</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1420,10 +1827,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Stationery Collateral</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1444,10 +1851,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Stationery Collateral</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1460,7 +1867,7 @@
         <div class="category-group-header">
           <div class="category-group-title-wrap">
             <h2 class="category-group-title"><span>👕</span> APPAREL / CLOTHING</h2>
-            <span class="category-group-count">6 Designs</span>
+            <span class="category-group-count">7 Designs</span>
           </div>
           <div class="group-subcat-nav">
             <button class="group-subcat-btn active" data-sub="all">All Apparel</button>
@@ -1486,10 +1893,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Custom T-Shirts</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Street District Apparel</span>
+                  <span class="thumb-hover-client">Dubani Originals</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1510,10 +1917,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Custom T-Shirts</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Kulture Kolektive</span>
+                  <span class="thumb-hover-client">Cape Heritage Apparel</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1534,10 +1941,34 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Custom T-Shirts</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Dubani Studio Merch</span>
+                  <span class="thumb-hover-client">Dubani Creatives Internal</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="portfolio-thumb-card" 
+               data-id="ap-tsh-4" 
+               data-category="apparel" 
+               data-subcategory="tshirts" 
+               tabindex="0" 
+               role="button" 
+               aria-label="Bathandwa Foundation Custom Tee">
+            <div class="thumb-img-wrap">
+              <img src="images/Portfolio/Aparel/Bathandwa_Foundation_Tshirt.jpg" alt="Bathandwa Foundation Custom Tee" class="thumb-img" loading="lazy" />
+            </div>
+            <div class="thumb-hover-overlay">
+              <div class="thumb-hover-text">
+                <h4 class="thumb-hover-title">Bathandwa Foundation Custom Tee</h4>
+                <div class="thumb-hover-meta">
+                  <span class="thumb-hover-subcat">Custom T-Shirts</span>
+                  <span class="thumb-hover-dot">•</span>
+                  <span class="thumb-hover-client">Bathandwa Foundation</span>
+                </div>
+                <div class="thumb-hover-action">
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1558,10 +1989,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Headwear &amp; Caps</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Apex Urban Gear</span>
+                  <span class="thumb-hover-client">Street Culture SA</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1582,10 +2013,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Headwear &amp; Caps</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Coastline Club</span>
+                  <span class="thumb-hover-client">Coastal Goods</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1609,7 +2040,7 @@
                   <span class="thumb-hover-client">Metro Operations</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1651,7 +2082,7 @@
                   <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1675,7 +2106,7 @@
                   <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1699,7 +2130,7 @@
                   <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1723,7 +2154,7 @@
                   <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1744,10 +2175,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">FCI Company Profiles</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">FCICHS (Community Health Solutions)</span>
+                  <span class="thumb-hover-client">FCICHS (Foundation Community Initiative)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1768,10 +2199,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">FCI Company Profiles</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">FCICHS (Community Health Solutions)</span>
+                  <span class="thumb-hover-client">FCICHS (Foundation Community Initiative)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1792,10 +2223,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Corporate Publications</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1816,10 +2247,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Corporate Publications</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1840,10 +2271,10 @@
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Corporate Publications</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust</span>
+                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1872,20 +2303,20 @@
                data-subcategory="corporate-portals" 
                tabindex="0" 
                role="button" 
-               aria-label="FCICHS Social Housing Portal">
+               aria-label="FCICHS Property Development Portal">
             <div class="thumb-img-wrap">
-              <img src="images/Portfolio/Web Design/FCICHS/newLogo.png" alt="FCICHS Social Housing Portal" class="thumb-img" loading="lazy" />
+              <img src="images/Portfolio/Web Design/FCICHS/property.jpg" alt="FCICHS Property Development Portal" class="thumb-img" loading="lazy" />
             </div>
             <div class="thumb-hover-overlay">
               <div class="thumb-hover-text">
-                <h4 class="thumb-hover-title">FCICHS Social Housing Portal</h4>
+                <h4 class="thumb-hover-title">FCICHS Property Development Portal</h4>
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Corporate &amp; NGO Portals</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">FCICHS (Foundation Community Initiative)</span>
+                  <span class="thumb-hover-client">FCICHS Social Housing</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1896,20 +2327,20 @@
                data-subcategory="corporate-portals" 
                tabindex="0" 
                role="button" 
-               aria-label="KCT Community Trust Portal">
+               aria-label="Xwazi Foundation Community Web Portal">
             <div class="thumb-img-wrap">
-              <img src="images/Portfolio/Web Design/KCT/logo.webp" alt="KCT Community Trust Portal" class="thumb-img" loading="lazy" />
+              <img src="images/Portfolio/Web Design/Xwazi Foundation/534224564_1326220812844759_4889749808702556810_n.jpg" alt="Xwazi Foundation Community Web Portal" class="thumb-img" loading="lazy" />
             </div>
             <div class="thumb-hover-overlay">
               <div class="thumb-hover-text">
-                <h4 class="thumb-hover-title">KCT Community Trust Portal</h4>
+                <h4 class="thumb-hover-title">Xwazi Foundation Community Web Portal</h4>
                 <div class="thumb-hover-meta">
                   <span class="thumb-hover-subcat">Corporate &amp; NGO Portals</span>
                   <span class="thumb-hover-dot">•</span>
-                  <span class="thumb-hover-client">Khayelitsha Community Trust (KCT)</span>
+                  <span class="thumb-hover-client">Dr Mandiluve Xwazi Foundation</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1933,7 +2364,7 @@
                   <span class="thumb-hover-client">Dream Area</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1957,7 +2388,7 @@
                   <span class="thumb-hover-client">Star Blox Studio</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -1981,7 +2412,7 @@
                   <span class="thumb-hover-client">Chef Lungelo</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -2005,7 +2436,7 @@
                   <span class="thumb-hover-client">Chef Lungelo</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -2029,7 +2460,7 @@
                   <span class="thumb-hover-client">Regimed Healthcare</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -2053,7 +2484,7 @@
                   <span class="thumb-hover-client">Regimed Healthcare</span>
                 </div>
                 <div class="thumb-hover-action">
-                  <span>View artwork →</span>
+                  <span>Open full view ↗</span>
                 </div>
               </div>
             </div>
@@ -2065,45 +2496,50 @@
     </main>
   </div>
 
-  <!-- Interactive Lightbox Modal (View Function) -->
-  <div class="lightbox-modal" id="portfolio-lightbox" role="dialog" aria-modal="true" aria-label="Portfolio Artwork Viewer">
-    <div class="lightbox-content-card">
-      <button class="lightbox-close-btn" id="lightbox-close" aria-label="Close modal">×</button>
-      
-      <div class="lightbox-preview-box">
-        <button class="lightbox-nav-arrow lightbox-nav-prev" id="lightbox-prev" aria-label="Previous artwork">‹</button>
-        <img src="" alt="" id="lightbox-img" class="lightbox-preview-img" title="Click to zoom in/out" />
-        <button class="lightbox-nav-arrow lightbox-nav-next" id="lightbox-next" aria-label="Next artwork">›</button>
+  <!-- TRUE FULL-VIEW LIGHTBOX MODAL WITH PROMINENT NAVIGATION BUTTONS -->
+  <div class="fullview-lightbox" id="portfolio-lightbox" role="dialog" aria-modal="true" aria-label="Full-View Portfolio Image">
+    <!-- Top Bar -->
+    <div class="lightbox-top-bar">
+      <div class="lightbox-counter-badge">
+        <span id="lb-counter">1 / 71</span>
+        <span class="lightbox-tag-pill" id="lb-cat">Category</span>
+        <span class="lightbox-tag-pill" id="lb-subcat" style="color: #ff6b00; border-color: rgba(255, 107, 0, 0.4); background: rgba(255, 107, 0, 0.1);">Subcategory</span>
       </div>
-
-      <div class="lightbox-details">
-        <div class="lightbox-header-row">
-          <div>
-            <h2 class="lightbox-title" id="lightbox-title"></h2>
-            <p class="lightbox-client-line" id="lightbox-client"></p>
-          </div>
-          <div class="lightbox-badges">
-            <span class="lightbox-cat-badge" id="lightbox-cat"></span>
-            <span class="lightbox-subcat-badge" id="lightbox-subcat"></span>
-          </div>
-        </div>
-
-        <p class="lightbox-desc" id="lightbox-desc"></p>
-
-        <div class="lightbox-actions-row">
-          <span style="font-size: 13px; color: #94a3b8;">Click the image to zoom. Press Esc to exit.</span>
-          <a href="#" target="_blank" rel="noopener" class="btn-primary" id="lightbox-wa-btn">Inquire on WhatsApp →</a>
-        </div>
+      <div class="lightbox-top-actions">
+        <button class="lightbox-btn-icon" id="lb-zoom-btn" title="Toggle Zoom" aria-label="Toggle Zoom">🔍</button>
+        <button class="lightbox-btn-icon" id="lb-close-btn" title="Close (Esc)" aria-label="Close">✕</button>
       </div>
+    </div>
+
+    <!-- Main Image Stage -->
+    <div class="lightbox-main-stage" id="lb-stage">
+      <button class="lightbox-nav-btn prev-btn" id="lb-prev-btn" title="Previous artwork (Left Arrow)" aria-label="Previous">‹</button>
+      <img src="" alt="" id="lb-full-img" class="lightbox-full-img" title="Click to zoom in/out" />
+      <button class="lightbox-nav-btn next-btn" id="lb-next-btn" title="Next artwork (Right Arrow)" aria-label="Next">›</button>
+    </div>
+
+    <!-- Bottom Caption Bar -->
+    <div class="lightbox-bottom-bar">
+      <div class="lightbox-info-col">
+        <h3 class="lightbox-info-title" id="lb-title">Project Title</h3>
+        <p class="lightbox-info-meta">
+          <span>Client: <strong class="lightbox-info-client" id="lb-client">Client Name</strong></span>
+          <span style="opacity: 0.4;">•</span>
+          <span id="lb-desc">Project Overview</span>
+        </p>
+      </div>
+      <a href="#" target="_blank" rel="noopener" class="lightbox-wa-cta" id="lb-wa-btn">
+        <span>💬</span> Inquire about this project →
+      </a>
     </div>
   </div>
 
   <!-- Shared App & Mobile Logic -->
   <script src="main.js"></script>
 
-  <!-- Grouped Portfolio & Filter Script -->
+  <!-- Grouped Portfolio, Full-View Lightbox & Filter Script -->
   <script>
-    const portfolioItems = [{"id": "b-logo-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Enkosi Gqunube Foundation", "client": "Enkosi Gqunube Foundation", "image": "images/Portfolio/Logo Design/Enkosi Gqunube Foundation Logo Design_1771002702188.webp", "desc": "Emblematic community foundation brand mark celebrating grassroots unity, cultural heritage, and youth empowerment in the Eastern Cape."}, {"id": "b-logo-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "INGELOSI Employment Law", "client": "INGELOSI Employment Law", "image": "images/Portfolio/Logo Design/INGELOSI Employment Law_1771003268721.webp", "desc": "Authoritative and prestigious legal identity mark engineered for high-stakes corporate labor relations and employment jurisprudence."}, {"id": "b-logo-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Lelu's Kitchen Interiors Logo", "client": "Lelu's Kitchen Interiors", "image": "images/Portfolio/Logo Design/Lelu_s Kitchen Interiors Branding_1771003297997.jpg", "desc": "Bespoke culinary and interior architecture brand emblem with minimalist linework."}, {"id": "b-logo-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Makhulela Holdings Logo", "client": "Makhulela Holdings", "image": "images/Portfolio/Logo Design/Makhulela Holdings Branding_1771003091146.jpg", "desc": "Distinguished corporate holdings emblem symbolizing growth, strength, and integrity."}, {"id": "b-logo-5", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "PK MEDIA Brand Mark", "client": "PK Media Group", "image": "images/Portfolio/Logo Design/PK MEDIA logo Design_1771003102704.webp", "desc": "Dynamic visual media and broadcasting logo designed for digital streaming platforms."}, {"id": "b-logo-6", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "THE FIG FOUNDATION Logo", "client": "The FIG Foundation", "image": "images/Portfolio/Logo Design/THE FIG FOUNDATION Branding_1771002978028.webp", "desc": "Nurturing community empowerment foundation logo with symbolic organic motifs."}, {"id": "b-id-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "LUZANA Executive Identity Suite", "client": "LUZANA Consulting Holdings", "image": "images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg", "desc": "Comprehensive visual system including corporate letterhead, folders, business cards, pitch decks, and brand guidelines."}, {"id": "b-id-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "INGELOSI Corporate Stationery", "client": "INGELOSI Employment Law", "image": "images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp", "desc": "Prestige corporate stationery folders, legal briefs, letterheads, and executive business cards with refined gold detailing."}, {"id": "b-id-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "IMM MABOTE Executive Suite", "client": "IMM MABOTE", "image": "images/Portfolio/Branding/IMM MABOTE/514350235_1293736032759904_2702461927603542805_n.jpg", "desc": "Executive stationery, business cards, and corporate presentation suite."}, {"id": "b-id-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "CashWave Digital Collateral", "client": "CashWave Finance", "image": "images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp", "desc": "Credit stationery, branded application forms, promotional handouts, and mobile digital finance banners."}, {"id": "b-ban-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "TheUnlimitedExperience Rollup", "client": "TheUnlimitedExperience", "image": "images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp", "desc": "High-impact exhibition pull-up banner designed for brand activations, industry expos, and live demonstrations."}, {"id": "b-ban-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "IRAZA Footwear Pop-up Banner", "client": "IRAZA Footwear", "image": "images/Portfolio/Banners/IRAZA footwear package design_1771003524777.jpg", "desc": "Dynamic retail and pop-up marketing banner announcing product drops and footwear launches across flagship stores."}, {"id": "b-ban-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "Corporate Facility Directional Signage", "client": "Commercial Property Signage", "image": "images/Portfolio/Signage/1.jpg", "desc": "Architectural directional wayfinding and exterior sign systems engineered for modern industrial and business parks."}, {"id": "b-ban-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "3D Fabricated Entrance Sign", "client": "Corporate Facility Signage", "image": "images/Portfolio/Signage/2.jpg", "desc": "High-contrast 3D fabricated building entrance signage with weather-resistant brushed composite finishes."}, {"id": "p-evt-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Live Music & Arts Showcase", "client": "Creative Nights Live", "image": "images/Portfolio/Posters/494218292_1229844952482346_1116606363651595572_n.jpg", "desc": "Electrifying typographical concert and performance poster designed for maximum engagement across Instagram and TikTok."}, {"id": "p-evt-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Urban Youth Festival Poster", "client": "Cape Creative Collective", "image": "images/Portfolio/Posters/494314046_1230341949099313_5073685672330890678_n.jpg", "desc": "Vibrant street culture festival and music showcase promotional poster built for viral community sharing."}, {"id": "p-evt-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Creative Summit Keynote Poster", "client": "Future Design Forum", "image": "images/Portfolio/Posters/494905437_1229756509157857_9077725963076676636_n.jpg", "desc": "Modern minimalist keynote presentation poster emphasizing speaker authority, date prominence, and venue clarity."}, {"id": "p-fly-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Paygas Digital Community Flyer", "client": "Paygas South Africa", "image": "images/Portfolio/Flyer/Paygas Flyers_1771003144872.webp", "desc": "High-impact mobile and print promotional flyer for affordable clean cooking gas accessibility."}, {"id": "p-fly-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Lelu's Kitchen Promotional Flyer", "client": "Lelu's Kitchen Interiors", "image": "images/Portfolio/Flyer/Lelu_s Kitchen Interiors Branding_1771003307155.jpg", "desc": "Refined lifestyle promotional flyer highlighting artisanal kitchen installations."}, {"id": "p-fly-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Metro Social Night Flyer", "client": "Metro Events Cape Town", "image": "images/Portfolio/Flyer/515364281_1307781548022019_3160041811554924075_n.jpg", "desc": "Eye-catching social media digital flyer crafted for Instagram and WhatsApp broadcasts."}, {"id": "p-cam-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Community Drive Youth Campaign", "client": "Community Drive SA", "image": "images/Portfolio/Posters/502504943_1255465876586920_3732486807857411753_n.jpg", "desc": "Provocative social awareness campaign addressing youth skills development and digital literacy across Western Cape communities."}, {"id": "p-cam-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Dubani Design Lab Workshop Series", "client": "Dubani Creatives Lab", "image": "images/Portfolio/Posters/506214624_1266785332121641_8393783487578973254_n.jpg", "desc": "Engaging multi-slide educational workshop promotion helping emerging founders elevate their visual brand identities."}, {"id": "dp-pkg-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Luxury Footwear Box", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg", "desc": "Signature custom rigid shoebox dieline with soft-touch matte lamination, spot UV, and structural strength."}, {"id": "dp-pkg-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Dieline & Labeling", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003505996.jpg", "desc": "Manufacturing dielines, barcode placement, size grid typography, and eco-certified packaging specifications."}, {"id": "dp-pkg-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Premium Retail Unboxing", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003507973.jpg", "desc": "Custom patterned tissue paper wrap, authentication certificate card, and branded sticker seal for customer unboxing."}, {"id": "dp-bro-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "FCICHS Corporate Capabilities Profile", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp", "desc": "Full 24-page landscape corporate profile detailing social housing projects, accreditation metrics, and healthcare partnerships."}, {"id": "dp-bro-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "THE FIG FOUNDATION Donor Brochure", "client": "The FIG Foundation", "image": "images/Portfolio/Brochure/THE FIG FOUNDATION Branding_1771002984093.jpg", "desc": "Philanthropic donor brochure balancing emotional beneficiary portraits with audited financial allocation charts."}, {"id": "dp-bro-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "Commemorative Tribute Booklet", "client": "Mrs B Family Trust", "image": "images/Portfolio/Brochure/Mrs B Funeral_1771002911896.jpg", "desc": "Dignified and timeless heirloom memorial booklet with gold foil accents, full-color archival photography, and premium paper stock."}, {"id": "dp-sta-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Executive Embossed Notebook", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Notebook_Mockup_2.jpg", "desc": "Hardcover embossed executive notebook and annual corporate planner for board members and strategic stakeholders."}, {"id": "dp-sta-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Sublimated Lanyards", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Lanyard_Mockup_1.jpg", "desc": "Durable full-color sublimated satin conference lanyards with metal lobster claw clips and safety breakaways."}, {"id": "dp-sta-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Laser-Engraved USB Flash Drives", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Pendrive_Mockup_1.jpg", "desc": "Branded metal swivel USB 3.0 flash drives loaded with audited annual reports, video presentations, and press kits."}, {"id": "dp-sta-4", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Executive Ballpoint Pen Suite", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Pen_Mockup_1.jpg", "desc": "Matte black metal executive pens with laser-etched KCT branding for institutional gifting and signature ceremonies."}, {"id": "ap-tsh-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Signature Street Graphic Tee", "client": "Street District Apparel", "image": "images/Portfolio/Aparel/480582002_1034364905404769_8803467143722299735_n.jpg", "desc": "Heavyweight 240gsm combed cotton t-shirt featuring bespoke high-density typography and back screen print artwork."}, {"id": "ap-tsh-2", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Heritage Crewneck T-Shirt", "client": "Kulture Kolektive", "image": "images/Portfolio/Aparel/480876761_1034953375345922_8660859334893525078_n.jpg", "desc": "Modern cut crewneck t-shirt with precision chest embroidery and custom neck-tape woven branding."}, {"id": "ap-tsh-3", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Dubani Creatives Studio Tee", "client": "Dubani Studio Merch", "image": "images/Portfolio/Aparel/481098107_1044816791026247_2216861155745790659_n.jpg", "desc": "Official studio cotton tee featuring the signature orange and cyan contrast emblem and motivational typography."}, {"id": "ap-cap-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "headwear", "subcategoryName": "Headwear & Caps", "title": "Structured 3D Puff Snapback", "client": "Apex Urban Gear", "image": "images/Portfolio/Aparel/481468607_1046882124153047_8284986740349321572_n.jpg", "desc": "6-panel structured snapback with high-relief 3D puff embroidery, green undervisor, and custom inner seam binding."}, {"id": "ap-cap-2", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "headwear", "subcategoryName": "Headwear & Caps", "title": "Vintage Washed Cotton Dad Hat", "client": "Coastline Club", "image": "images/Portfolio/Aparel/494165052_1229756649157843_6245972667023574482_n.jpg", "desc": "Unstructured low-profile washed cotton cap with subtle brass closure buckle and micro-embroidered crest."}, {"id": "ap-wrk-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "workwear", "subcategoryName": "Branded Workwear", "title": "Corporate Staff Uniform Polo", "client": "Metro Operations", "image": "images/Portfolio/Aparel/494196211_1229756655824509_5868124905933162260_n.jpg", "desc": "Durable anti-fade pique knit corporate polo shirts engineered for daily operational staff, site managers, and events."}, {"id": "ar-kct-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Annual Report 2024/25", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp", "desc": "The flagship audited publication detailing socio-economic investments, youth empowerment metrics, and major commercial property milestones."}, {"id": "ar-kct-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Community Report Vol 3", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 3_1771002862247.jpg", "desc": "Comprehensive community impact assessment publication featuring governance statements, trustee reports, and localized case studies."}, {"id": "ar-kct-3", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Development Report Vol 2", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 2_1771002875065.jpg", "desc": "Detailed financial and infrastructural breakdown with infographics, audited balance sheets, and capital expenditure diagrams."}, {"id": "ar-kct-4", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Foundation Report Vol 1", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 1_1771002891340.jpg", "desc": "Inaugural community trust governance volume laying the foundation for transparent public sector reporting and donor stewardship."}, {"id": "ar-fci-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "fci-profiles", "subcategoryName": "FCI Company Profiles", "title": "FCICHS Corporate Profile & Impact", "client": "FCICHS (Community Health Solutions)", "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp", "desc": "Institutional publication documenting accreditation with SHRA, NHBRC, CIDB, and Western Cape Department of Human Settlements."}, {"id": "ar-fci-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "fci-profiles", "subcategoryName": "FCI Company Profiles", "title": "Goodwood Housing Project Portfolio", "client": "FCICHS (Community Health Solutions)", "image": "images/Portfolio/Web Design/FCICHS/Main-Entrance.jpg", "desc": "Multimillion-rand social housing architectural showcase publication detailing tenant accommodation and community wellness facilities."}, {"id": "ar-pub-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Dual-Language Calendar (English)", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/KCT Calendar Mockup (English).jpg", "desc": "Large-format corporate wall calendar distributed to government departments, corporate partners, and civic leaders."}, {"id": "ar-pub-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Dual-Language Calendar (isiXhosa)", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/KCT Calendar Mockup (isiXhosa).jpg", "desc": "Official corporate calendar celebrating indigenous language preservation and community grassroots leadership."}, {"id": "ar-pub-3", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Graduate Achievement Certificates", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/KCT certificates_1771003667052.webp", "desc": "Gold-foiled security certificates awarded to graduates of the KCT community business incubation initiatives."}, {"id": "w-cor-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "FCICHS Social Housing Portal", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Web Design/FCICHS/newLogo.png", "desc": "Full corporate digital portal featuring online social housing tenant applications, property directories, and stakeholder reports."}, {"id": "w-cor-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "KCT Community Trust Portal", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Web Design/KCT/logo.webp", "desc": "Accessible institutional website with tender downloads, governance library, project tracking, and community event schedules."}, {"id": "w-cor-3", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Dream Area Cultural Platform", "client": "Dream Area", "image": "images/imgi_13_68bd341e34845d434f3fb083_1.png", "desc": "High-performance web app and immersive multimedia platform engineered for youth creators and cultural events."}, {"id": "w-cor-4", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Star Blox Gaming Studio Hub", "client": "Star Blox Studio", "image": "images/imgi_14_68bd33e0e57b111749f34daf_0.png", "desc": "Dark-mode gaming web hub with interactive game asset previews, creator tools, and community forum integrations."}, {"id": "w-cul-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "food-lifestyle", "subcategoryName": "Food & Lifestyle", "title": "Chef Lungelo Fine Dining Web App", "client": "Chef Lungelo", "image": "images/Portfolio/Web Design/Chef Lungelo/509758564_1275713811228793_8836691374578379249_n.jpg", "desc": "Luxury culinary portfolio featuring private chef bookings, tasting menus, and interactive masterclass ticket checkout."}, {"id": "w-cul-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "food-lifestyle", "subcategoryName": "Food & Lifestyle", "title": "Chef Lungelo Gourmet Experiences", "client": "Chef Lungelo", "image": "images/Portfolio/Web Design/Chef Lungelo/510804046_1275714121228762_565188796764469855_n.jpg", "desc": "Visual storytelling web platform highlighting Afro-fusion dining, private events, and editorial press coverage."}, {"id": "w-med-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "medical-health", "subcategoryName": "Medical & Health", "title": "Regimed Medical Practice Portal", "client": "Regimed Healthcare", "image": "images/Portfolio/Web Design/Regimed/510442613_1275715857895255_5442613084655942366_n.jpg", "desc": "Clean clinical telemedicine website with secure patient intake forms, doctor directories, and prescription refills."}, {"id": "w-med-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "medical-health", "subcategoryName": "Medical & Health", "title": "Regimed Mobile Health Platform", "client": "Regimed Healthcare", "image": "images/Portfolio/Web Design/Regimed/511887185_1275715454561962_1162762411983906702_n.jpg", "desc": "Fast, lightweight mobile interface optimized for low-bandwidth healthcare access across South Africa."}];
+    const portfolioItems = [{"id": "b-logo-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Enkosi Gqunube Foundation", "client": "Enkosi Gqunube Foundation", "image": "images/Portfolio/Logo Design/Enkosi Gqunube Foundation Logo Design_1771002702188.webp", "desc": "Community empowerment brand mark celebrating grassroots unity, cultural heritage, and youth upliftment in the Eastern Cape."}, {"id": "b-logo-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "INGELOSI Employment Law", "client": "INGELOSI Employment Law", "image": "images/Portfolio/Logo Design/INGELOSI Employment Law_1771003268721.webp", "desc": "Authoritative and prestigious legal identity mark engineered for high-stakes corporate labor relations and employment jurisprudence."}, {"id": "b-logo-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Lelu's Kitchen Interiors Logo", "client": "Lelu's Kitchen Interiors", "image": "images/Portfolio/Logo Design/Lelu_s Kitchen Interiors Branding_1771003297997.jpg", "desc": "Bespoke culinary and interior architecture brand emblem featuring minimalist linework and warmth."}, {"id": "b-logo-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Makhulela Holdings Logo", "client": "Makhulela Holdings", "image": "images/Portfolio/Logo Design/Makhulela Holdings Branding_1771003091146.jpg", "desc": "Distinguished corporate holdings emblem symbolizing sustainable growth, financial strength, and governance."}, {"id": "b-logo-5", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "PK MEDIA Brand Mark", "client": "PK Media Group", "image": "images/Portfolio/Logo Design/PK MEDIA logo Design_1771003102704.webp", "desc": "Dynamic visual media and broadcasting logo designed for digital streaming platforms and creative productions."}, {"id": "b-logo-6", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "THE FIG FOUNDATION Logo", "client": "The Fig Foundation", "image": "images/Portfolio/Logo Design/THE FIG FOUNDATION Branding_1771002978028.webp", "desc": "Botanical and philanthropic brand emblem crafted for human development and nutritional charity initiatives."}, {"id": "b-logo-7", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Bathandwa Foundation Logo", "client": "Bathandwa Foundation", "image": "images/Portfolio/Logo Design/Bathandwa_Foundation_Logo.png", "desc": "Grassroots community non-profit emblem celebrating social care, youth support, and community welfare."}, {"id": "b-logo-8", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Makinzi Building Solutions Logo Mockup", "client": "Makinzi Building Solutions", "image": "images/Portfolio/Logo Design/Makinzi_Building_Solutions_Logo_Mockup.jpg", "desc": "Industrial construction and infrastructure identity mark featuring geometric precision and solid durability."}, {"id": "b-logo-9", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Zanengoma Heritage Trust Logo", "client": "Zanengoma Heritage Trust", "image": "images/Portfolio/Logo Design/Zanengoma_Heritage_Trust_Logo.jpg", "desc": "Cultural preservation and historical documentation trust emblem reflecting indigenous wisdom and literature."}, {"id": "b-id-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "LUZANA Executive Identity Suite", "client": "LUZANA Consulting Holdings", "image": "images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg", "desc": "Complete corporate brand architecture, executive stationery, typography rules, and gold-foiled identity suite."}, {"id": "b-id-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "INGELOSI Corporate Stationery", "client": "INGELOSI Employment Law", "image": "images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp", "desc": "Formal legal firm stationery suite, business cards, official seal formats, and letterhead layouts."}, {"id": "b-id-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "IMM MABOTE Executive Suite", "client": "IMM Mabote Group", "image": "images/Portfolio/Branding/IMM MABOTE/514350235_1293736032759904_2702461927603542805_n.jpg", "desc": "High-tier corporate collateral package encompassing identity guidelines, folder kits, and business cards."}, {"id": "b-id-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "CashWave Digital Collateral", "client": "CashWave Finance", "image": "images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp", "desc": "Modern FinTech identity system, payment card designs, visual assets, and cross-channel brand language."}, {"id": "b-ban-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "TheUnlimitedExperience Rollup Banner", "client": "The Unlimited Experience", "image": "images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp", "desc": "High-visibility luxury event roll-up banner engineered for conference stages and red carpet receptions."}, {"id": "b-ban-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "IRAZA Footwear Pop-up Banner", "client": "IRAZA Footwear", "image": "images/Portfolio/Banners/IRAZA footwear package design_1771003524777.jpg", "desc": "Retail activation pop-up banner showcasing premium bespoke footwear craft and brand aesthetics."}, {"id": "b-ban-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "CashWave Teardrop Outdoor Flag", "client": "CashWave Finance", "image": "images/Portfolio/Banners/CashWave_Teardrop_Flag.jpg", "desc": "Durable all-weather outdoor promotional teardrop flag for retail branch road frontage and outdoor events."}, {"id": "b-ban-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "AA Connections Pull Up Banner", "client": "AA Connections", "image": "images/Portfolio/Banners/AA_Connections_Pull_Up_Banner.jpg", "desc": "Executive retractable pull-up banner designed for corporate networking and exhibition expo booths."}, {"id": "b-ban-5", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "Zanengoma Book Launch Banner", "client": "Zanengoma Heritage Trust", "image": "images/Portfolio/Banners/Zanengoma_Heritage_Trust_Rollup_Banner.jpg", "desc": "Cultural book launch presentation banner honoring historical heritage and public author sessions."}, {"id": "b-ban-6", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "CashWave Front Store 3D Signage", "client": "CashWave Finance", "image": "images/Portfolio/Signage/CashWave_Front_Store_3D_Signage.jpg", "desc": "Architectural 3D fabricated storefront signage rendering featuring illuminated acrylic lettering."}, {"id": "b-ban-7", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "Corporate Facility Directional Signage", "client": "Metropolitan Workspace", "image": "images/Portfolio/Signage/1.jpg", "desc": "Architectural wayfinding system designed for multi-tenant commercial offices and campuses."}, {"id": "b-ban-8", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "3D Fabricated Entrance Sign", "client": "TechHub Innovation Center", "image": "images/Portfolio/Signage/2.jpg", "desc": "Precision-cut acrylic and brushed metal dimensional wall logo installation with backlighting."}, {"id": "p-evt-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Live Music & Arts Showcase", "client": "Vibrant Sessions", "image": "images/Portfolio/Posters/494218292_1229844952482346_1116606363651595572_n.jpg", "desc": "Electric weekend concert artwork combining bold typography and dynamic live performance imagery."}, {"id": "p-evt-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Urban Youth Festival Poster", "client": "Metro Youth Culture", "image": "images/Portfolio/Posters/494314046_1230341949099313_5073685672330890678_n.jpg", "desc": "High-energy festival announcement poster featuring neon gradients and modern street culture elements."}, {"id": "p-evt-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Creative Summit Keynote Poster", "client": "Cape Creative Con", "image": "images/Portfolio/Posters/494905437_1229756509157857_9077725963076676636_n.jpg", "desc": "Editorial conference poster promoting pan-African innovation, creative enterprise, and keynote talks."}, {"id": "p-evt-4", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Bathandwa Foundation 10 Year Anniversary", "client": "Bathandwa Foundation", "image": "images/Portfolio/Posters/Bathandwa_Foundation_10_Year_Anniversary.jpg", "desc": "Commemorative milestone poster celebrating ten years of community dedication, youth upliftment, and joy."}, {"id": "p-evt-5", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Club Night Live Sessions", "client": "NightLife Entertainment", "image": "images/Portfolio/Posters/Club_Night_Live_Poster.jpg", "desc": "Ultra-sleek club night promotional artwork with moody atmospheric lighting and DJ lineup focus."}, {"id": "p-evt-6", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Camada Music Festival Poster", "client": "Camada Entertainment", "image": "images/Portfolio/Posters/Camada_Music_Festival_Poster.jpg", "desc": "Outdoor summer festival creative with rhythmic color contrasts and large headliner typography."}, {"id": "p-evt-7", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Pagodinn Live Music Session", "client": "Pagodinn Sessions", "image": "images/Portfolio/Posters/Pagodinn_Live_Music_Poster.jpg", "desc": "Celebratory live music session poster with rich tropical color palette and artist spotlight."}, {"id": "p-fly-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Paygas Digital Community Flyer", "client": "Paygas SA", "image": "images/Portfolio/Flyer/Paygas Flyers_1771003144872.webp", "desc": "Clean, educational social flyer illustrating clean cooking gas credits and community safety benefits."}, {"id": "p-fly-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Lelu's Kitchen Promotional Flyer", "client": "Lelu's Kitchen Interiors", "image": "images/Portfolio/Flyer/Lelu_s Kitchen Interiors Branding_1771003307155.jpg", "desc": "Sophisticated interior decor promotional social flyer showcasing custom kitchen designs."}, {"id": "p-fly-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Metro Social Night Flyer", "client": "Metro Lounge & Dining", "image": "images/Portfolio/Flyer/515364281_1307781548022019_3160041811554924075_n.jpg", "desc": "Weekend social gathering digital flyer designed for Instagram Stories and WhatsApp broadcast."}, {"id": "p-fly-4", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "CashWave Student Loan Digital Flyer", "client": "CashWave Finance", "image": "images/Portfolio/Flyer/CashWave_Student_Loan_Flyer.jpg", "desc": "Accessible student loan flyer designed for social media feeds, highlighting quick approvals and student benefits."}, {"id": "p-fly-5", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "CashWave Instagram Promo Flyer", "client": "CashWave Finance", "image": "images/Portfolio/Flyer/CashWave_Instagram_Promo_Flyer.jpg", "desc": "High-conversion Instagram promotional campaign flyer with bold call-to-action and clear financial terms."}, {"id": "p-cam-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Community Drive Youth Campaign", "client": "Foundation Initiatives", "image": "images/Portfolio/Posters/502504943_1255465876586920_3732486807857411753_n.jpg", "desc": "Community empowerment drive poster with compelling photojournalistic focus and call-to-action."}, {"id": "p-cam-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Dubani Design Lab Workshop Series", "client": "Dubani Creatives Academy", "image": "images/Portfolio/Posters/506214624_1266785332121641_8393783487578973254_n.jpg", "desc": "Educational campaign poster recruiting aspiring graphic designers for intensive UI/UX masterclasses."}, {"id": "p-cam-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Agricultural Summit Campaign Poster", "client": "Eastern Cape Agri-Summit", "image": "images/Portfolio/Posters/Agricultural_Summit_Campaign_Poster.jpg", "desc": "Regional agricultural enterprise and sustainable farming forum awareness campaign poster."}, {"id": "dp-pkg-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Luxury Footwear Box", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg", "desc": "Rigid bespoke shoe packaging box with matte soft-touch finish and custom branded magnetic closure."}, {"id": "dp-pkg-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Dieline & Labeling", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003505996.jpg", "desc": "Production-ready structural dieline, foil stamping specifications, and barcode placement."}, {"id": "dp-pkg-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Premium Retail Unboxing", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003507973.jpg", "desc": "Luxury unboxing presentation with branded tissue paper, custom insoles, and certificates of authenticity."}, {"id": "dp-bro-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "FCICHS Corporate Capabilities Profile", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp", "desc": "Institutional social housing development brochure highlighting Cape Town housing project milestones."}, {"id": "dp-bro-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "THE FIG FOUNDATION Donor Brochure", "client": "The Fig Foundation", "image": "images/Portfolio/Brochure/THE FIG FOUNDATION Branding_1771002984093.jpg", "desc": "High-impact non-profit donor advocacy booklet with inflected editorial charts and program data."}, {"id": "dp-bro-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "Commemorative Tribute Booklet", "client": "B Memorial Trust", "image": "images/Portfolio/Brochure/Mrs B Funeral_1771002911896.jpg", "desc": "Prestige biographical celebration booklet designed with archival typography and gold-accented borders."}, {"id": "dp-bro-4", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "Makinzi Building Solutions Business Profile", "client": "Makinzi Building Solutions", "image": "images/Portfolio/Brochure/Makinzi_Building_Solutions_Business_Profile.jpg", "desc": "Comprehensive corporate construction profile detailing commercial projects, equipment, and accreditations."}, {"id": "dp-sta-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Executive Embossed Notebook", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/Notebook_Mockup_2.jpg", "desc": "Leatherette hardcover executive journal featuring debossed metallic foil emblem for board directors."}, {"id": "dp-sta-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Sublimated Lanyards", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/Lanyard_Mockup_1.jpg", "desc": "Dual-sided satin finish sublimated lanyards equipped with safety breakaway clasps and branded clips."}, {"id": "dp-sta-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Laser-Engraved USB Flash Drives", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/Pendrive_Mockup_1.jpg", "desc": "Branded metallic swivel thumb drives pre-loaded with digital annual financial disclosures."}, {"id": "dp-sta-4", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Executive Ballpoint Pen Suite", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/Pen_Mockup_1.jpg", "desc": "Matte black twist-action rollerball pens with laser-etched insignia for AGM delegates."}, {"id": "ap-tsh-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Signature Street Graphic Tee", "client": "Dubani Originals", "image": "images/Portfolio/Aparel/480582002_1034364905404769_8803467143722299735_n.jpg", "desc": "Heavyweight 240gsm oversized cotton graphic t-shirt with screen-printed urban illustration."}, {"id": "ap-tsh-2", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Heritage Crewneck T-Shirt", "client": "Cape Heritage Apparel", "image": "images/Portfolio/Aparel/480876761_1034953375345922_8660859334893525078_n.jpg", "desc": "Minimalist chest embroidery with cultural typography on premium combed organic cotton."}, {"id": "ap-tsh-3", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Dubani Creatives Studio Tee", "client": "Dubani Creatives Internal", "image": "images/Portfolio/Aparel/481098107_1044816791026247_2216861155745790659_n.jpg", "desc": "Custom in-house team apparel featuring technical vector design specs and high-density ink."}, {"id": "ap-tsh-4", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Bathandwa Foundation Custom Tee", "client": "Bathandwa Foundation", "image": "images/Portfolio/Aparel/Bathandwa_Foundation_Tshirt.jpg", "desc": "Community outreach branded t-shirt designed for charity volunteers and celebration events."}, {"id": "ap-cap-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "headwear", "subcategoryName": "Headwear & Caps", "title": "Structured 3D Puff Snapback", "client": "Street Culture SA", "image": "images/Portfolio/Aparel/481468607_1046882124153047_8284986740349321572_n.jpg", "desc": "Six-panel wool blend flat-brim cap with dimensional puff embroidery and custom internal taping."}, {"id": "ap-cap-2", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "headwear", "subcategoryName": "Headwear & Caps", "title": "Vintage Washed Cotton Dad Hat", "client": "Coastal Goods", "image": "images/Portfolio/Aparel/494165052_1229756649157843_6245972667023574482_n.jpg", "desc": "Unstructured low-profile cap with brass buckle strap and subtle tonal front branding."}, {"id": "ap-wrk-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "workwear", "subcategoryName": "Branded Workwear", "title": "Corporate Staff Uniform Polo", "client": "Metro Operations", "image": "images/Portfolio/Aparel/494196211_1229756655824509_5868124905933162260_n.jpg", "desc": "Durable moisture-wicking pique polo shirts embroidered with corporate staff identity."}, {"id": "ar-kct-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Annual Report 2024/25", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp", "desc": "Comprehensive 120-page governance and audited financial review document with infographic data visualizations."}, {"id": "ar-kct-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Community Report Vol 3", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 3_1771002862247.jpg", "desc": "Stakeholder impact publication spotlighting retail precinct expansion and local job creation."}, {"id": "ar-kct-3", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Development Report Vol 2", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 2_1771002875065.jpg", "desc": "Infrastructure project delivery report highlighting township economic transformation."}, {"id": "ar-kct-4", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Foundation Report Vol 1", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 1_1771002891340.jpg", "desc": "Foundational community charter document with historical photography and executive statements."}, {"id": "ar-fci-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "fci-profiles", "subcategoryName": "FCI Company Profiles", "title": "FCICHS Corporate Profile & Impact", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp", "desc": "Institutional profile covering Cape Town social housing developments, governance, and tenant support."}, {"id": "ar-fci-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "fci-profiles", "subcategoryName": "FCI Company Profiles", "title": "Goodwood Housing Project Portfolio", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Web Design/FCICHS/Main-Entrance.jpg", "desc": "Architectural development review documenting multi-million rand urban housing facilities."}, {"id": "ar-pub-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Dual-Language Calendar (English)", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/KCT Calendar Mockup (English).jpg", "desc": "Prestige corporate wall calendar featuring institutional project photography and governance dates."}, {"id": "ar-pub-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Dual-Language Calendar (isiXhosa)", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/KCT Calendar Mockup (isiXhosa).jpg", "desc": "Indigenous language edition celebrating local township culture, milestones, and civic initiatives."}, {"id": "ar-pub-3", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Graduate Achievement Certificates", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Stationery/KCT certificates_1771003667052.webp", "desc": "Official foil-stamped graduation certificates honoring youth leadership and skills participants."}, {"id": "w-cor-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "FCICHS Property Development Portal", "client": "FCICHS Social Housing", "image": "images/Portfolio/Web Design/FCICHS/property.jpg", "desc": "Responsive web interface presenting residential housing opportunities, applications, and tenant portals."}, {"id": "w-cor-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Xwazi Foundation Community Web Portal", "client": "Dr Mandiluve Xwazi Foundation", "image": "images/Portfolio/Web Design/Xwazi Foundation/534224564_1326220812844759_4889749808702556810_n.jpg", "desc": "Modern philanthropic platform designed for social impact outreach, donor engagement, and community news."}, {"id": "w-cor-3", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Dream Area Cultural Platform", "client": "Dream Area", "image": "images/imgi_13_68bd341e34845d434f3fb083_1.png", "desc": "Immersive digital community hub connecting creatives, events, and cultural exhibitions."}, {"id": "w-cor-4", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Star Blox Gaming Studio Hub", "client": "Star Blox Studio", "image": "images/imgi_14_68bd33e0e57b111749f34daf_0.png", "desc": "High-octane gaming studio web presence with dark UI theme, game showcases, and community integrations."}, {"id": "w-cul-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "food-lifestyle", "subcategoryName": "Food & Lifestyle", "title": "Chef Lungelo Fine Dining Web App", "client": "Chef Lungelo", "image": "images/Portfolio/Web Design/Chef Lungelo/509758564_1275713811228793_8836691374578379249_n.jpg", "desc": "Luxury culinary web experience with online booking, bespoke chef menus, and private event catering."}, {"id": "w-cul-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "food-lifestyle", "subcategoryName": "Food & Lifestyle", "title": "Chef Lungelo Gourmet Experiences", "client": "Chef Lungelo", "image": "images/Portfolio/Web Design/Chef Lungelo/510804046_1275714121228762_565188796764469855_n.jpg", "desc": "Visual storytelling web interface spotlighting African fine dining craftsmanship and masterclasses."}, {"id": "w-med-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "medical-health", "subcategoryName": "Medical & Health", "title": "Regimed Medical Practice Portal", "client": "Regimed Healthcare", "image": "images/Portfolio/Web Design/Regimed/510442613_1275715857895255_5442613084655942366_n.jpg", "desc": "Streamlined patient appointment booking, doctor schedules, and digital health consultation portal."}, {"id": "w-med-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "medical-health", "subcategoryName": "Medical & Health", "title": "Regimed Mobile Health Platform", "client": "Regimed Healthcare", "image": "images/Portfolio/Web Design/Regimed/511887185_1275715454561962_1162762411983906702_n.jpg", "desc": "Mobile-first responsive telemedicine UI enabling rapid patient triage and clinical management."}];
 
     // Mobile Sidebar Toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -2118,14 +2554,6 @@
       backdrop.addEventListener('click', () => {
         sidebar.classList.remove('open');
         backdrop.classList.remove('active');
-      });
-    }
-
-    // Zoom on lightbox image
-    const lightboxImg = document.getElementById('lightbox-img');
-    if (lightboxImg) {
-      lightboxImg.addEventListener('click', () => {
-        lightboxImg.classList.toggle('zoomed');
       });
     }
 
@@ -2146,7 +2574,7 @@
         }
       });
 
-      // Filter category groups
+      // Filter category groups: show ONLY the selected category, or all when 'all'
       categoryGroups.forEach(group => {
         const groupCat = group.dataset.category;
         if (catSlug === 'all' || groupCat === catSlug) {
@@ -2192,17 +2620,23 @@
       });
     });
 
-    // Lightbox Modal Logic
+    // ==========================================
+    // FULL-VIEW LIGHTBOX MODAL LOGIC
+    // ==========================================
     const lightbox = document.getElementById('portfolio-lightbox');
-    const lightboxTitle = document.getElementById('lightbox-title');
-    const lightboxClient = document.getElementById('lightbox-client');
-    const lightboxDesc = document.getElementById('lightbox-desc');
-    const lightboxCat = document.getElementById('lightbox-cat');
-    const lightboxSubcat = document.getElementById('lightbox-subcat');
-    const lightboxWaBtn = document.getElementById('lightbox-wa-btn');
-    const lightboxClose = document.getElementById('lightbox-close');
-    const lightboxPrev = document.getElementById('lightbox-prev');
-    const lightboxNext = document.getElementById('lightbox-next');
+    const lbImg = document.getElementById('lb-full-img');
+    const lbTitle = document.getElementById('lb-title');
+    const lbClient = document.getElementById('lb-client');
+    const lbDesc = document.getElementById('lb-desc');
+    const lbCat = document.getElementById('lb-cat');
+    const lbSubcat = document.getElementById('lb-subcat');
+    const lbCounter = document.getElementById('lb-counter');
+    const lbWaBtn = document.getElementById('lb-wa-btn');
+    const lbCloseBtn = document.getElementById('lb-close-btn');
+    const lbZoomBtn = document.getElementById('lb-zoom-btn');
+    const lbPrevBtn = document.getElementById('lb-prev-btn');
+    const lbNextBtn = document.getElementById('lb-next-btn');
+    const lbStage = document.getElementById('lb-stage');
 
     let visibleItemsList = [...portfolioItems];
     let currentLightboxIdx = 0;
@@ -2229,20 +2663,21 @@
       currentLightboxIdx = index;
 
       const item = visibleItemsList[currentLightboxIdx];
-      if (lightboxImg) {
-        lightboxImg.src = item.image;
-        lightboxImg.alt = item.title;
-        lightboxImg.classList.remove('zoomed');
+      if (lbImg) {
+        lbImg.src = item.image;
+        lbImg.alt = item.title;
+        lbImg.classList.remove('zoomed');
       }
-      if (lightboxTitle) lightboxTitle.textContent = item.title;
-      if (lightboxClient) lightboxClient.innerHTML = '<strong>Client:</strong> ' + item.client;
-      if (lightboxDesc) lightboxDesc.textContent = item.desc;
-      if (lightboxCat) lightboxCat.textContent = item.categoryName;
-      if (lightboxSubcat) lightboxSubcat.textContent = item.subcategoryName;
+      if (lbTitle) lbTitle.textContent = item.title;
+      if (lbClient) lbClient.textContent = item.client;
+      if (lbDesc) lbDesc.textContent = item.desc;
+      if (lbCat) lbCat.textContent = item.categoryName;
+      if (lbSubcat) lbSubcat.textContent = item.subcategoryName;
+      if (lbCounter) lbCounter.textContent = `${currentLightboxIdx + 1} / ${visibleItemsList.length}`;
 
-      if (lightboxWaBtn) {
-        const waMsg = encodeURIComponent(`Hi Dubani Creatives! I saw "${item.title}" (${item.categoryName} - ${item.subcategoryName}) on your website portfolio and would like to discuss a project.`);
-        lightboxWaBtn.href = `https://wa.link/rs6bee?text=${waMsg}`;
+      if (lbWaBtn) {
+        const waMsg = encodeURIComponent(`Hi Dubani Creatives! I saw "${item.title}" (${item.categoryName} - ${item.subcategoryName}) on your website and would like to discuss a project.`);
+        lbWaBtn.href = `https://wa.link/rs6bee?text=${waMsg}`;
       }
 
       lightbox.classList.add('active');
@@ -2278,25 +2713,36 @@
 
     function closeLightbox() {
       lightbox.classList.remove('active');
-      if (lightboxImg) lightboxImg.classList.remove('zoomed');
+      if (lbImg) lbImg.classList.remove('zoomed');
       document.body.style.overflow = '';
     }
 
-    lightboxClose?.addEventListener('click', closeLightbox);
-    lightbox?.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
+    lbCloseBtn?.addEventListener('click', closeLightbox);
+    
+    // Clicking backdrop stage closes (except clicking the image or nav buttons)
+    lbStage?.addEventListener('click', (e) => {
+      if (e.target === lbStage) closeLightbox();
     });
 
-    lightboxPrev?.addEventListener('click', (e) => {
+    // Zoom toggle
+    function toggleZoom() {
+      if (lbImg) lbImg.classList.toggle('zoomed');
+    }
+    lbImg?.addEventListener('click', toggleZoom);
+    lbZoomBtn?.addEventListener('click', toggleZoom);
+
+    // Prev / Next Nav Buttons
+    lbPrevBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       showLightboxItem(currentLightboxIdx - 1);
     });
 
-    lightboxNext?.addEventListener('click', (e) => {
+    lbNextBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       showLightboxItem(currentLightboxIdx + 1);
     });
 
+    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('active')) return;
       if (e.key === 'Escape') closeLightbox();
