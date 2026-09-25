@@ -3219,16 +3219,16 @@ img.zoom-tilt:hover,
    WIDGETS VERTICAL STACKING & TOP BAR LOGO (2026-09-25)
    ========================================================================== */
 
-/* Right Hero Visual: Contra widget ON TOP, Weather widget directly BELOW */
+/* Right Hero Visual: Smaller Contra widget ON TOP, Smaller Weather widget directly BELOW */
 .home-hero-visual {
   position: relative !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
   justify-content: flex-start !important;
-  gap: 16px !important;
+  gap: 10px !important;
   width: 100% !important;
-  max-width: 440px !important;
+  max-width: 310px !important;
   justify-self: end !important;
 }
 
@@ -3239,12 +3239,17 @@ img.zoom-tilt:hover,
   display: flex !important;
   justify-content: center !important;
   box-sizing: border-box !important;
+  padding: 10px 16px !important;
+  border-radius: 12px !important;
 }
 
 .home-hero-visual .glass-weather-widget {
   width: 100% !important;
   margin: 0 !important;
   box-sizing: border-box !important;
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+  gap: 10px !important;
 }
 
 /* Top Nav Bar Logo Placement */
