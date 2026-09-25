@@ -3,22 +3,492 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio & Case Studies | Dubani Creatives</title>
-  <meta name="description" content="Explore selected brand identities, packaging, web design, and digital experiences crafted by Dubani Creatives in South Africa." />
+  <title>Design Portfolio | Dubani Creatives - Brand & Design Studio</title>
+  <meta name="description" content="Explore Dubani Creatives design portfolio categorized by Branding, Social Media Posters, Design & Print, Apparel, Annual Reports, and Web Design." />
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260925-05" />
+  <link rel="stylesheet" href="styles.css?v=20260925-06" />
+
+  <style>
+    /* Direct Instant Overrides: 1:1 Square Ratio Blocks, Smooth Galleries, Larger Buttons & Typography */
+    .portfolio-hero-wrap {
+      margin-bottom: 32px;
+    }
+    .portfolio-main-title {
+      font-family: var(--font-heading, 'Outfit', sans-serif);
+      font-size: clamp(36px, 4.2vw, 54px) !important;
+      font-weight: 800 !important;
+      line-height: 1.12 !important;
+      letter-spacing: -1.2px !important;
+      color: #ffffff !important;
+      margin-bottom: 16px !important;
+    }
+    .portfolio-main-desc {
+      font-size: 18px !important;
+      color: rgba(255, 255, 255, 0.82) !important;
+      line-height: 1.65 !important;
+      max-width: 680px !important;
+      margin-bottom: 24px !important;
+    }
+
+    /* Main Category Filter Tabs */
+    .portfolio-cat-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .cat-pill-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 11px 22px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+    .cat-pill-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 210, 255, 0.5);
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+    .cat-pill-btn.active {
+      background: linear-gradient(135deg, #ff6b00 0%, #ff801f 100%);
+      border-color: rgba(255, 107, 0, 0.5);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.45);
+      font-weight: 700;
+    }
+
+    /* Subcategories Filter Bar */
+    .portfolio-subcat-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(13, 18, 28, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      margin-bottom: 30px;
+      align-items: center;
+    }
+    .subcat-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--cyan, #00d2ff);
+      margin-right: 6px;
+    }
+    .subcat-pill-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted, #94a3b8);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .subcat-pill-btn:hover {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .subcat-pill-btn.active {
+      background: rgba(0, 210, 255, 0.12);
+      border-color: #00d2ff;
+      color: #00d2ff;
+      font-weight: 700;
+    }
+
+    /* 1:1 Ratio Sized Blocks Grid */
+    .portfolio-grid-1to1 {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+      gap: 22px !important;
+      width: 100% !important;
+      margin-bottom: 48px !important;
+    }
+    .portfolio-block-1to1 {
+      aspect-ratio: 1 / 1 !important;
+      width: 100% !important;
+      background: #090d16 !important;
+      border: 1px solid rgba(255, 255, 255, 0.09) !important;
+      border-radius: 18px !important;
+      overflow: hidden !important;
+      position: relative !important;
+      cursor: pointer !important;
+      display: flex !important;
+      flex-direction: column !important;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+    }
+    .portfolio-block-1to1:hover {
+      transform: translateY(-6px) scale(1.015) !important;
+      border-color: rgba(56, 189, 248, 0.65) !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 24px rgba(0, 210, 255, 0.2) !important;
+    }
+    .portfolio-block-1to1:focus-visible {
+      outline: 2px solid var(--orange, #ff6b00);
+      outline-offset: 3px;
+    }
+
+    /* 1:1 Contained Image Wrap */
+    .portfolio-block-img-wrap {
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 18px !important;
+      background: radial-gradient(circle at center, #111726 0%, #070a12 100%) !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    .portfolio-block-img {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important;
+      transform: none !important;
+      transition: transform 0.4s ease !important;
+    }
+    .portfolio-block-1to1:hover .portfolio-block-img {
+      transform: scale(1.05) !important;
+    }
+
+    /* Top Badges */
+    .portfolio-block-badge {
+      position: absolute !important;
+      top: 14px !important;
+      left: 14px !important;
+      background: rgba(13, 18, 28, 0.88) !important;
+      backdrop-filter: blur(8px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      color: #00d2ff !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.05em !important;
+      text-transform: uppercase !important;
+      padding: 5px 12px !important;
+      border-radius: 9999px !important;
+      z-index: 2 !important;
+    }
+
+    /* Bottom Overlay */
+    .portfolio-block-overlay {
+      position: absolute !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      padding: 24px 16px 16px !important;
+      background: linear-gradient(to top, rgba(7, 10, 18, 0.98) 0%, rgba(7, 10, 18, 0.85) 60%, transparent 100%) !important;
+      backdrop-filter: blur(6px) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      z-index: 3 !important;
+    }
+    .portfolio-block-title {
+      font-family: var(--font-heading, 'Outfit', sans-serif) !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      color: #ffffff !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      margin: 0 !important;
+    }
+    .portfolio-block-meta {
+      font-size: 12.5px !important;
+      color: var(--text-muted, #94a3b8) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+    }
+    .portfolio-block-client {
+      color: var(--orange, #ff6b00) !important;
+      font-weight: 600 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .portfolio-block-action {
+      color: #00d2ff !important;
+      font-weight: 700 !important;
+      font-size: 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      white-space: nowrap !important;
+    }
+
+    /* Smooth Scrolling Showcase Strips */
+    .showcase-strip-section {
+      margin-top: 40px;
+      margin-bottom: 50px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 36px;
+    }
+    .showcase-strip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .showcase-strip-title {
+      font-family: var(--font-heading, 'Outfit', sans-serif);
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .showcase-strip-controls {
+      display: flex;
+      gap: 8px;
+    }
+    .scroll-nav-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .scroll-nav-btn:hover {
+      background: var(--orange, #ff6b00);
+      border-color: var(--orange, #ff6b00);
+      transform: scale(1.08);
+    }
+    .showcase-scroll-row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .showcase-scroll-row .portfolio-block-1to1 {
+      flex: 0 0 260px !important;
+      min-width: 260px !important;
+      max-width: 260px !important;
+      scroll-snap-align: start !important;
+    }
+
+    /* Lightbox Modal (View Function) */
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 14, 0.92);
+      backdrop-filter: blur(14px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .lightbox-modal.active {
+      display: flex;
+      opacity: 1;
+    }
+    .lightbox-content-card {
+      background: #0d121c;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      max-width: 860px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 210, 255, 0.12);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .lightbox-preview-box {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      max-height: 480px;
+      background: radial-gradient(circle at center, #131a29 0%, #080b12 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+    .lightbox-preview-img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .lightbox-details {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .lightbox-tags-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .lightbox-tag {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(255, 107, 0, 0.12);
+      color: var(--orange, #ff6b00);
+      border: 1px solid rgba(255, 107, 0, 0.3);
+    }
+    .lightbox-subtag {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(0, 210, 255, 0.1);
+      color: #00d2ff;
+      border: 1px solid rgba(0, 210, 255, 0.3);
+    }
+    .lightbox-title {
+      font-family: var(--font-heading, 'Outfit', sans-serif);
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      line-height: 1.2;
+    }
+    .lightbox-client {
+      font-size: 15px;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+    .lightbox-desc {
+      font-size: 16px;
+      color: #94a3b8;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .lightbox-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .lightbox-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      color: #ffffff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+    .lightbox-close-btn:hover {
+      background: var(--orange, #ff6b00);
+      border-color: var(--orange, #ff6b00);
+      transform: scale(1.1);
+    }
+    .lightbox-nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      color: #ffffff;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 5;
+    }}
+    .lightbox-nav-arrow:hover {
+      background: #00d2ff;
+      color: #070a12;
+      border-color: #00d2ff;
+      transform: translateY(-50%) scale(1.1);
+    }
+    .lightbox-nav-prev {
+      left: 14px;
+    }
+    .lightbox-nav-next {
+      right: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .portfolio-grid-1to1 {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+        gap: 16px !important;
+      }
+      .lightbox-details {
+        padding: 20px;
+      }
+      .lightbox-title {
+        font-size: 22px;
+      }
+    }
+  </style>
 </head>
 <body>
 
   <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
   <div class="site-layout">
-    <!-- ====================================================================
-         FIXED LEFT SIDEBAR (About placed right under Home)
-         ==================================================================== -->
+    <!-- Fixed Left Sidebar (About placed right under Home) -->
     <aside class="site-sidebar" id="site-sidebar">
       <div>
         <a href="index.html" class="sidebar-brand">
@@ -26,14 +496,14 @@
         </a>
 
         <nav class="sidebar-nav">
-          <a href="index.html" class="sidebar-nav-item " data-section="home">
+          <a href="index.html" class="sidebar-nav-item" data-section="home">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             </span>
             <span>Home</span>
           </a>
-          <!-- About moved to directly under Home -->
-          <a href="about.html" class="sidebar-nav-item " data-section="about">
+          <!-- About under Home -->
+          <a href="about.html" class="sidebar-nav-item" data-section="about">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </span>
@@ -45,19 +515,19 @@
             </span>
             <span>Portfolio</span>
           </a>
-          <a href="services.html" class="sidebar-nav-item " data-section="services">
+          <a href="services.html" class="sidebar-nav-item" data-section="services">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             </span>
             <span>Services</span>
           </a>
-          <a href="packages.html" class="sidebar-nav-item " data-section="packages">
+          <a href="packages.html" class="sidebar-nav-item" data-section="packages">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><line x1="1" y1="3" x2="23" y2="3"></line><path d="M10 12h4"></path></svg>
             </span>
             <span>Packages</span>
           </a>
-          <a href="contact.html" class="sidebar-nav-item " data-section="contact">
+          <a href="contact.html" class="sidebar-nav-item" data-section="contact">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             </span>
@@ -67,7 +537,7 @@
           <div class="sidebar-divider"></div>
 
           <!-- Subpage Archive & Apps Lock -->
-          <a href="projects.html" class="sidebar-nav-item ">
+          <a href="projects.html" class="sidebar-nav-item">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
             </span>
@@ -108,230 +578,1564 @@
       </header>
 
       <section class="page-section" id="portfolio">
-        <div class="case-studies-header-row">
-          <div>
-            <span class="section-eyebrow">OUR WORK & CASE STUDIES</span>
-            <h1 class="section-title">Design Portfolio</h1>
-            <p class="section-desc">Real brands. Real results. Every project framed with purpose and strategy.</p>
+        <!-- Portfolio Hero Header -->
+        <div class="portfolio-hero-wrap">
+          <span class="section-eyebrow">PORTFOLIO &amp; CREATIVE ARCHIVE</span>
+          <h1 class="portfolio-main-title">Curated Work. <span class="brand-gradient">Engineered for Impact.</span></h1>
+          <p class="portfolio-main-desc">Explore our complete catalog of 50+ projects organized into 6 core disciplines. Every project block is framed in 1:1 square ratio with uncropped artwork containment and instant interactive lightbox view.</p>
+        </div>
+
+        <!-- 1. Major Categories Filter Bar -->
+        <div class="portfolio-cat-nav" role="tablist" aria-label="Portfolio Categories">
+          <button class="cat-pill-btn active" data-cat="all"><span>✨</span> All Categories (55)</button>
+          <button class="cat-pill-btn" data-cat="branding"><span>💎</span> BRANDING</button>
+          <button class="cat-pill-btn" data-cat="posters"><span>📱</span> SOCIAL MEDIA POSTERS</button>
+          <button class="cat-pill-btn" data-cat="print"><span>📦</span> DESIGN &amp; PRINT</button>
+          <button class="cat-pill-btn" data-cat="apparel"><span>👕</span> APPAREL / CLOTHING</button>
+          <button class="cat-pill-btn" data-cat="reports"><span>📊</span> ANNUAL REPORTS</button>
+          <button class="cat-pill-btn" data-cat="web"><span>🌐</span> WEB DESIGN</button>
+        </div>
+
+        <!-- 2. Dynamic Subcategories Filter Bar -->
+        <div class="portfolio-subcat-nav" id="subcat-container">
+          <span class="subcat-label">SUB-CATEGORIES:</span>
+          <button class="subcat-pill-btn active" data-sub="all">Show All in View</button>
+        </div>
+
+        <!-- 3. The 1:1 Square Ratio Blocks Grid (All 55 Projects) -->
+        <div class="portfolio-grid-1to1" id="portfolio-grid">
+          <!-- Item 1: Enkosi Gqunube Foundation -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="logos" 
+                   data-id="b-logo-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Enkosi Gqunube Foundation">
+            <span class="portfolio-block-badge">Logos</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Logo Design/Enkosi Gqunube Foundation Logo Design_1771002702188.webp" alt="Enkosi Gqunube Foundation" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Enkosi Gqunube Foundation</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Enkosi Gqunube Foundation</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 2: INGELOSI Employment Law -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="logos" 
+                   data-id="b-logo-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View INGELOSI Employment Law">
+            <span class="portfolio-block-badge">Logos</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Logo Design/INGELOSI Employment Law_1771003268721.webp" alt="INGELOSI Employment Law" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">INGELOSI Employment Law</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">INGELOSI Employment Law</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 3: Lelu&#x27;s Kitchen Interiors Logo -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="logos" 
+                   data-id="b-logo-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Lelu&#x27;s Kitchen Interiors Logo">
+            <span class="portfolio-block-badge">Logos</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Logo Design/Lelu_s Kitchen Interiors Branding_1771003297997.jpg" alt="Lelu&#x27;s Kitchen Interiors Logo" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Lelu&#x27;s Kitchen Interiors Logo</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Lelu&#x27;s Kitchen Interiors</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 4: Makhulela Holdings Logo -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="logos" 
+                   data-id="b-logo-4" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Makhulela Holdings Logo">
+            <span class="portfolio-block-badge">Logos</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Logo Design/Makhulela Holdings Branding_1771003091146.jpg" alt="Makhulela Holdings Logo" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Makhulela Holdings Logo</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Makhulela Holdings</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 5: PK MEDIA Brand Mark -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="logos" 
+                   data-id="b-logo-5" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View PK MEDIA Brand Mark">
+            <span class="portfolio-block-badge">Logos</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Logo Design/PK MEDIA logo Design_1771003102704.webp" alt="PK MEDIA Brand Mark" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">PK MEDIA Brand Mark</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">PK Media Group</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 6: THE FIG FOUNDATION Logo -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="logos" 
+                   data-id="b-logo-6" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View THE FIG FOUNDATION Logo">
+            <span class="portfolio-block-badge">Logos</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Logo Design/THE FIG FOUNDATION Branding_1771002978028.webp" alt="THE FIG FOUNDATION Logo" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">THE FIG FOUNDATION Logo</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">The FIG Foundation</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 7: LUZANA Executive Identity Suite -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="identity" 
+                   data-id="b-id-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View LUZANA Executive Identity Suite">
+            <span class="portfolio-block-badge">Brand Identity Systems</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Executive Identity Suite" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">LUZANA Executive Identity Suite</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">LUZANA Consulting Holdings</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 8: INGELOSI Corporate Stationery -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="identity" 
+                   data-id="b-id-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View INGELOSI Corporate Stationery">
+            <span class="portfolio-block-badge">Brand Identity Systems</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp" alt="INGELOSI Corporate Stationery" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">INGELOSI Corporate Stationery</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">INGELOSI Employment Law</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 9: IMM MABOTE Executive Suite -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="identity" 
+                   data-id="b-id-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View IMM MABOTE Executive Suite">
+            <span class="portfolio-block-badge">Brand Identity Systems</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Branding/IMM MABOTE/514350235_1293736032759904_2702461927603542805_n.jpg" alt="IMM MABOTE Executive Suite" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">IMM MABOTE Executive Suite</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">IMM MABOTE</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 10: CashWave Digital Collateral -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="identity" 
+                   data-id="b-id-4" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View CashWave Digital Collateral">
+            <span class="portfolio-block-badge">Brand Identity Systems</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp" alt="CashWave Digital Collateral" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">CashWave Digital Collateral</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">CashWave Finance</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 11: TheUnlimitedExperience Rollup -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="banners-signage" 
+                   data-id="b-ban-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View TheUnlimitedExperience Rollup">
+            <span class="portfolio-block-badge">Banners &amp; Signages</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp" alt="TheUnlimitedExperience Rollup" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">TheUnlimitedExperience Rollup</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">TheUnlimitedExperience</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 12: IRAZA Footwear Pop-up Banner -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="banners-signage" 
+                   data-id="b-ban-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View IRAZA Footwear Pop-up Banner">
+            <span class="portfolio-block-badge">Banners &amp; Signages</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Banners/IRAZA footwear package design_1771003524777.jpg" alt="IRAZA Footwear Pop-up Banner" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">IRAZA Footwear Pop-up Banner</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">IRAZA Footwear</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 13: Corporate Facility Directional Signage -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="banners-signage" 
+                   data-id="b-ban-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Corporate Facility Directional Signage">
+            <span class="portfolio-block-badge">Banners &amp; Signages</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Signage/1.jpg" alt="Corporate Facility Directional Signage" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Corporate Facility Directional Signage</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Commercial Property Signage</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 14: 3D Fabricated Entrance Sign -->
+          <article class="portfolio-block-1to1" 
+                   data-category="branding" 
+                   data-subcategory="banners-signage" 
+                   data-id="b-ban-4" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View 3D Fabricated Entrance Sign">
+            <span class="portfolio-block-badge">Banners &amp; Signages</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Signage/2.jpg" alt="3D Fabricated Entrance Sign" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">3D Fabricated Entrance Sign</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Corporate Facility Signage</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 15: Live Music &amp; Arts Showcase -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="event-posters" 
+                   data-id="p-evt-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Live Music &amp; Arts Showcase">
+            <span class="portfolio-block-badge">Event Posters</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Posters/494218292_1229844952482346_1116606363651595572_n.jpg" alt="Live Music &amp; Arts Showcase" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Live Music &amp; Arts Showcase</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Creative Nights Live</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 16: Urban Youth Festival Poster -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="event-posters" 
+                   data-id="p-evt-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Urban Youth Festival Poster">
+            <span class="portfolio-block-badge">Event Posters</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Posters/494314046_1230341949099313_5073685672330890678_n.jpg" alt="Urban Youth Festival Poster" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Urban Youth Festival Poster</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Cape Creative Collective</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 17: Creative Summit Keynote Poster -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="event-posters" 
+                   data-id="p-evt-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Creative Summit Keynote Poster">
+            <span class="portfolio-block-badge">Event Posters</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Posters/494905437_1229756509157857_9077725963076676636_n.jpg" alt="Creative Summit Keynote Poster" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Creative Summit Keynote Poster</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Future Design Forum</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 18: Paygas Digital Community Flyer -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="digital-flyers" 
+                   data-id="p-fly-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Paygas Digital Community Flyer">
+            <span class="portfolio-block-badge">Digital Flyers</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Flyer/Paygas Flyers_1771003144872.webp" alt="Paygas Digital Community Flyer" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Paygas Digital Community Flyer</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Paygas South Africa</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 19: Lelu&#x27;s Kitchen Promotional Flyer -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="digital-flyers" 
+                   data-id="p-fly-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Lelu&#x27;s Kitchen Promotional Flyer">
+            <span class="portfolio-block-badge">Digital Flyers</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Flyer/Lelu_s Kitchen Interiors Branding_1771003307155.jpg" alt="Lelu&#x27;s Kitchen Promotional Flyer" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Lelu&#x27;s Kitchen Promotional Flyer</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Lelu&#x27;s Kitchen Interiors</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 20: Metro Social Night Flyer -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="digital-flyers" 
+                   data-id="p-fly-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Metro Social Night Flyer">
+            <span class="portfolio-block-badge">Digital Flyers</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Flyer/515364281_1307781548022019_3160041811554924075_n.jpg" alt="Metro Social Night Flyer" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Metro Social Night Flyer</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Metro Events Cape Town</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 21: Community Drive Youth Campaign -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="campaigns" 
+                   data-id="p-cam-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Community Drive Youth Campaign">
+            <span class="portfolio-block-badge">Campaigns</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Posters/502504943_1255465876586920_3732486807857411753_n.jpg" alt="Community Drive Youth Campaign" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Community Drive Youth Campaign</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Community Drive SA</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 22: Dubani Design Lab Workshop Series -->
+          <article class="portfolio-block-1to1" 
+                   data-category="posters" 
+                   data-subcategory="campaigns" 
+                   data-id="p-cam-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Dubani Design Lab Workshop Series">
+            <span class="portfolio-block-badge">Campaigns</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Posters/506214624_1266785332121641_8393783487578973254_n.jpg" alt="Dubani Design Lab Workshop Series" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Dubani Design Lab Workshop Series</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Dubani Creatives Lab</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 23: IRAZA Luxury Footwear Box -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="packaging" 
+                   data-id="dp-pkg-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View IRAZA Luxury Footwear Box">
+            <span class="portfolio-block-badge">Packaging &amp; Boxes</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg" alt="IRAZA Luxury Footwear Box" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">IRAZA Luxury Footwear Box</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">IRAZA Footwear</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 24: IRAZA Dieline &amp; Labeling -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="packaging" 
+                   data-id="dp-pkg-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View IRAZA Dieline &amp; Labeling">
+            <span class="portfolio-block-badge">Packaging &amp; Boxes</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003505996.jpg" alt="IRAZA Dieline &amp; Labeling" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">IRAZA Dieline &amp; Labeling</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">IRAZA Footwear</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 25: IRAZA Premium Retail Unboxing -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="packaging" 
+                   data-id="dp-pkg-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View IRAZA Premium Retail Unboxing">
+            <span class="portfolio-block-badge">Packaging &amp; Boxes</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003507973.jpg" alt="IRAZA Premium Retail Unboxing" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">IRAZA Premium Retail Unboxing</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">IRAZA Footwear</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 26: FCICHS Corporate Capabilities Profile -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="brochures" 
+                   data-id="dp-bro-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View FCICHS Corporate Capabilities Profile">
+            <span class="portfolio-block-badge">Brochures &amp; Booklets</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp" alt="FCICHS Corporate Capabilities Profile" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">FCICHS Corporate Capabilities Profile</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">FCICHS (Foundation Community Initiative)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 27: THE FIG FOUNDATION Donor Brochure -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="brochures" 
+                   data-id="dp-bro-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View THE FIG FOUNDATION Donor Brochure">
+            <span class="portfolio-block-badge">Brochures &amp; Booklets</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/THE FIG FOUNDATION Branding_1771002984093.jpg" alt="THE FIG FOUNDATION Donor Brochure" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">THE FIG FOUNDATION Donor Brochure</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">The FIG Foundation</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 28: Commemorative Tribute Booklet -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="brochures" 
+                   data-id="dp-bro-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Commemorative Tribute Booklet">
+            <span class="portfolio-block-badge">Brochures &amp; Booklets</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/Mrs B Funeral_1771002911896.jpg" alt="Commemorative Tribute Booklet" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Commemorative Tribute Booklet</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Mrs B Family Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 29: KCT Executive Embossed Notebook -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="stationery" 
+                   data-id="dp-sta-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Executive Embossed Notebook">
+            <span class="portfolio-block-badge">Stationery Collateral</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/Notebook_Mockup_2.jpg" alt="KCT Executive Embossed Notebook" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Executive Embossed Notebook</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 30: KCT Sublimated Lanyards -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="stationery" 
+                   data-id="dp-sta-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Sublimated Lanyards">
+            <span class="portfolio-block-badge">Stationery Collateral</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/Lanyard_Mockup_1.jpg" alt="KCT Sublimated Lanyards" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Sublimated Lanyards</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 31: KCT Laser-Engraved USB Flash Drives -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="stationery" 
+                   data-id="dp-sta-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Laser-Engraved USB Flash Drives">
+            <span class="portfolio-block-badge">Stationery Collateral</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/Pendrive_Mockup_1.jpg" alt="KCT Laser-Engraved USB Flash Drives" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Laser-Engraved USB Flash Drives</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 32: KCT Executive Ballpoint Pen Suite -->
+          <article class="portfolio-block-1to1" 
+                   data-category="print" 
+                   data-subcategory="stationery" 
+                   data-id="dp-sta-4" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Executive Ballpoint Pen Suite">
+            <span class="portfolio-block-badge">Stationery Collateral</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/Pen_Mockup_1.jpg" alt="KCT Executive Ballpoint Pen Suite" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Executive Ballpoint Pen Suite</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 33: Signature Street Graphic Tee -->
+          <article class="portfolio-block-1to1" 
+                   data-category="apparel" 
+                   data-subcategory="tshirts" 
+                   data-id="ap-tsh-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Signature Street Graphic Tee">
+            <span class="portfolio-block-badge">Custom T-Shirts</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Aparel/480582002_1034364905404769_8803467143722299735_n.jpg" alt="Signature Street Graphic Tee" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Signature Street Graphic Tee</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Street District Apparel</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 34: Heritage Crewneck T-Shirt -->
+          <article class="portfolio-block-1to1" 
+                   data-category="apparel" 
+                   data-subcategory="tshirts" 
+                   data-id="ap-tsh-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Heritage Crewneck T-Shirt">
+            <span class="portfolio-block-badge">Custom T-Shirts</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Aparel/480876761_1034953375345922_8660859334893525078_n.jpg" alt="Heritage Crewneck T-Shirt" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Heritage Crewneck T-Shirt</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Kulture Kolektive</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 35: Dubani Creatives Studio Tee -->
+          <article class="portfolio-block-1to1" 
+                   data-category="apparel" 
+                   data-subcategory="tshirts" 
+                   data-id="ap-tsh-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Dubani Creatives Studio Tee">
+            <span class="portfolio-block-badge">Custom T-Shirts</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Aparel/481098107_1044816791026247_2216861155745790659_n.jpg" alt="Dubani Creatives Studio Tee" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Dubani Creatives Studio Tee</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Dubani Studio Merch</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 36: Structured 3D Puff Snapback -->
+          <article class="portfolio-block-1to1" 
+                   data-category="apparel" 
+                   data-subcategory="headwear" 
+                   data-id="ap-cap-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Structured 3D Puff Snapback">
+            <span class="portfolio-block-badge">Headwear &amp; Caps</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Aparel/481468607_1046882124153047_8284986740349321572_n.jpg" alt="Structured 3D Puff Snapback" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Structured 3D Puff Snapback</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Apex Urban Gear</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 37: Vintage Washed Cotton Dad Hat -->
+          <article class="portfolio-block-1to1" 
+                   data-category="apparel" 
+                   data-subcategory="headwear" 
+                   data-id="ap-cap-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Vintage Washed Cotton Dad Hat">
+            <span class="portfolio-block-badge">Headwear &amp; Caps</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Aparel/494165052_1229756649157843_6245972667023574482_n.jpg" alt="Vintage Washed Cotton Dad Hat" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Vintage Washed Cotton Dad Hat</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Coastline Club</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 38: Corporate Staff Uniform Polo -->
+          <article class="portfolio-block-1to1" 
+                   data-category="apparel" 
+                   data-subcategory="workwear" 
+                   data-id="ap-wrk-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Corporate Staff Uniform Polo">
+            <span class="portfolio-block-badge">Branded Workwear</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Aparel/494196211_1229756655824509_5868124905933162260_n.jpg" alt="Corporate Staff Uniform Polo" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Corporate Staff Uniform Polo</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Metro Operations</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 39: KCT Annual Report 2024/25 -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="kct-reports" 
+                   data-id="ar-kct-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Annual Report 2024/25">
+            <span class="portfolio-block-badge">KCT Annual Reports</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp" alt="KCT Annual Report 2024/25" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Annual Report 2024/25</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust (KCT)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 40: KCT Community Report Vol 3 -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="kct-reports" 
+                   data-id="ar-kct-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Community Report Vol 3">
+            <span class="portfolio-block-badge">KCT Annual Reports</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/KCT Annual report 3_1771002862247.jpg" alt="KCT Community Report Vol 3" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Community Report Vol 3</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust (KCT)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 41: KCT Development Report Vol 2 -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="kct-reports" 
+                   data-id="ar-kct-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Development Report Vol 2">
+            <span class="portfolio-block-badge">KCT Annual Reports</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/KCT Annual report 2_1771002875065.jpg" alt="KCT Development Report Vol 2" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Development Report Vol 2</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust (KCT)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 42: KCT Foundation Report Vol 1 -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="kct-reports" 
+                   data-id="ar-kct-4" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Foundation Report Vol 1">
+            <span class="portfolio-block-badge">KCT Annual Reports</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/KCT Annual report 1_1771002891340.jpg" alt="KCT Foundation Report Vol 1" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Foundation Report Vol 1</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust (KCT)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 43: FCICHS Corporate Profile &amp; Impact -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="fci-profiles" 
+                   data-id="ar-fci-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View FCICHS Corporate Profile &amp; Impact">
+            <span class="portfolio-block-badge">FCI Company Profiles</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp" alt="FCICHS Corporate Profile &amp; Impact" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">FCICHS Corporate Profile &amp; Impact</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">FCICHS (Community Health Solutions)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 44: Goodwood Housing Project Portfolio -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="fci-profiles" 
+                   data-id="ar-fci-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Goodwood Housing Project Portfolio">
+            <span class="portfolio-block-badge">FCI Company Profiles</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/FCICHS/Main-Entrance.jpg" alt="Goodwood Housing Project Portfolio" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Goodwood Housing Project Portfolio</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">FCICHS (Community Health Solutions)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 45: KCT Dual-Language Calendar (English) -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="gov-publications" 
+                   data-id="ar-pub-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Dual-Language Calendar (English)">
+            <span class="portfolio-block-badge">Corporate Publications</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/KCT Calendar Mockup (English).jpg" alt="KCT Dual-Language Calendar (English)" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Dual-Language Calendar (English)</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 46: KCT Dual-Language Calendar (isiXhosa) -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="gov-publications" 
+                   data-id="ar-pub-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Dual-Language Calendar (isiXhosa)">
+            <span class="portfolio-block-badge">Corporate Publications</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/KCT Calendar Mockup (isiXhosa).jpg" alt="KCT Dual-Language Calendar (isiXhosa)" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Dual-Language Calendar (isiXhosa)</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 47: KCT Graduate Achievement Certificates -->
+          <article class="portfolio-block-1to1" 
+                   data-category="reports" 
+                   data-subcategory="gov-publications" 
+                   data-id="ar-pub-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Graduate Achievement Certificates">
+            <span class="portfolio-block-badge">Corporate Publications</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Stationery/KCT certificates_1771003667052.webp" alt="KCT Graduate Achievement Certificates" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Graduate Achievement Certificates</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 48: FCICHS Social Housing Portal -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="corporate-portals" 
+                   data-id="w-cor-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View FCICHS Social Housing Portal">
+            <span class="portfolio-block-badge">Corporate &amp; NGO Portals</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/FCICHS/newLogo.png" alt="FCICHS Social Housing Portal" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">FCICHS Social Housing Portal</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">FCICHS (Foundation Community Initiative)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 49: KCT Community Trust Portal -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="corporate-portals" 
+                   data-id="w-cor-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View KCT Community Trust Portal">
+            <span class="portfolio-block-badge">Corporate &amp; NGO Portals</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/KCT/logo.webp" alt="KCT Community Trust Portal" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">KCT Community Trust Portal</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Khayelitsha Community Trust (KCT)</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 50: Dream Area Cultural Platform -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="corporate-portals" 
+                   data-id="w-cor-3" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Dream Area Cultural Platform">
+            <span class="portfolio-block-badge">Corporate &amp; NGO Portals</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/imgi_13_68bd341e34845d434f3fb083_1.png" alt="Dream Area Cultural Platform" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Dream Area Cultural Platform</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Dream Area</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 51: Star Blox Gaming Studio Hub -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="corporate-portals" 
+                   data-id="w-cor-4" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Star Blox Gaming Studio Hub">
+            <span class="portfolio-block-badge">Corporate &amp; NGO Portals</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/imgi_14_68bd33e0e57b111749f34daf_0.png" alt="Star Blox Gaming Studio Hub" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Star Blox Gaming Studio Hub</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Star Blox Studio</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 52: Chef Lungelo Fine Dining Web App -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="food-lifestyle" 
+                   data-id="w-cul-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Chef Lungelo Fine Dining Web App">
+            <span class="portfolio-block-badge">Food &amp; Lifestyle</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/Chef Lungelo/509758564_1275713811228793_8836691374578379249_n.jpg" alt="Chef Lungelo Fine Dining Web App" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Chef Lungelo Fine Dining Web App</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Chef Lungelo</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 53: Chef Lungelo Gourmet Experiences -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="food-lifestyle" 
+                   data-id="w-cul-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Chef Lungelo Gourmet Experiences">
+            <span class="portfolio-block-badge">Food &amp; Lifestyle</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/Chef Lungelo/510804046_1275714121228762_565188796764469855_n.jpg" alt="Chef Lungelo Gourmet Experiences" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Chef Lungelo Gourmet Experiences</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Chef Lungelo</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 54: Regimed Medical Practice Portal -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="medical-health" 
+                   data-id="w-med-1" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Regimed Medical Practice Portal">
+            <span class="portfolio-block-badge">Medical &amp; Health</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/Regimed/510442613_1275715857895255_5442613084655942366_n.jpg" alt="Regimed Medical Practice Portal" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Regimed Medical Practice Portal</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Regimed Healthcare</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+          <!-- Item 55: Regimed Mobile Health Platform -->
+          <article class="portfolio-block-1to1" 
+                   data-category="web" 
+                   data-subcategory="medical-health" 
+                   data-id="w-med-2" 
+                   tabindex="0" 
+                   role="button" 
+                   aria-label="View Regimed Mobile Health Platform">
+            <span class="portfolio-block-badge">Medical &amp; Health</span>
+            <div class="portfolio-block-img-wrap">
+              <img src="images/Portfolio/Web Design/Regimed/511887185_1275715454561962_1162762411983906702_n.jpg" alt="Regimed Mobile Health Platform" class="portfolio-block-img" loading="lazy" />
+            </div>
+            <div class="portfolio-block-overlay">
+              <h3 class="portfolio-block-title">Regimed Mobile Health Platform</h3>
+              <div class="portfolio-block-meta">
+                <span class="portfolio-block-client">Regimed Healthcare</span>
+                <span class="portfolio-block-action">View design →</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- 4. Smooth Scrolling Category Showcases -->
+        <!-- Showcase 1: Annual Reports & Governance (KCT & FCI) -->
+        <div class="showcase-strip-section">
+          <div class="showcase-strip-header">
+            <div class="showcase-strip-title">
+              <span>📊</span> Annual Reports &amp; Institutional Governance Showcase
+            </div>
+            <div class="showcase-strip-controls">
+              <button class="scroll-nav-btn" onclick="scrollShowcase('showcase-reports', -300)" aria-label="Previous">←</button>
+              <button class="scroll-nav-btn" onclick="scrollShowcase('showcase-reports', 300)" aria-label="Next">→</button>
+            </div>
           </div>
-          <div class="case-studies-filter-wrap">
-            <select class="select-filter-dropdown" id="case-filter-dropdown" aria-label="Filter portfolio projects">
-              <option value="all">All Projects</option>
-              <option value="brand">Brand Identity</option>
-              <option value="digital">Digital & Web</option>
-              <option value="print">Print & Packaging</option>
-            </select>
-            <a href="projects.html" class="btn-ghost">Full 50+ Archive →</a>
+          <div class="showcase-scroll-row" id="showcase-reports">
+            <article class="portfolio-block-1to1" data-id="ar-kct-1" onclick="openLightboxById('ar-kct-1')">
+              <span class="portfolio-block-badge">KCT Annual Report</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp" alt="KCT Annual Report 2024/25" class="portfolio-block-img" loading="lazy" />
+              </div>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">KCT Annual Report 2024/25</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">Khayelitsha Community Trust</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="portfolio-block-1to1" data-id="ar-fci-1" onclick="openLightboxById('ar-fci-1')">
+              <span class="portfolio-block-badge">Company Profile</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp" alt="FCICHS Corporate Profile" class="portfolio-block-img" loading="lazy" />
+              </div>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">FCICHS Corporate Profile</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">FCICHS</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="portfolio-block-1to1" data-id="ar-kct-2" onclick="openLightboxById('ar-kct-2')">
+              <span class="portfolio-block-badge">Governance</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Brochure/KCT Annual report 3_1771002862247.jpg" alt="KCT Community Report Vol 3" class="portfolio-block-img" loading="lazy" />
+              </div>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">KCT Community Report Vol 3</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">KCT</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="portfolio-block-1to1" data-id="ar-pub-1" onclick="openLightboxById('ar-pub-1')">
+              <span class="portfolio-block-badge">Corporate Calendar</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Stationery/KCT Calendar Mockup (English).jpg" alt="KCT Dual-Language Calendar" class="portfolio-block-img" loading="lazy" />
+              </div>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">KCT Wall Calendar (English)</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">KCT</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="portfolio-block-1to1" data-id="ar-pub-3" onclick="openLightboxById('ar-pub-3')">
+              <span class="portfolio-block-badge">Certificates</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Stationery/KCT certificates_1771003667052.webp" alt="KCT Certificates" class="portfolio-block-img" loading="lazy" />
+              </div>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">KCT Graduate Certificates</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">KCT</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
 
-        <!-- Portfolio Cards Grid (Framed Boxes, Full Image, No Zoom) -->
-        <div class="case-studies-main-grid">
-          <!-- Project 1: LUZANA Consulting -->
-          <article class="case-card" data-category="brand print digital">
-            <div class="case-thumb-wrap">
-              <img src="images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Consulting Holdings Case Study" class="case-thumb-img" />
+        <!-- Showcase 2: Luxury Packaging & Product Architecture -->
+        <div class="showcase-strip-section" style="border-top:none; padding-top: 0;">
+          <div class="showcase-strip-header">
+            <div class="showcase-strip-title">
+              <span>📦</span> Packaging &amp; Apparel Precision Showcase
             </div>
-            <div class="case-card-body">
-              <div class="case-tags-row">
-                <span class="case-tag">Brand Identity</span>
-                <span class="case-tag">Print</span>
-                <span class="case-tag">Corporate</span>
+            <div class="showcase-strip-controls">
+              <button class="scroll-nav-btn" onclick="scrollShowcase('showcase-pkg', -300)" aria-label="Previous">←</button>
+              <button class="scroll-nav-btn" onclick="scrollShowcase('showcase-pkg', 300)" aria-label="Next">→</button>
+            </div>
+          </div>
+          <div class="showcase-scroll-row" id="showcase-pkg">
+            <article class="portfolio-block-1to1" data-id="dp-pkg-1" onclick="openLightboxById('dp-pkg-1')">
+              <span class="portfolio-block-badge">Shoebox Design</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg" alt="IRAZA Luxury Footwear Box" class="portfolio-block-img" loading="lazy" />
               </div>
-              <h3 class="case-card-title">LUZANA Consulting Holdings</h3>
-              <p class="case-card-desc">A prestigious visual identity system, corporate stationery, and digital presence for a premier advisory firm.</p>
-              <a href="#" class="case-card-link" data-case="luzana">View case study details →</a>
-            </div>
-          </article>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">IRAZA Luxury Footwear Box</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">IRAZA Footwear</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
 
-          <!-- Project 2: Dream Area -->
-          <article class="case-card" data-category="brand digital">
-            <div class="case-thumb-wrap">
-              <img src="images/imgi_13_68bd341e34845d434f3fb083_1.png" alt="Dream Area Creative Platform Case Study" class="case-thumb-img" />
-            </div>
-            <div class="case-card-body">
-              <div class="case-tags-row">
-                <span class="case-tag">Branding</span>
-                <span class="case-tag">Digital Experience</span>
-                <span class="case-tag">Community</span>
+            <article class="portfolio-block-1to1" data-id="dp-pkg-3" onclick="openLightboxById('dp-pkg-3')">
+              <span class="portfolio-block-badge">Unboxing</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003507973.jpg" alt="IRAZA Unboxing Experience" class="portfolio-block-img" loading="lazy" />
               </div>
-              <h3 class="case-card-title">Dream Area Creative Platform</h3>
-              <p class="case-card-desc">Vibrant cultural and community lifestyle branding centered on human potential and expressive modern visuals.</p>
-              <a href="#" class="case-card-link" data-case="dream">View case study details →</a>
-            </div>
-          </article>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">IRAZA Unboxing Experience</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">IRAZA Footwear</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
 
-          <!-- Project 3: Star Blox -->
-          <article class="case-card" data-category="brand digital">
-            <div class="case-thumb-wrap">
-              <img src="images/imgi_14_68bd33e0e57b111749f34daf_0.png" alt="Star Blox Case Study" class="case-thumb-img" />
-            </div>
-            <div class="case-card-body">
-              <div class="case-tags-row">
-                <span class="case-tag">Brand Identity</span>
-                <span class="case-tag">Gaming & Web</span>
-                <span class="case-tag">Art Direction</span>
+            <article class="portfolio-block-1to1" data-id="ap-tsh-1" onclick="openLightboxById('ap-tsh-1')">
+              <span class="portfolio-block-badge">Heavyweight Tee</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Aparel/480582002_1034364905404769_8803467143722299735_n.jpg" alt="Signature Street Graphic Tee" class="portfolio-block-img" loading="lazy" />
               </div>
-              <h3 class="case-card-title">Star Blox Studio</h3>
-              <p class="case-card-desc">Energetic visual identity, custom typography, and web assets tailored for high-engagement gaming entertainment.</p>
-              <a href="#" class="case-card-link" data-case="star">View case study details →</a>
-            </div>
-          </article>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">Signature Street Graphic Tee</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">Street District</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
 
-          <!-- Project 4: INGELOSI Employment Law -->
-          <article class="case-card" data-category="brand print">
-            <div class="case-thumb-wrap">
-              <img src="images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp" alt="INGELOSI Employment Law Case Study" class="case-thumb-img" />
-            </div>
-            <div class="case-card-body">
-              <div class="case-tags-row">
-                <span class="case-tag">Legal Identity</span>
-                <span class="case-tag">Stationery</span>
-                <span class="case-tag">Branding</span>
+            <article class="portfolio-block-1to1" data-id="ap-cap-1" onclick="openLightboxById('ap-cap-1')">
+              <span class="portfolio-block-badge">3D Snapback</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Aparel/481468607_1046882124153047_8284986740349321572_n.jpg" alt="Structured 3D Puff Snapback" class="portfolio-block-img" loading="lazy" />
               </div>
-              <h3 class="case-card-title">INGELOSI Employment Law</h3>
-              <p class="case-card-desc">Authoritative, trustworthy legal brand architecture, business stationery, and professional collateral.</p>
-              <a href="#" class="case-card-link" data-case="ingelosi">View case study details →</a>
-            </div>
-          </article>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">Structured 3D Snapback</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">Apex Urban Gear</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
+              </div>
+            </article>
 
-          <!-- Project 5: CashWave Finance -->
-          <article class="case-card" data-category="brand print">
-            <div class="case-thumb-wrap">
-              <img src="images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp" alt="CashWave Finance Case Study" class="case-thumb-img" />
-            </div>
-            <div class="case-card-body">
-              <div class="case-tags-row">
-                <span class="case-tag">Brand Identity</span>
-                <span class="case-tag">FinTech</span>
-                <span class="case-tag">Print System</span>
+            <article class="portfolio-block-1to1" data-id="b-ban-1" onclick="openLightboxById('b-ban-1')">
+              <span class="portfolio-block-badge">Exhibition Banner</span>
+              <div class="portfolio-block-img-wrap">
+                <img src="images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp" alt="TheUnlimitedExperience Rollup" class="portfolio-block-img" loading="lazy" />
               </div>
-              <h3 class="case-card-title">CashWave Short-Term Finance</h3>
-              <p class="case-card-desc">Complete corporate visual identity system, brand mark, credit stationery, and marketing collateral.</p>
-              <a href="#" class="case-card-link" data-case="cashwave">View case study details →</a>
-            </div>
-          </article>
-
-          <!-- Project 6: IRAZA Footwear Packaging -->
-          <article class="case-card" data-category="print brand">
-            <div class="case-thumb-wrap">
-              <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg" alt="IRAZA Footwear Packaging Case Study" class="case-thumb-img" />
-            </div>
-            <div class="case-card-body">
-              <div class="case-tags-row">
-                <span class="case-tag">Packaging Design</span>
-                <span class="case-tag">Product Box</span>
-                <span class="case-tag">Retail Label</span>
+              <div class="portfolio-block-overlay">
+                <h3 class="portfolio-block-title">TheUnlimitedExperience Banner</h3>
+                <div class="portfolio-block-meta">
+                  <span class="portfolio-block-client">TheUnlimitedExperience</span>
+                  <span class="portfolio-block-action">View →</span>
+                </div>
               </div>
-              <h3 class="case-card-title">IRAZA Footwear Packaging</h3>
-              <p class="case-card-desc">Premium packaging design, shoe box architecture, custom labels, and retail display assets.</p>
-              <a href="#" class="case-card-link" data-case="iraza">View case study details →</a>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
 
-        <!-- Archive Banner -->
-        <div class="cta-banner-strip" style="margin-top: 40px;">
+        <!-- Bottom CTA -->
+        <div class="cta-banner-strip" style="margin-top: 20px;">
           <div class="cta-banner-left">
-            <span class="cta-banner-eyebrow">EXTENSIVE ARCHIVE</span>
-            <h3 class="cta-banner-title">Want to see all 50+ projects?</h3>
-            <p class="cta-banner-desc">Browse through our complete catalog including logos, flyers, editorial layouts, and packaging.</p>
+            <span class="cta-banner-eyebrow">READY TO BUILD SOMETHING EXTRAORDINARY?</span>
+            <h3 class="cta-banner-title">Let's craft your next brand or digital experience.</h3>
+            <p class="cta-banner-desc">From full corporate identity systems and annual reports to custom web design, we elevate your presence.</p>
           </div>
-          <a href="projects.html" class="btn-primary">Browse Full Projects Archive (50+) →</a>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="contact.html" class="btn-primary">Start a project with us &rarr;</a>
+            <a href="https://wa.link/rs6bee" target="_blank" rel="noopener noreferrer" class="btn-ghost">Direct WhatsApp Inquiry &rarr;</a>
+          </div>
         </div>
       </section>
-
     </main>
   </div>
 
-  <!-- Interactive Case Study Detail Modal -->
-  <div class="case-modal" id="case-modal" role="dialog" aria-modal="true">
-    <div class="case-modal-content">
-      <button class="case-modal-close" id="case-modal-close" aria-label="Close dialog">✕</button>
-      <div id="case-modal-body"></div>
-    </div>
-  </div>
+  <!-- Interactive Lightbox Modal (View Function) -->
+  <div class="lightbox-modal" id="portfolio-lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
+    <div class="lightbox-content-card">
+      <button class="lightbox-close-btn" id="lightbox-close" aria-label="Close dialog">&times;</button>
+      <button class="lightbox-nav-arrow lightbox-nav-prev" id="lightbox-prev" aria-label="Previous Project">&larr;</button>
+      <button class="lightbox-nav-arrow lightbox-nav-next" id="lightbox-next" aria-label="Next Project">&rarr;</button>
 
-  <!-- Apps Sidebar Overlay & Aside -->
-  <div class="apps-sidebar-overlay" id="apps-sidebar-overlay"></div>
-  <aside class="apps-sidebar" id="apps-sidebar">
-    <div class="sidebar-header">
-      <h2 class="sidebar-title">Dubani <span>Apps</span></h2>
-      <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">&times;</button>
-    </div>
-    <div class="sidebar-content">
-      <p class="sidebar-desc">Explore our custom utility tools designed to streamline your business workflow.</p>
-      <div class="app-list">
-        <!-- Invoice App -->
-        <a href="invoice.html" class="app-item">
-          <div class="app-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          </div>
-          <div class="app-info">
-            <h3 class="app-name">Invoice Generator</h3>
-            <p class="app-tagline">Create & manage professional invoices.</p>
-          </div>
-          <div class="app-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </div>
-        </a>
+      <div class="lightbox-preview-box">
+        <img src="" alt="" id="lightbox-img" class="lightbox-preview-img" />
+      </div>
 
-        <!-- Handscribe App -->
-        <a href="handscribe/" class="app-item">
-          <div class="app-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path><path d="M15 5l4 4"></path></svg>
-          </div>
-          <div class="app-info">
-            <h3 class="app-name">Handscribe</h3>
-            <p class="app-tagline">Convert text to beautiful handwriting.</p>
-          </div>
-          <div class="app-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </div>
-        </a>
-
-        <!-- PatternForge App -->
-        <a href="patternforge/" class="app-item">
-          <div class="app-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          </div>
-          <div class="app-info">
-            <h3 class="app-name">PatternForge</h3>
-            <p class="app-tagline">Generate seamless SVG patterns.</p>
-          </div>
-          <div class="app-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </div>
-        </a>
+      <div class="lightbox-details">
+        <div class="lightbox-tags-row">
+          <span class="lightbox-tag" id="lightbox-cat">CATEGORY</span>
+          <span class="lightbox-subtag" id="lightbox-subcat">SUBCATEGORY</span>
+        </div>
+        <h2 class="lightbox-title" id="lightbox-title">Project Title</h2>
+        <div class="lightbox-client" id="lightbox-client">Client Name</div>
+        <p class="lightbox-desc" id="lightbox-desc">Project description goes here.</p>
+        <div class="lightbox-actions">
+          <a href="#" id="lightbox-wa-btn" target="_blank" rel="noopener noreferrer" class="btn-primary">Inquire About This Design on WhatsApp &rarr;</a>
+          <a href="contact.html" class="btn-ghost">Book Full Discovery Call &rarr;</a>
+        </div>
       </div>
     </div>
-    <div class="sidebar-footer">
-      <p>&copy; 2026 Dubani Creatives</p>
-    </div>
-  </aside>
-
-  <!-- WhatsApp Chat Widget with Robot SVG -->
-  <div class="wa-widget-container">
-    <div class="wa-tooltip">Chat with me on WhatsApp 👋</div>
-    <div class="wa-bot-and-btn">
-      <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
-        <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
-        <circle cx="28" cy="20" r="2.5" fill="#fff"/>
-        <circle cx="36" cy="20" r="2.5" fill="#fff"/>
-        <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
-        <circle cx="32" cy="6" r="3" fill="#25D366"/>
-        <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
-        <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
-        <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
-      </svg>
-      <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-      </a>
-    </div>
   </div>
 
-  <!-- Core Javascript Engine -->
-  <script src="main.js?v=20260925-03"></script>
+  <!-- Floating WhatsApp Action -->
+  <div class="wa-bot-and-btn">
+    <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="#ffffff"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.159.57 4.184 1.571 5.938l-1.666 6.088 6.257-1.642c1.701.928 3.647 1.455 5.714 1.455 6.627 0 12-5.373 12-12 0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+  </div>
+
+  <script src="main.js?v=20260925-06"></script>
+  <script>
+    // Portfolio Interactive Categorization & Lightbox View Function
+    const portfolioItems = [{"id": "b-logo-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Enkosi Gqunube Foundation", "client": "Enkosi Gqunube Foundation", "image": "images/Portfolio/Logo Design/Enkosi Gqunube Foundation Logo Design_1771002702188.webp", "desc": "Emblematic community foundation brand mark celebrating grassroots unity, cultural heritage, and youth empowerment in the Eastern Cape."}, {"id": "b-logo-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "INGELOSI Employment Law", "client": "INGELOSI Employment Law", "image": "images/Portfolio/Logo Design/INGELOSI Employment Law_1771003268721.webp", "desc": "Authoritative and prestigious legal identity mark engineered for high-stakes corporate labor relations and employment jurisprudence."}, {"id": "b-logo-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Lelu's Kitchen Interiors Logo", "client": "Lelu's Kitchen Interiors", "image": "images/Portfolio/Logo Design/Lelu_s Kitchen Interiors Branding_1771003297997.jpg", "desc": "Bespoke culinary and interior architecture brand emblem with minimalist linework."}, {"id": "b-logo-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "Makhulela Holdings Logo", "client": "Makhulela Holdings", "image": "images/Portfolio/Logo Design/Makhulela Holdings Branding_1771003091146.jpg", "desc": "Distinguished corporate holdings emblem symbolizing growth, strength, and integrity."}, {"id": "b-logo-5", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "PK MEDIA Brand Mark", "client": "PK Media Group", "image": "images/Portfolio/Logo Design/PK MEDIA logo Design_1771003102704.webp", "desc": "Dynamic visual media and broadcasting logo designed for digital streaming platforms."}, {"id": "b-logo-6", "category": "branding", "categoryName": "BRANDING", "subcategory": "logos", "subcategoryName": "Logos", "title": "THE FIG FOUNDATION Logo", "client": "The FIG Foundation", "image": "images/Portfolio/Logo Design/THE FIG FOUNDATION Branding_1771002978028.webp", "desc": "Nurturing community empowerment foundation logo with symbolic organic motifs."}, {"id": "b-id-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "LUZANA Executive Identity Suite", "client": "LUZANA Consulting Holdings", "image": "images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg", "desc": "Comprehensive visual system including corporate letterhead, folders, business cards, pitch decks, and brand guidelines."}, {"id": "b-id-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "INGELOSI Corporate Stationery", "client": "INGELOSI Employment Law", "image": "images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp", "desc": "Prestige corporate stationery folders, legal briefs, letterheads, and executive business cards with refined gold detailing."}, {"id": "b-id-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "IMM MABOTE Executive Suite", "client": "IMM MABOTE", "image": "images/Portfolio/Branding/IMM MABOTE/514350235_1293736032759904_2702461927603542805_n.jpg", "desc": "Executive stationery, business cards, and corporate presentation suite."}, {"id": "b-id-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "identity", "subcategoryName": "Brand Identity Systems", "title": "CashWave Digital Collateral", "client": "CashWave Finance", "image": "images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp", "desc": "Credit stationery, branded application forms, promotional handouts, and mobile digital finance banners."}, {"id": "b-ban-1", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "TheUnlimitedExperience Rollup", "client": "TheUnlimitedExperience", "image": "images/Portfolio/Banners/TheUnlimitedExperience Roll Up Banner Design_1771002669518.webp", "desc": "High-impact exhibition pull-up banner designed for brand activations, industry expos, and live demonstrations."}, {"id": "b-ban-2", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "IRAZA Footwear Pop-up Banner", "client": "IRAZA Footwear", "image": "images/Portfolio/Banners/IRAZA footwear package design_1771003524777.jpg", "desc": "Dynamic retail and pop-up marketing banner announcing product drops and footwear launches across flagship stores."}, {"id": "b-ban-3", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "Corporate Facility Directional Signage", "client": "Commercial Property Signage", "image": "images/Portfolio/Signage/1.jpg", "desc": "Architectural directional wayfinding and exterior sign systems engineered for modern industrial and business parks."}, {"id": "b-ban-4", "category": "branding", "categoryName": "BRANDING", "subcategory": "banners-signage", "subcategoryName": "Banners & Signages", "title": "3D Fabricated Entrance Sign", "client": "Corporate Facility Signage", "image": "images/Portfolio/Signage/2.jpg", "desc": "High-contrast 3D fabricated building entrance signage with weather-resistant brushed composite finishes."}, {"id": "p-evt-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Live Music & Arts Showcase", "client": "Creative Nights Live", "image": "images/Portfolio/Posters/494218292_1229844952482346_1116606363651595572_n.jpg", "desc": "Electrifying typographical concert and performance poster designed for maximum engagement across Instagram and TikTok."}, {"id": "p-evt-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Urban Youth Festival Poster", "client": "Cape Creative Collective", "image": "images/Portfolio/Posters/494314046_1230341949099313_5073685672330890678_n.jpg", "desc": "Vibrant street culture festival and music showcase promotional poster built for viral community sharing."}, {"id": "p-evt-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "event-posters", "subcategoryName": "Event Posters", "title": "Creative Summit Keynote Poster", "client": "Future Design Forum", "image": "images/Portfolio/Posters/494905437_1229756509157857_9077725963076676636_n.jpg", "desc": "Modern minimalist keynote presentation poster emphasizing speaker authority, date prominence, and venue clarity."}, {"id": "p-fly-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Paygas Digital Community Flyer", "client": "Paygas South Africa", "image": "images/Portfolio/Flyer/Paygas Flyers_1771003144872.webp", "desc": "High-impact mobile and print promotional flyer for affordable clean cooking gas accessibility."}, {"id": "p-fly-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Lelu's Kitchen Promotional Flyer", "client": "Lelu's Kitchen Interiors", "image": "images/Portfolio/Flyer/Lelu_s Kitchen Interiors Branding_1771003307155.jpg", "desc": "Refined lifestyle promotional flyer highlighting artisanal kitchen installations."}, {"id": "p-fly-3", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "digital-flyers", "subcategoryName": "Digital Flyers", "title": "Metro Social Night Flyer", "client": "Metro Events Cape Town", "image": "images/Portfolio/Flyer/515364281_1307781548022019_3160041811554924075_n.jpg", "desc": "Eye-catching social media digital flyer crafted for Instagram and WhatsApp broadcasts."}, {"id": "p-cam-1", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Community Drive Youth Campaign", "client": "Community Drive SA", "image": "images/Portfolio/Posters/502504943_1255465876586920_3732486807857411753_n.jpg", "desc": "Provocative social awareness campaign addressing youth skills development and digital literacy across Western Cape communities."}, {"id": "p-cam-2", "category": "posters", "categoryName": "SOCIAL MEDIA POSTERS", "subcategory": "campaigns", "subcategoryName": "Campaigns", "title": "Dubani Design Lab Workshop Series", "client": "Dubani Creatives Lab", "image": "images/Portfolio/Posters/506214624_1266785332121641_8393783487578973254_n.jpg", "desc": "Engaging multi-slide educational workshop promotion helping emerging founders elevate their visual brand identities."}, {"id": "dp-pkg-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Luxury Footwear Box", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg", "desc": "Signature custom rigid shoebox dieline with soft-touch matte lamination, spot UV, and structural strength."}, {"id": "dp-pkg-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Dieline & Labeling", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003505996.jpg", "desc": "Manufacturing dielines, barcode placement, size grid typography, and eco-certified packaging specifications."}, {"id": "dp-pkg-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "packaging", "subcategoryName": "Packaging & Boxes", "title": "IRAZA Premium Retail Unboxing", "client": "IRAZA Footwear", "image": "images/Portfolio/Packaging/IRAZA footwear package design_1771003507973.jpg", "desc": "Custom patterned tissue paper wrap, authentication certificate card, and branded sticker seal for customer unboxing."}, {"id": "dp-bro-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "FCICHS Corporate Capabilities Profile", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp", "desc": "Full 24-page landscape corporate profile detailing social housing projects, accreditation metrics, and healthcare partnerships."}, {"id": "dp-bro-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "THE FIG FOUNDATION Donor Brochure", "client": "The FIG Foundation", "image": "images/Portfolio/Brochure/THE FIG FOUNDATION Branding_1771002984093.jpg", "desc": "Philanthropic donor brochure balancing emotional beneficiary portraits with audited financial allocation charts."}, {"id": "dp-bro-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "brochures", "subcategoryName": "Brochures & Booklets", "title": "Commemorative Tribute Booklet", "client": "Mrs B Family Trust", "image": "images/Portfolio/Brochure/Mrs B Funeral_1771002911896.jpg", "desc": "Dignified and timeless heirloom memorial booklet with gold foil accents, full-color archival photography, and premium paper stock."}, {"id": "dp-sta-1", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Executive Embossed Notebook", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Notebook_Mockup_2.jpg", "desc": "Hardcover embossed executive notebook and annual corporate planner for board members and strategic stakeholders."}, {"id": "dp-sta-2", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Sublimated Lanyards", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Lanyard_Mockup_1.jpg", "desc": "Durable full-color sublimated satin conference lanyards with metal lobster claw clips and safety breakaways."}, {"id": "dp-sta-3", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Laser-Engraved USB Flash Drives", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Pendrive_Mockup_1.jpg", "desc": "Branded metal swivel USB 3.0 flash drives loaded with audited annual reports, video presentations, and press kits."}, {"id": "dp-sta-4", "category": "print", "categoryName": "DESIGN & PRINT", "subcategory": "stationery", "subcategoryName": "Stationery Collateral", "title": "KCT Executive Ballpoint Pen Suite", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/Pen_Mockup_1.jpg", "desc": "Matte black metal executive pens with laser-etched KCT branding for institutional gifting and signature ceremonies."}, {"id": "ap-tsh-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Signature Street Graphic Tee", "client": "Street District Apparel", "image": "images/Portfolio/Aparel/480582002_1034364905404769_8803467143722299735_n.jpg", "desc": "Heavyweight 240gsm combed cotton t-shirt featuring bespoke high-density typography and back screen print artwork."}, {"id": "ap-tsh-2", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Heritage Crewneck T-Shirt", "client": "Kulture Kolektive", "image": "images/Portfolio/Aparel/480876761_1034953375345922_8660859334893525078_n.jpg", "desc": "Modern cut crewneck t-shirt with precision chest embroidery and custom neck-tape woven branding."}, {"id": "ap-tsh-3", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "tshirts", "subcategoryName": "Custom T-Shirts", "title": "Dubani Creatives Studio Tee", "client": "Dubani Studio Merch", "image": "images/Portfolio/Aparel/481098107_1044816791026247_2216861155745790659_n.jpg", "desc": "Official studio cotton tee featuring the signature orange and cyan contrast emblem and motivational typography."}, {"id": "ap-cap-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "headwear", "subcategoryName": "Headwear & Caps", "title": "Structured 3D Puff Snapback", "client": "Apex Urban Gear", "image": "images/Portfolio/Aparel/481468607_1046882124153047_8284986740349321572_n.jpg", "desc": "6-panel structured snapback with high-relief 3D puff embroidery, green undervisor, and custom inner seam binding."}, {"id": "ap-cap-2", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "headwear", "subcategoryName": "Headwear & Caps", "title": "Vintage Washed Cotton Dad Hat", "client": "Coastline Club", "image": "images/Portfolio/Aparel/494165052_1229756649157843_6245972667023574482_n.jpg", "desc": "Unstructured low-profile washed cotton cap with subtle brass closure buckle and micro-embroidered crest."}, {"id": "ap-wrk-1", "category": "apparel", "categoryName": "APPAREL / CLOTHING", "subcategory": "workwear", "subcategoryName": "Branded Workwear", "title": "Corporate Staff Uniform Polo", "client": "Metro Operations", "image": "images/Portfolio/Aparel/494196211_1229756655824509_5868124905933162260_n.jpg", "desc": "Durable anti-fade pique knit corporate polo shirts engineered for daily operational staff, site managers, and events."}, {"id": "ar-kct-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Annual Report 2024/25", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp", "desc": "The flagship audited publication detailing socio-economic investments, youth empowerment metrics, and major commercial property milestones."}, {"id": "ar-kct-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Community Report Vol 3", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 3_1771002862247.jpg", "desc": "Comprehensive community impact assessment publication featuring governance statements, trustee reports, and localized case studies."}, {"id": "ar-kct-3", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Development Report Vol 2", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 2_1771002875065.jpg", "desc": "Detailed financial and infrastructural breakdown with infographics, audited balance sheets, and capital expenditure diagrams."}, {"id": "ar-kct-4", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "kct-reports", "subcategoryName": "KCT Annual Reports", "title": "KCT Foundation Report Vol 1", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Brochure/KCT Annual report 1_1771002891340.jpg", "desc": "Inaugural community trust governance volume laying the foundation for transparent public sector reporting and donor stewardship."}, {"id": "ar-fci-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "fci-profiles", "subcategoryName": "FCI Company Profiles", "title": "FCICHS Corporate Profile & Impact", "client": "FCICHS (Community Health Solutions)", "image": "images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp", "desc": "Institutional publication documenting accreditation with SHRA, NHBRC, CIDB, and Western Cape Department of Human Settlements."}, {"id": "ar-fci-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "fci-profiles", "subcategoryName": "FCI Company Profiles", "title": "Goodwood Housing Project Portfolio", "client": "FCICHS (Community Health Solutions)", "image": "images/Portfolio/Web Design/FCICHS/Main-Entrance.jpg", "desc": "Multimillion-rand social housing architectural showcase publication detailing tenant accommodation and community wellness facilities."}, {"id": "ar-pub-1", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Dual-Language Calendar (English)", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/KCT Calendar Mockup (English).jpg", "desc": "Large-format corporate wall calendar distributed to government departments, corporate partners, and civic leaders."}, {"id": "ar-pub-2", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Dual-Language Calendar (isiXhosa)", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/KCT Calendar Mockup (isiXhosa).jpg", "desc": "Official corporate calendar celebrating indigenous language preservation and community grassroots leadership."}, {"id": "ar-pub-3", "category": "reports", "categoryName": "ANNUAL REPORTS", "subcategory": "gov-publications", "subcategoryName": "Corporate Publications", "title": "KCT Graduate Achievement Certificates", "client": "Khayelitsha Community Trust", "image": "images/Portfolio/Stationery/KCT certificates_1771003667052.webp", "desc": "Gold-foiled security certificates awarded to graduates of the KCT community business incubation initiatives."}, {"id": "w-cor-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "FCICHS Social Housing Portal", "client": "FCICHS (Foundation Community Initiative)", "image": "images/Portfolio/Web Design/FCICHS/newLogo.png", "desc": "Full corporate digital portal featuring online social housing tenant applications, property directories, and stakeholder reports."}, {"id": "w-cor-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "KCT Community Trust Portal", "client": "Khayelitsha Community Trust (KCT)", "image": "images/Portfolio/Web Design/KCT/logo.webp", "desc": "Accessible institutional website with tender downloads, governance library, project tracking, and community event schedules."}, {"id": "w-cor-3", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Dream Area Cultural Platform", "client": "Dream Area", "image": "images/imgi_13_68bd341e34845d434f3fb083_1.png", "desc": "High-performance web app and immersive multimedia platform engineered for youth creators and cultural events."}, {"id": "w-cor-4", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "corporate-portals", "subcategoryName": "Corporate & NGO Portals", "title": "Star Blox Gaming Studio Hub", "client": "Star Blox Studio", "image": "images/imgi_14_68bd33e0e57b111749f34daf_0.png", "desc": "Dark-mode gaming web hub with interactive game asset previews, creator tools, and community forum integrations."}, {"id": "w-cul-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "food-lifestyle", "subcategoryName": "Food & Lifestyle", "title": "Chef Lungelo Fine Dining Web App", "client": "Chef Lungelo", "image": "images/Portfolio/Web Design/Chef Lungelo/509758564_1275713811228793_8836691374578379249_n.jpg", "desc": "Luxury culinary portfolio featuring private chef bookings, tasting menus, and interactive masterclass ticket checkout."}, {"id": "w-cul-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "food-lifestyle", "subcategoryName": "Food & Lifestyle", "title": "Chef Lungelo Gourmet Experiences", "client": "Chef Lungelo", "image": "images/Portfolio/Web Design/Chef Lungelo/510804046_1275714121228762_565188796764469855_n.jpg", "desc": "Visual storytelling web platform highlighting Afro-fusion dining, private events, and editorial press coverage."}, {"id": "w-med-1", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "medical-health", "subcategoryName": "Medical & Health", "title": "Regimed Medical Practice Portal", "client": "Regimed Healthcare", "image": "images/Portfolio/Web Design/Regimed/510442613_1275715857895255_5442613084655942366_n.jpg", "desc": "Clean clinical telemedicine website with secure patient intake forms, doctor directories, and prescription refills."}, {"id": "w-med-2", "category": "web", "categoryName": "WEB DESIGN", "subcategory": "medical-health", "subcategoryName": "Medical & Health", "title": "Regimed Mobile Health Platform", "client": "Regimed Healthcare", "image": "images/Portfolio/Web Design/Regimed/511887185_1275715454561962_1162762411983906702_n.jpg", "desc": "Fast, lightweight mobile interface optimized for low-bandwidth healthcare access across South Africa."}];
+
+    const subcatMap = {
+      'all': [
+        { slug: 'all', name: 'Show All' },
+        { slug: 'logos', name: 'Logos' },
+        { slug: 'identity', name: 'Identity Systems' },
+        { slug: 'banners-signage', name: 'Banners & Signages' },
+        { slug: 'event-posters', name: 'Event Posters' },
+        { slug: 'digital-flyers', name: 'Digital Flyers' },
+        { slug: 'packaging', name: 'Packaging & Boxes' },
+        { slug: 'tshirts', name: 'Custom Apparel' },
+        { slug: 'kct-reports', name: 'Annual Reports' },
+        { slug: 'corporate-portals', name: 'Web Portals' }
+      ],
+      'branding': [
+        { slug: 'all', name: 'All Branding' },
+        { slug: 'logos', name: 'Logos' },
+        { slug: 'identity', name: 'Identity Systems' },
+        { slug: 'banners-signage', name: 'Banners & Signages' }
+      ],
+      'posters': [
+        { slug: 'all', name: 'All Posters' },
+        { slug: 'event-posters', name: 'Event Posters' },
+        { slug: 'digital-flyers', name: 'Digital Flyers' },
+        { slug: 'campaigns', name: 'Campaigns' }
+      ],
+      'print': [
+        { slug: 'all', name: 'All Design & Print' },
+        { slug: 'packaging', name: 'Packaging & Boxes' },
+        { slug: 'brochures', name: 'Brochures & Booklets' },
+        { slug: 'stationery', name: 'Stationery Collateral' }
+      ],
+      'apparel': [
+        { slug: 'all', name: 'All Apparel' },
+        { slug: 'tshirts', name: 'Custom T-Shirts' },
+        { slug: 'headwear', name: 'Headwear & Caps' },
+        { slug: 'workwear', name: 'Branded Workwear' }
+      ],
+      'reports': [
+        { slug: 'all', name: 'All Reports' },
+        { slug: 'kct-reports', name: 'KCT Annual Reports' },
+        { slug: 'fci-profiles', name: 'FCI Company Profiles' },
+        { slug: 'gov-publications', name: 'Corporate Publications' }
+      ],
+      'web': [
+        { slug: 'all', name: 'All Web Design' },
+        { slug: 'corporate-portals', name: 'Corporate & NGO Portals' },
+        { slug: 'food-lifestyle', name: 'Food & Lifestyle' },
+        { slug: 'medical-health', name: 'Medical & Health' }
+      ]
+    };
+
+    let activeCategory = 'all';
+    let activeSubcategory = 'all';
+    let currentLightboxIndex = 0;
+    let currentlyFilteredItems = [...portfolioItems];
+
+    // Filter Elements
+    const catButtons = document.querySelectorAll('.cat-pill-btn');
+    const subcatContainer = document.getElementById('subcat-container');
+    const blocks = document.querySelectorAll('.portfolio-block-1to1');
+
+    function renderSubcategories(cat) {
+      const list = subcatMap[cat] || subcatMap['all'];
+      subcatContainer.innerHTML = '<span class="subcat-label">SUB-CATEGORIES:</span>';
+      list.forEach((sub, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `subcat-pill-btn ${idx === 0 ? 'active' : ''}`;
+        btn.dataset.sub = sub.slug;
+        btn.textContent = sub.name;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.subcat-pill-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeSubcategory = sub.slug;
+          filterPortfolio();
+        });
+        subcatContainer.appendChild(btn);
+      });
+    }
+
+    function filterPortfolio() {
+      currentlyFilteredItems = [];
+      blocks.forEach(block => {
+        const cardCat = block.dataset.category;
+        const cardSub = block.dataset.subcategory;
+
+        const matchCat = (activeCategory === 'all' || cardCat === activeCategory);
+        const matchSub = (activeSubcategory === 'all' || cardSub === activeSubcategory);
+
+        if (matchCat && matchSub) {
+          block.style.display = 'flex';
+          const found = portfolioItems.find(i => i.id === block.dataset.id);
+          if (found) currentlyFilteredItems.push(found);
+        } else {
+          block.style.display = 'none';
+        }
+      });
+    }
+
+    catButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.dataset.cat;
+        activeSubcategory = 'all';
+        renderSubcategories(activeCategory);
+        filterPortfolio();
+      });
+    });
+
+    // Initialize subcategories
+    renderSubcategories('all');
+
+    // Lightbox Modal Logic
+    const lightbox = document.getElementById('portfolio-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxClient = document.getElementById('lightbox-client');
+    const lightboxDesc = document.getElementById('lightbox-desc');
+    const lightboxCat = document.getElementById('lightbox-cat');
+    const lightboxSubcat = document.getElementById('lightbox-subcat');
+    const lightboxWaBtn = document.getElementById('lightbox-wa-btn');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+
+    function showLightboxItem(index) {
+      if (!currentlyFilteredItems.length) return;
+      if (index < 0) index = currentlyFilteredItems.length - 1;
+      if (index >= currentlyFilteredItems.length) index = 0;
+      currentLightboxIndex = index;
+
+      const item = currentlyFilteredItems[currentLightboxIndex];
+      lightboxImg.src = item.image;
+      lightboxImg.alt = item.title;
+      lightboxTitle.textContent = item.title;
+      lightboxClient.textContent = 'Client: ' + item.client;
+      lightboxDesc.textContent = item.desc;
+      lightboxCat.textContent = item.categoryName;
+      lightboxSubcat.textContent = item.subcategoryName;
+
+      const waMsg = encodeURIComponent(`Hi Dubani Creatives! I saw "${item.title}" (${item.categoryName} - ${item.subcategoryName}) in your portfolio and would like to discuss a project.`);
+      lightboxWaBtn.href = `https://wa.link/rs6bee?text=${waMsg}`;
+
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    window.openLightboxById = function(id) {
+      const idx = currentlyFilteredItems.findIndex(i => i.id === id);
+      if (idx !== -1) {
+        showLightboxItem(idx);
+      } else {
+        const allIdx = portfolioItems.findIndex(i => i.id === id);
+        if (allIdx !== -1) {
+          currentlyFilteredItems = [portfolioItems[allIdx]];
+          showLightboxItem(0);
+        }
+      }
+    };
+
+    blocks.forEach(block => {
+      block.addEventListener('click', () => {
+        const id = block.dataset.id;
+        openLightboxById(id);
+      });
+      block.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const id = block.dataset.id;
+          openLightboxById(id);
+        }
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    lightboxClose?.addEventListener('click', closeLightbox);
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    lightboxPrev?.addEventListener('click', () => {
+      showLightboxItem(currentLightboxIndex - 1);
+    });
+
+    lightboxNext?.addEventListener('click', () => {
+      showLightboxItem(currentLightboxIndex + 1);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showLightboxItem(currentLightboxIndex - 1);
+      if (e.key === 'ArrowRight') showLightboxItem(currentLightboxIndex + 1);
+    });
+
+    // Smooth Scrolling Helpers for Category Strips
+    window.scrollShowcase = function(containerId, distance) {
+      const el = document.getElementById(containerId);
+      if (el) {
+        el.scrollBy({ left: distance, behavior: 'smooth' });
+      }
+    };
+  </script>
 </body>
 </html>

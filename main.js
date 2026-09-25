@@ -151,6 +151,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const caseModalClose = document.getElementById('case-modal-close');
 
   const caseData = {
+    fcichs: {
+      title: 'Foundation Community Initiative (FCICHS)',
+      tags: 'Brand Identity • Company Profile • Social Housing',
+      desc: 'Corporate visual identity, official multi-page company capability profile, residential development portfolio booklets, and digital application portals designed for a premier Western Cape social housing and community health organisation.',
+      image: 'images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp'
+    },
+    kct: {
+      title: 'Khayelitsha Community Trust (KCT)',
+      tags: 'Annual Reports • Stationery • Digital Platform',
+      desc: 'Four consecutive editions of audited Annual Reports, official dual-language corporate calendars (English & isiXhosa), graduate achievement certificates, conference identity collaterals, and community development web portals.',
+      image: 'images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp'
+    },
     luzana: {
       title: 'LUZANA Consulting Holdings',
       tags: 'Brand Identity • Print • Corporate',
@@ -175,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
       desc: 'Authoritative, trustworthy legal brand architecture, business stationery, and professional collateral engineered for corporate legal representation.',
       image: 'images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp'
     },
-cashwave: {
+    cashwave: {
       title: 'CashWave Short-Term Finance',
       tags: 'Brand Identity • FinTech • Print Rollout',
       desc: 'Complete corporate visual identity system, brand mark, credit stationery, and marketing collateral designed for a modern South African short-term finance provider.',
