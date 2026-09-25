@@ -31,12 +31,13 @@
       overflow: hidden !important;
       text-decoration: none !important;
       color: inherit !important;
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+      transition: transform 0.25s ease, border-color 0.25s ease !important;
+      box-shadow: none !important;
     }
     .selected-work-grid .case-card:hover {
       transform: translateY(-4px) !important;
       border-color: rgba(56, 189, 248, 0.5) !important;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+      box-shadow: none !important;
     }
     .selected-work-grid .case-thumb-wrap {
       width: 100% !important;
@@ -242,63 +243,66 @@
       background-size: cover !important;
     }
 
-    /* Glass Left Sidebar */
+    /* Glass Left Sidebar - No Outer Shadow */
     .site-sidebar {
       background: rgba(8, 12, 22, 0.72) !important;
       backdrop-filter: blur(24px) !important;
       -webkit-backdrop-filter: blur(24px) !important;
       border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
-      box-shadow: 6px 0 30px rgba(0, 0, 0, 0.45) !important;
+      box-shadow: none !important;
     }
 
-    /* Glass Top Navigation Bar */
+    /* Glass Top Navigation Bar - No Outer Shadow */
     .top-nav-bar {
       background: rgba(8, 12, 22, 0.75) !important;
       backdrop-filter: blur(24px) !important;
       -webkit-backdrop-filter: blur(24px) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
-      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
+      box-shadow: none !important;
     }
 
-    /* Glass Featured Client Cards */
+    /* Glass Featured Client Cards - No Outer Shadow */
     .selected-work-grid .case-card {
       background: rgba(12, 17, 28, 0.6) !important;
       backdrop-filter: blur(16px) !important;
       -webkit-backdrop-filter: blur(16px) !important;
       border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+      box-shadow: none !important;
     }
     .selected-work-grid .case-card:hover {
       background: rgba(16, 23, 38, 0.75) !important;
       border-color: rgba(0, 210, 255, 0.45) !important;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 210, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+      box-shadow: none !important;
     }
 
-    /* Glass Partner Logos Container */
+    /* Glass Partner Logos Container - No Outer Shadow */
     .trusted-by-section {
       background: rgba(11, 16, 26, 0.55) !important;
       backdrop-filter: blur(16px) !important;
       -webkit-backdrop-filter: blur(16px) !important;
       border: 1px solid rgba(255, 255, 255, 0.08) !important;
       border-radius: 20px !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+      box-shadow: none !important;
     }
 
-    /* Glass Buttons */
+    /* Glass Buttons - No Outer Shadow */
     .btn-ghost {
       background: rgba(255, 255, 255, 0.05) !important;
       backdrop-filter: blur(14px) !important;
       -webkit-backdrop-filter: blur(14px) !important;
       border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      box-shadow: none !important;
     }
     .btn-ghost:hover {
       background: rgba(255, 255, 255, 0.12) !important;
       border-color: rgba(0, 210, 255, 0.5) !important;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 18px rgba(0, 210, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+      box-shadow: none !important;
+    }
+    .btn-primary, .btn-primary:hover {
+      box-shadow: none !important;
     }
 
-    /* 1. Smaller Glass Contra Widget */
+    /* 1. Smaller Glass Contra Widget - No Outer Shadow */
     .hero-badge-widget {
       background: rgba(16, 22, 36, 0.6) !important;
       backdrop-filter: blur(18px) !important;
@@ -306,8 +310,11 @@
       padding: 10px 16px !important;
       border-radius: 12px !important;
       border: 1px solid rgba(255, 107, 0, 0.4) !important;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+      box-shadow: none !important;
       margin: 0 !important;
+    }
+    .hero-badge-widget:hover {
+      box-shadow: none !important;
     }
     .hero-badge-widget .badge-content {
       gap: 10px !important;
@@ -336,13 +343,13 @@
       height: 13px !important;
     }
 
-    /* 2. Smaller Live Weather & Time Glass Widget */
+    /* 2. Smaller Live Weather & Time Glass Widget - No Outer Shadow */
     .glass-weather-widget {
       background: rgba(12, 17, 28, 0.62) !important;
       backdrop-filter: blur(20px) !important;
       -webkit-backdrop-filter: blur(20px) !important;
       border: 1px solid rgba(255, 255, 255, 0.11) !important;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      box-shadow: none !important;
       padding: 14px 16px !important;
       border-radius: 14px !important;
       gap: 10px !important;
@@ -465,6 +472,11 @@
         max-width: 320px !important;
         margin: 0 auto !important;
       }
+    }
+
+    /* Zero Outer Shadow UI Rule */
+    *, *::before, *::after {
+      box-shadow: none !important;
     }
   </style>
 </head>

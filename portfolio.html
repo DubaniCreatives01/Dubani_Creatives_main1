@@ -105,7 +105,7 @@
       border-color: rgba(255, 107, 0, 0.6);
       color: #ffffff;
       font-weight: 600;
-      box-shadow: 0 4px 16px rgba(255, 107, 0, 0.38);
+      box-shadow: none !important;
     }
     .cat-tab-dot {
       width: 7px;
@@ -221,13 +221,13 @@
       justify-content: center;
       padding: 16px;
       box-sizing: border-box;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: none !important;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
     }
     .portfolio-thumb-card:hover {
       transform: translateY(-5px);
       border-color: rgba(0, 210, 255, 0.5) !important;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 210, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+      box-shadow: none !important;
     }
     .portfolio-thumb-card:focus-visible {
       outline: 2px solid #00d2ff;
@@ -426,7 +426,7 @@
       height: auto;
       object-fit: contain;
       border-radius: 8px;
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 210, 255, 0.1);
+      box-shadow: none !important;
       transition: transform 0.28s ease;
       user-select: none;
     }
@@ -466,7 +466,7 @@
       color: #060a12;
       border-color: #00d2ff;
       transform: translateY(-50%) scale(1.12);
-      box-shadow: 0 0 24px rgba(0, 210, 255, 0.5);
+      box-shadow: none !important;
     }
     .lightbox-nav-btn.prev-btn {
       left: 20px;
@@ -526,12 +526,12 @@
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+      box-shadow: none !important;
       white-space: nowrap;
     }
     .lightbox-wa-cta:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
+      box-shadow: none !important;
     }
 
     @media (max-width: 1100px) {
@@ -579,6 +579,11 @@
       .lightbox-info-title {
         font-size: 15px;
       }
+    }
+
+    /* Zero Outer Shadow UI Rule */
+    *, *::before, *::after {
+      box-shadow: none !important;
     }
   </style>
 </head>

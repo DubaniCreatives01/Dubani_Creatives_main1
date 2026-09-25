@@ -102,7 +102,7 @@ body {
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
   border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
-  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: none !important;
   position: fixed;
   top: 0;
   left: 0;
@@ -136,7 +136,7 @@ body {
   font-size: 15px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  box-shadow: 0 4px 14px var(--orange-glow);
+  box-shadow: none !important;
 }
 
 .brand-name {
@@ -281,7 +281,7 @@ body {
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
+  box-shadow: none !important;
   position: sticky;
   top: 0;
   z-index: 90;
@@ -3335,13 +3335,14 @@ img.zoom-tilt:hover,
   overflow: hidden !important;
   text-decoration: none !important;
   color: inherit !important;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+  transition: transform 0.25s ease, border-color 0.25s ease !important;
+  box-shadow: none !important;
 }
 
 .selected-work-grid .case-card:hover {
   transform: translateY(-4px) !important;
   border-color: rgba(56, 189, 248, 0.5) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: none !important;
 }
 
 .selected-work-grid .case-thumb-wrap {
@@ -3546,3 +3547,9 @@ img.zoom-tilt:hover,
   font-size: 18px !important;
   line-height: 1.65 !important;
 }
+
+/* Master UI Rule: Remove all outer shadow effects across the entire UI */
+*, *::before, *::after {
+  box-shadow: none !important;
+}
+
