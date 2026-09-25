@@ -53,7 +53,13 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-dark);
+  background-color: #050811;
+  background-image: 
+    radial-gradient(circle at 18% 12%, rgba(0, 210, 255, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 82% 28%, rgba(255, 107, 0, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(0, 210, 255, 0.06) 0%, transparent 50%);
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--text-white);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -88,12 +94,15 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Fixed Left Sidebar
+   Fixed Left Sidebar (Glass Effect)
    -------------------------------------------------------------------------- */
 .site-sidebar {
   width: var(--sidebar-w);
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--card-border);
+  background: rgba(8, 12, 22, 0.72) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.45) !important;
   position: fixed;
   top: 0;
   left: 0;
@@ -265,13 +274,14 @@ body {
   flex-direction: column;
 }
 
-/* Top Sticky Navigation Bar */
+/* Top Sticky Navigation Bar (Glass Effect) */
 .top-nav-bar {
   height: var(--header-h);
-  background: var(--bg-header);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--card-border);
+  background: rgba(8, 12, 22, 0.75) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
   position: sticky;
   top: 0;
   z-index: 90;

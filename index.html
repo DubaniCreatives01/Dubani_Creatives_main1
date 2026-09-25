@@ -193,24 +193,120 @@
       padding: 11px 24px !important;
     }
 
-    /* Hero Grid & Smaller Widgets */
+    /* Hero Grid: Big, Breathable & Center-Aligned on Desktop via 3-Column Balance */
     .home-hero-grid {
       display: grid !important;
-      grid-template-columns: 1fr 310px !important;
+      grid-template-columns: 310px 1fr 310px !important;
       align-items: center !important;
       gap: 32px !important;
+      min-height: 65vh !important;
+      padding: 60px 0 80px 0 !important;
+      margin-bottom: 90px !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+    }
+    .hero-left-spacer {
+      display: block;
+      width: 100%;
+      pointer-events: none;
     }
     .home-hero-visual {
       max-width: 310px !important;
       width: 100% !important;
-      gap: 10px !important;
+      gap: 12px !important;
     }
 
-    /* 1. Smaller Contra Widget */
+    /* Bring Featured Clients & All Clients Down for Hero Breathing Room */
+    .selected-work-section {
+      margin-top: 40px !important;
+      padding-top: 50px !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+      margin-bottom: 70px !important;
+    }
+    .trusted-by-section {
+      margin-top: 60px !important;
+      padding-top: 40px !important;
+      margin-bottom: 80px !important;
+    }
+
+    /* =========================================================================
+       WHOLE WEBSITE GLASS EFFECT (Glassmorphic UI Design)
+       ========================================================================= */
+    body {
+      background-color: #050811 !important;
+      background-image: 
+        radial-gradient(circle at 18% 12%, rgba(0, 210, 255, 0.09) 0%, transparent 45%),
+        radial-gradient(circle at 82% 28%, rgba(255, 107, 0, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(0, 210, 255, 0.06) 0%, transparent 50%) !important;
+      background-attachment: fixed !important;
+      background-size: cover !important;
+    }
+
+    /* Glass Left Sidebar */
+    .site-sidebar {
+      background: rgba(8, 12, 22, 0.72) !important;
+      backdrop-filter: blur(24px) !important;
+      -webkit-backdrop-filter: blur(24px) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
+      box-shadow: 6px 0 30px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* Glass Top Navigation Bar */
+    .top-nav-bar {
+      background: rgba(8, 12, 22, 0.75) !important;
+      backdrop-filter: blur(24px) !important;
+      -webkit-backdrop-filter: blur(24px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Glass Featured Client Cards */
+    .selected-work-grid .case-card {
+      background: rgba(12, 17, 28, 0.6) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    }
+    .selected-work-grid .case-card:hover {
+      background: rgba(16, 23, 38, 0.75) !important;
+      border-color: rgba(0, 210, 255, 0.45) !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 210, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Glass Partner Logos Container */
+    .trusted-by-section {
+      background: rgba(11, 16, 26, 0.55) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Glass Buttons */
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.05) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    }
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(0, 210, 255, 0.5) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 18px rgba(0, 210, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    }
+
+    /* 1. Smaller Glass Contra Widget */
     .hero-badge-widget {
+      background: rgba(16, 22, 36, 0.6) !important;
+      backdrop-filter: blur(18px) !important;
+      -webkit-backdrop-filter: blur(18px) !important;
       padding: 10px 16px !important;
       border-radius: 12px !important;
-      border-width: 1.5px !important;
+      border: 1px solid rgba(255, 107, 0, 0.4) !important;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
       margin: 0 !important;
     }
     .hero-badge-widget .badge-content {
@@ -242,6 +338,11 @@
 
     /* 2. Smaller Live Weather & Time Glass Widget */
     .glass-weather-widget {
+      background: rgba(12, 17, 28, 0.62) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.11) !important;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
       padding: 14px 16px !important;
       border-radius: 14px !important;
       gap: 10px !important;
@@ -278,6 +379,7 @@
       padding: 8px 12px !important;
       border-radius: 10px !important;
       gap: 8px !important;
+      background: rgba(255, 255, 255, 0.04) !important;
     }
     .weather-main-info {
       gap: 8px !important;
@@ -348,10 +450,16 @@
       line-height: 1.65 !important;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1250px) {
       .home-hero-grid {
         grid-template-columns: 1fr !important;
-        gap: 28px !important;
+        gap: 36px !important;
+        min-height: auto !important;
+        padding: 40px 0 60px 0 !important;
+        margin-bottom: 70px !important;
+      }
+      .hero-left-spacer {
+        display: none !important;
       }
       .home-hero-visual {
         max-width: 320px !important;
@@ -459,6 +567,9 @@
       <!-- Hero Section -->
       <section class="page-section" id="home">
         <div class="home-hero-grid">
+          <!-- Left Balancing Spacer for True Mathematical Center Alignment on Desktop -->
+          <div class="hero-left-spacer" aria-hidden="true"></div>
+
           <div class="home-hero-content">
             <span class="section-eyebrow">SOUTH AFRICAN BRAND & DESIGN STUDIO</span>
             <h1 class="home-hero-title">Strategic <span class="brand-gradient">brand identity</span> for a bolder tomorrow.</h1>
