@@ -1,10 +1,11 @@
 User-agent: *
 Allow: /
 
-# Block private pages from indexing
-Disallow: /my-apps.html
-Disallow: /handscribe/
 Disallow: /invoice.html
+Disallow: /my-apps.html
+Disallow: /cv.html
+Disallow: /handscribe/
+Disallow: /patternforge/
+Disallow: /_build_tools/
 
-# Sitemap location
 Sitemap: https://dubanicreatives.tech/sitemap.xml

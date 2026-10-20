@@ -1,946 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dubani Creatives | Strategic Brand Identity & Design Studio</title>
-  <meta name="description" content="Dubani Creatives is a South African brand and design studio helping ambitious brands turn ideas into powerful identities, engaging content and digital experiences." />
-  <link rel="icon" type="image/png" href="images/favicon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260925-05" />
-  <style>
-    /* Direct Instant Overrides: 6 Featured Clients in 1 Single Row & Larger Text/Buttons */
-    .selected-work-grid {
-      display: flex !important;
-      flex-direction: row !important;
-      flex-wrap: nowrap !important;
-      gap: 12px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .selected-work-grid .case-card {
-      flex: 1 1 0 !important;
-      min-width: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      background: var(--card-bg, #0d121c) !important;
-      border: 1px solid var(--card-border, rgba(255,255,255,0.08)) !important;
-      border-radius: 12px !important;
-      overflow: hidden !important;
-      text-decoration: none !important;
-      color: inherit !important;
-      transition: transform 0.25s ease, border-color 0.25s ease !important;
-      box-shadow: none !important;
-    }
-    .selected-work-grid .case-card:hover {
-      transform: translateY(-4px) !important;
-      border-color: rgba(56, 189, 248, 0.5) !important;
-      box-shadow: none !important;
-    }
-    .selected-work-grid .case-thumb-wrap {
-      width: 100% !important;
-      height: 135px !important;
-      background: #090c12 !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 10px !important;
-      overflow: hidden !important;
-      box-sizing: border-box !important;
-    }
-    .selected-work-grid .case-thumb-img {
-      max-width: 100% !important;
-      max-height: 100% !important;
-      width: auto !important;
-      height: auto !important;
-      object-fit: contain !important;
-      transform: none !important;
-    }
-    .selected-work-grid .case-card-body {
-      padding: 12px 10px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 6px !important;
-      flex: 1 !important;
-    }
-    .selected-work-grid .case-card-title {
-      font-family: var(--font-heading) !important;
-      font-size: 14.5px !important;
-      font-weight: 700 !important;
-      color: #ffffff !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-    }
-    .selected-work-grid .case-card-desc {
-      font-size: 11.5px !important;
-      color: var(--text-muted, #94a3b8) !important;
-      line-height: 1.35 !important;
-      display: -webkit-box !important;
-      -webkit-line-clamp: 2 !important;
-      -webkit-box-orient: vertical !important;
-      overflow: hidden !important;
-      margin-bottom: 4px !important;
-    }
-    .case-card-btn {
-      font-size: 12px !important;
-      font-weight: 700 !important;
-      color: var(--orange, #ff6b00) !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-      margin-top: auto !important;
-      transition: color 0.2s ease !important;
-    }
-    .selected-work-grid .case-card:hover .case-card-btn {
-      color: var(--cyan, #00d2ff) !important;
-    }
-
-    @media (max-width: 820px) {
-      .selected-work-grid {
-        overflow-x: auto !important;
-        padding-bottom: 12px !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-      .selected-work-grid .case-card {
-        flex: 0 0 175px !important;
-        min-width: 175px !important;
-      }
-    }
-
-    /* Bigger Dubani Creatives Logo */
-    .top-bar-logo-img {
-      height: 44px !important;
-      width: auto !important;
-      max-width: 290px !important;
-      object-fit: contain !important;
-      display: block !important;
-    }
-    .sidebar-logo-img {
-      height: 52px !important;
-      width: auto !important;
-      max-width: 230px !important;
-      object-fit: contain !important;
-      display: block !important;
-    }
-
-    /* Center-Aligned Hero Text & Buttons */
-    .home-hero-content {
-      text-align: center !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-    .home-hero-content .section-eyebrow {
-      text-align: center !important;
-      display: inline-block !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      margin-bottom: 14px !important;
-      font-size: 13.5px !important;
-      letter-spacing: 2.5px !important;
-      font-weight: 700 !important;
-    }
-    .home-hero-title {
-      text-align: center !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      font-size: clamp(38px, 4.4vw, 58px) !important;
-      font-weight: 800 !important;
-      line-height: 1.12 !important;
-      letter-spacing: -1.4px !important;
-      margin-bottom: 20px !important;
-    }
-    .home-hero-text {
-      text-align: center !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      font-size: 18px !important;
-      color: rgba(255, 255, 255, 0.88) !important;
-      line-height: 1.65 !important;
-      margin-bottom: 28px !important;
-      max-width: 580px !important;
-    }
-    .home-hero-cta {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      gap: 16px !important;
-    }
-    .home-hero-cta .btn-primary, .home-hero-cta .btn-ghost {
-      font-size: 16px !important;
-      padding: 14px 32px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.3px !important;
-      border-radius: 9999px !important;
-    }
-    .btn-primary, .btn-ghost, .btn-secondary {
-      font-size: 15px !important;
-      padding: 12px 28px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.3px !important;
-      border-radius: 9999px !important;
-    }
-    .top-bar-actions .btn-primary {
-      font-size: 14.5px !important;
-      padding: 11px 24px !important;
-    }
-
-    /* Hero Grid: Big, Breathable & Center-Aligned on Desktop via 3-Column Balance */
-    .home-hero-grid {
-      display: grid !important;
-      grid-template-columns: 310px 1fr 310px !important;
-      align-items: center !important;
-      gap: 32px !important;
-      min-height: 65vh !important;
-      padding: 60px 0 80px 0 !important;
-      margin-bottom: 90px !important;
-      box-sizing: border-box !important;
-      width: 100% !important;
-    }
-    .hero-left-spacer {
-      display: block;
-      width: 100%;
-      pointer-events: none;
-    }
-    .home-hero-visual {
-      max-width: 310px !important;
-      width: 100% !important;
-      gap: 12px !important;
-    }
-
-    /* Bring Featured Clients & All Clients Down for Hero Breathing Room */
-    .selected-work-section {
-      margin-top: 40px !important;
-      padding-top: 50px !important;
-      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-      margin-bottom: 70px !important;
-    }
-    .trusted-by-section {
-      margin-top: 60px !important;
-      padding-top: 40px !important;
-      margin-bottom: 80px !important;
-    }
-
-    /* =========================================================================
-       WHOLE WEBSITE GLASS EFFECT (Glassmorphic UI Design)
-       ========================================================================= */
-    body {
-      background-color: #050811 !important;
-      background-image: 
-        radial-gradient(circle at 18% 12%, rgba(0, 210, 255, 0.09) 0%, transparent 45%),
-        radial-gradient(circle at 82% 28%, rgba(255, 107, 0, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 50% 80%, rgba(0, 210, 255, 0.06) 0%, transparent 50%) !important;
-      background-attachment: fixed !important;
-      background-size: cover !important;
-    }
-
-    /* Glass Left Sidebar - No Outer Shadow */
-    .site-sidebar {
-      background: rgba(8, 12, 22, 0.72) !important;
-      backdrop-filter: blur(24px) !important;
-      -webkit-backdrop-filter: blur(24px) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
-      box-shadow: none !important;
-    }
-
-    /* Glass Top Navigation Bar - No Outer Shadow */
-    .top-nav-bar {
-      background: rgba(8, 12, 22, 0.75) !important;
-      backdrop-filter: blur(24px) !important;
-      -webkit-backdrop-filter: blur(24px) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
-      box-shadow: none !important;
-    }
-
-    /* Glass Featured Client Cards - No Outer Shadow */
-    .selected-work-grid .case-card {
-      background: rgba(12, 17, 28, 0.6) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      box-shadow: none !important;
-    }
-    .selected-work-grid .case-card:hover {
-      background: rgba(16, 23, 38, 0.75) !important;
-      border-color: rgba(0, 210, 255, 0.45) !important;
-      box-shadow: none !important;
-    }
-
-    /* Glass Partner Logos Container - No Outer Shadow */
-    .trusted-by-section {
-      background: rgba(11, 16, 26, 0.55) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      border-radius: 20px !important;
-      box-shadow: none !important;
-    }
-
-    /* Glass Buttons - No Outer Shadow */
-    .btn-ghost {
-      background: rgba(255, 255, 255, 0.05) !important;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      box-shadow: none !important;
-    }
-    .btn-ghost:hover {
-      background: rgba(255, 255, 255, 0.12) !important;
-      border-color: rgba(0, 210, 255, 0.5) !important;
-      box-shadow: none !important;
-    }
-    .btn-primary, .btn-primary:hover {
-      box-shadow: none !important;
-    }
-
-    /* 1. Smaller Glass Contra Widget - No Outer Shadow */
-    .hero-badge-widget {
-      background: rgba(16, 22, 36, 0.6) !important;
-      backdrop-filter: blur(18px) !important;
-      -webkit-backdrop-filter: blur(18px) !important;
-      padding: 10px 16px !important;
-      border-radius: 12px !important;
-      border: 1px solid rgba(255, 107, 0, 0.4) !important;
-      box-shadow: none !important;
-      margin: 0 !important;
-    }
-    .hero-badge-widget:hover {
-      box-shadow: none !important;
-    }
-    .hero-badge-widget .badge-content {
-      gap: 10px !important;
-    }
-    .hero-badge-widget .badge-icon {
-      width: 28px !important;
-      height: 28px !important;
-    }
-    .hero-badge-widget .badge-icon svg {
-      width: 16px !important;
-      height: 16px !important;
-    }
-    .hero-badge-widget .badge-tag {
-      font-size: 10px !important;
-      letter-spacing: 1px !important;
-      font-weight: 700 !important;
-      margin-bottom: 2px !important;
-    }
-    .hero-badge-widget .badge-title {
-      font-size: 12.5px !important;
-      font-weight: 600 !important;
-      line-height: 1.3 !important;
-    }
-    .hero-badge-widget .badge-arrow svg {
-      width: 13px !important;
-      height: 13px !important;
-    }
-
-    /* 2. Smaller Live Weather & Time Glass Widget - No Outer Shadow */
-    .glass-weather-widget {
-      background: rgba(12, 17, 28, 0.62) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.11) !important;
-      box-shadow: none !important;
-      padding: 14px 16px !important;
-      border-radius: 14px !important;
-      gap: 10px !important;
-      margin-top: 0 !important;
-    }
-    .weather-widget-top {
-      padding-bottom: 8px !important;
-    }
-    .weather-location {
-      font-size: 11.5px !important;
-      font-weight: 600 !important;
-      gap: 4px !important;
-    }
-    .weather-live-indicator {
-      font-size: 10px !important;
-      padding: 2px 7px !important;
-    }
-    .live-pulse-dot {
-      width: 5px !important;
-      height: 5px !important;
-    }
-    .weather-time-display {
-      gap: 2px !important;
-    }
-    .weather-digital-clock {
-      font-size: 24px !important;
-      font-weight: 800 !important;
-      line-height: 1 !important;
-    }
-    .weather-digital-date {
-      font-size: 11px !important;
-    }
-    .weather-condition-row {
-      padding: 8px 12px !important;
-      border-radius: 10px !important;
-      gap: 8px !important;
-      background: rgba(255, 255, 255, 0.04) !important;
-    }
-    .weather-main-info {
-      gap: 8px !important;
-    }
-    .weather-icon-wrap {
-      font-size: 20px !important;
-    }
-    .weather-temp-num {
-      font-size: 18px !important;
-      font-weight: 700 !important;
-    }
-    .weather-condition-text {
-      font-size: 10px !important;
-      font-weight: 600 !important;
-    }
-    .weather-meta-pills {
-      gap: 8px !important;
-    }
-    .weather-pill {
-      font-size: 9.5px !important;
-    }
-    .weather-pill-label {
-      font-size: 9px !important;
-    }
-    .weather-pill-val {
-      font-size: 11px !important;
-      font-weight: 600 !important;
-    }
-    .weather-status-footer {
-      font-size: 10.5px !important;
-      padding-top: 2px !important;
-    }
-    .weather-availability-tag {
-      font-size: 10.5px !important;
-    }
-    .btn-glass-pulse {
-      font-size: 10.5px !important;
-      padding: 4px 10px !important;
-      font-weight: 700 !important;
-      border-radius: 5px !important;
-    }
-
-    /* Sidebar Navigation Font */
-    .sidebar-nav-item {
-      font-size: 15.5px !important;
-      padding: 12px 18px !important;
-      font-weight: 600 !important;
-    }
-    .sidebar-nav-item .nav-icon {
-      width: 22px !important;
-      height: 22px !important;
-    }
-    .selected-work-title {
-      font-size: 15px !important;
-      letter-spacing: 2px !important;
-      font-weight: 800 !important;
-    }
-    .view-all-link {
-      font-size: 15px !important;
-      font-weight: 700 !important;
-    }
-    .section-title {
-      font-size: clamp(34px, 3.8vw, 46px) !important;
-      font-weight: 800 !important;
-    }
-    .section-desc {
-      font-size: 18px !important;
-      line-height: 1.65 !important;
-    }
-
-    @media (max-width: 1250px) {
-      .home-hero-grid {
-        grid-template-columns: 1fr !important;
-        gap: 36px !important;
-        min-height: auto !important;
-        padding: 40px 0 60px 0 !important;
-        margin-bottom: 70px !important;
-      }
-      .hero-left-spacer {
-        display: none !important;
-      }
-      .home-hero-visual {
-        max-width: 320px !important;
-        margin: 0 auto !important;
-      }
-    }
-
-    /* Zero Outer Shadow UI Rule */
-    *, *::before, *::after {
-      box-shadow: none !important;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dubani Creatives | Cape Town Design Studio</title>
+  <meta name="description" content="Dubani Creatives is a Cape Town studio led by Silulamele Dubani. Brand identity, print, social media and websites for South African businesses, NGOs, trusts and events.">
+  <link rel="canonical" href="https://dubanicreatives.tech/">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="geo.region" content="ZA-WC">
+  <meta name="geo.placename" content="Cape Town">
+  <meta property="og:site_name" content="Dubani Creatives">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dubanicreatives.tech/">
+  <meta property="og:title" content="Dubani Creatives | Cape Town Design Studio">
+  <meta property="og:description" content="Dubani Creatives is a Cape Town studio led by Silulamele Dubani. Brand identity, print, social media and websites for South African businesses, NGOs, trusts and events.">
+  <meta property="og:image" content="https://dubanicreatives.tech/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_ZA">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dubani Creatives | Cape Town Design Studio">
+  <meta name="twitter:description" content="Dubani Creatives is a Cape Town studio led by Silulamele Dubani. Brand identity, print, social media and websites for South African businesses, NGOs, trusts and events.">
+  <meta name="twitter:image" content="https://dubanicreatives.tech/images/og.jpg">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Syne:wght@600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/site.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Dubani Creatives", "url": "https://dubanicreatives.tech/", "image": "https://dubanicreatives.tech/images/og.jpg", "logo": "https://dubanicreatives.tech/images/dubanicreatives_logo.png", "telephone": "+27733464805", "email": "dubanicreatives@gmail.com", "description": "Cape Town graphic design studio led by Silulamele Dubani. Brand identity, print, social media and websites for South African organisations.", "foundingDate": "2020", "founder": {"@type": "Person", "name": "Silulamele Dubani"}, "address": {"@type": "PostalAddress", "addressLocality": "Cape Town", "addressRegion": "Western Cape", "addressCountry": "ZA"}, "areaServed": {"@type": "Country", "name": "South Africa"}, "priceRange": "R4500+", "sameAs": ["https://www.behance.net/dubanicreatives1", "https://www.behance.net/DubaniCreatives", "https://www.linkedin.com/company/dubani-creatives", "https://www.instagram.com/dubanicreatives/", "https://www.facebook.com/dubanicreativespage/", "https://x.com/Dubanicreative2", "https://www.tiktok.com/@dubanicreatives"]}</script>
 </head>
 <body>
-
-  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-
-  <div class="site-layout">
-    <!-- ====================================================================
-         FIXED LEFT SIDEBAR (About placed right under Home)
-         ==================================================================== -->
-    <aside class="site-sidebar" id="site-sidebar">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-bar">
+    <a class="logo" href="/">
+      <img src="/images/dubanicreatives_logo.png" alt="Dubani Creatives" width="1024" height="153">
+    </a>
+    <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-controls="site-nav" aria-expanded="false">
+    <label class="nav-burger" for="nav-toggle"><span class="burger-icon"></span><span class="sr-only">Menu</span></label>
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <a href="/portfolio.html">Work</a><a href="/services.html">Services</a><a href="/packages.html">Packages</a><a href="/about.html">About</a><a href="/contact.html">Contact</a>
+      <a class="btn btn-primary nav-cta" href="/brief.html">Book a free consultation</a>
+    </nav>
+    <a class="header-cta" href="/brief.html"><span class="cta-long">Book a consultation</span><span class="cta-short">Book</span></a>
+  </div>
+</header>
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero-grid">
       <div>
-        <a href="index.html" class="sidebar-brand">
-          <img src="images/dubanicreatives_logo.png" alt="Dubani Creatives" class="sidebar-logo-img" />
-        </a>
-
-        <nav class="sidebar-nav">
-          <a href="index.html" class="sidebar-nav-item active" data-section="home">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            </span>
-            <span>Home</span>
-          </a>
-          <!-- About moved to directly under Home -->
-          <a href="about.html" class="sidebar-nav-item " data-section="about">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </span>
-            <span>About</span>
-          </a>
-          <a href="portfolio.html" class="sidebar-nav-item " data-section="portfolio">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            </span>
-            <span>Portfolio</span>
-          </a>
-          <a href="services.html" class="sidebar-nav-item " data-section="services">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            </span>
-            <span>Services</span>
-          </a>
-          <a href="packages.html" class="sidebar-nav-item " data-section="packages">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><line x1="1" y1="3" x2="23" y2="3"></line><path d="M10 12h4"></path></svg>
-            </span>
-            <span>Packages</span>
-          </a>
-          <a href="contact.html" class="sidebar-nav-item " data-section="contact">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            </span>
-            <span>Contact</span>
-          </a>
-
-          <div class="sidebar-divider"></div>
-
-          <!-- Subpage Archive & Apps Lock -->
-          <a href="projects.html" class="sidebar-nav-item ">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-            </span>
-            <span>Projects Archive</span>
-          </a>
-          <button type="button" class="sidebar-nav-item" id="sidebar-apps-link" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            </span>
-            <span>Apps <small style="font-size:10px;opacity:0.85;margin-left:4px;color:var(--accent-orange);">(PIN 4664)</small></span>
-          </button>
-        </nav>
+        <p class="eyebrow">Cape Town · Est. 2020</p>
+        <h1>Brand, print and websites for organisations that people rely on.</h1>
+        <p class="lede">Dubani Creatives is a graphic design studio led by Silulamele Dubani. We work with South African businesses, NGOs, community trusts, housing organisations and events.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/brief.html">Book a free consultation</a>
+          <a class="btn btn-ghost" href="https://wa.me/27733464805" rel="noopener" target="_blank">WhatsApp 073 346 4805</a>
+        </div>
+        <ul class="facts">
+          <li><strong>Silulamele Dubani</strong><span>Founder and studio lead</span></li>
+          <li><strong>Cape Town</strong><span>South Africa</span></li>
+          <li><strong>Since 2020</strong><span>Identity, print, social and web</span></li>
+        </ul>
       </div>
-
-      <div class="sidebar-footer">
-        <p class="sidebar-footer-tagline">Creative ideas <span>Real impact</span></p>
-        <p class="sidebar-footer-loc">📍 Cape Town, South Africa</p>
-        <p class="sidebar-footer-copy">© 2026 Dubani Creatives. All rights reserved.</p>
+      <figure class="hero-figure">
+        <img src="/images/Portfolio/Brochure/KCT%20Annual%20report%201_1771002891340.jpg" alt="Cover of an annual report designed for Khayelitsha Community Trust" width="1000" height="700" fetchpriority="high">
+        <figcaption><strong>Khayelitsha Community Trust</strong> — annual reports, 2022 to 2025</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="client-band" aria-label="Selected clients">
+  <div class="wrap">
+    <p>Selected clients</p>
+    <ul class="client-list"><li>FCI Community Housing Services</li><li>Khayelitsha Community Trust</li><li>KCT Mall</li><li>CashWave</li><li>Regimed Health</li><li>Festa M</li><li>Mellows Lounge</li><li>Gugulethu Sports Council</li><li>Makinzi Building Solutions</li><li>Zuma&Malila Holdings</li><li>JikaJika Media</li><li>Time For Musique</li><li>TAEI</li><li>Val'z Boutique</li><li>Asham Foto</li><li>Alunje Carpentry</li><li>Langa Life Bible Church</li><li>Makaula Foundation</li></ul>
+  </div>
+</section>
+  <section class="section" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Selected work</p>
+        <h2 id="work-title">Recent projects, shown plainly.</h2>
+        <p class="lede">A few pieces from the studio archive. The rest of the grid is on the work page.</p>
       </div>
-    </aside>
-
-    <main class="site-content">
-      <!-- Sticky Top Header Bar (with Center DubaniCreatives Logo) -->
-      <header class="top-nav-bar">
-        <div class="top-bar-left">
-          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation">☰</button>
-          <span class="panel-section-indicator" id="panel-indicator">01. HOME</span>
-          <span class="top-bar-domain">dubanicreatives.tech</span>
-        </div>
-        <div class="top-bar-center">
-          <a href="index.html" class="top-bar-logo-link" title="Dubani Creatives Home">
-            <img src="images/dubanicreatives_logo.png" alt="Dubani Creatives Logo" class="top-bar-logo-img" />
-          </a>
-        </div>
-        <div class="top-bar-actions">
-          <a href="contact.html" class="btn-primary">Start a project →</a>
-        </div>
-      </header>
-
-      <!-- Hero Section -->
-      <section class="page-section" id="home">
-        <div class="home-hero-grid">
-          <!-- Left Balancing Spacer for True Mathematical Center Alignment on Desktop -->
-          <div class="hero-left-spacer" aria-hidden="true"></div>
-
-          <div class="home-hero-content">
-            <span class="section-eyebrow">SOUTH AFRICAN BRAND & DESIGN STUDIO</span>
-            <h1 class="home-hero-title">Strategic <span class="brand-gradient">brand identity</span> for a bolder tomorrow.</h1>
-            <p class="home-hero-text">We help businesses stand out with strategic brand identity, compelling visuals, and custom digital experiences. We craft powerful marketing assets that build lasting connections.</p>
-            <div class="home-hero-cta">
-              <a href="portfolio.html" class="btn-primary">Explore Portfolio →</a>
-              <a href="contact.html" class="btn-ghost">Start a Project →</a>
-            </div>
-          </div>
-
-          <!-- Right Widgets: Contra widget ON TOP, Weather widget directly BELOW -->
-          <div class="home-hero-visual">
-            <!-- 1. Featured on Contra Widget (TOP) -->
-            <a href="https://contra.com/hire/adobe-xd-freelancers-in-western-cape-south-africa?featuredUserProfileId=WyJVc2VyUHJvZmlsZSIsMzU1NjMwMTRd" target="_blank" rel="noopener noreferrer" class="hero-badge-widget" onclick="window.open(this.href, '_blank'); return false;">
-              <div class="badge-shine"></div>
-              <div class="badge-content">
-                <div class="badge-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                </div>
-                <div class="badge-text-box">
-                  <span class="badge-tag"><span class="blinking-dot"></span> Featured on Contra</span>
-                  <span class="badge-title">Best Adobe XD Freelancer in Western Cape</span>
-                </div>
-                <div class="badge-arrow">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                  </svg>
-                </div>
-              </div>
-            </a>
-
-            <!-- 2. Live Weather & Time Glass Widget (BELOW Contra Widget) -->
-            <div class="glass-weather-widget" id="glass-weather-widget">
-              <div class="weather-widget-top">
-                <div class="weather-location">
-                  <span>📍</span>
-                  <span>Cape Town, South Africa (SAST)</span>
-                </div>
-                <div class="weather-live-indicator">
-                  <span class="live-pulse-dot"></span>
-                  <span>Studio Active</span>
-                </div>
-              </div>
-
-              <div class="weather-time-display">
-                <div class="weather-digital-clock" id="weather-clock">12:00:00 PM</div>
-                <div class="weather-digital-date" id="weather-date">Friday, 25 September 2026</div>
-              </div>
-
-              <div class="weather-condition-row">
-                <div class="weather-main-info">
-                  <div class="weather-icon-wrap" id="weather-icon">🌤️</div>
-                  <div>
-                    <div class="weather-temp-num" id="weather-temp">19°C</div>
-                    <div class="weather-condition-text" id="weather-condition">Partly Cloudy</div>
-                  </div>
-                </div>
-                <div class="weather-meta-pills">
-                  <div class="weather-pill">
-                    <span class="weather-pill-label">Humidity</span>
-                    <span class="weather-pill-val" id="weather-humidity">64%</span>
-                  </div>
-                  <div class="weather-pill">
-                    <span class="weather-pill-label">Wind</span>
-                    <span class="weather-pill-val" id="weather-wind">14 km/h</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="weather-status-footer">
-                <span class="weather-availability-tag">⚡ Accepting Q4 2026 Branding Projects</span>
-                <a href="contact.html" class="btn-glass-pulse">Book Discovery Call →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Selected Work Strip (6 Featured Clients in One Row) -->
-        <div class="selected-work-section">
-          <div class="selected-work-header">
-            <span class="selected-work-title">FEATURED CLIENTS</span>
-            <a href="portfolio.html" class="view-all-link">View all portfolio →</a>
-          </div>
-
-          <div class="selected-work-grid">
-            <!-- Card 1: FCICHS (Regular Client) -->
-            <a href="portfolio.html" class="case-card" data-case="fcichs">
-              <div class="case-thumb-wrap">
-                <img src="images/Portfolio/Brochure/FCI Company Profile_1771002467429.webp" alt="FCICHS (Foundation Community Initiative)" class="case-thumb-img" />
-              </div>
-              <div class="case-card-body">
-                <h3 class="case-card-title">FCICHS</h3>
-                <p class="case-card-desc">Company Profile • Housing • Branding</p>
-                <span class="case-card-btn">View project →</span>
-              </div>
-            </a>
-
-            <!-- Card 2: KCT (Regular Client) -->
-            <a href="portfolio.html" class="case-card" data-case="kct">
-              <div class="case-thumb-wrap">
-                <img src="images/Portfolio/Brochure/KCT Annual report 4_1771002840899.webp" alt="Khayelitsha Community Trust (KCT)" class="case-thumb-img" />
-              </div>
-              <div class="case-card-body">
-                <h3 class="case-card-title">Khayelitsha Community Trust</h3>
-                <p class="case-card-desc">Annual Reports • Calendars • Web</p>
-                <span class="case-card-btn">View project →</span>
-              </div>
-            </a>
-
-            <!-- Card 3: Luzana -->
-            <a href="portfolio.html" class="case-card" data-case="luzana">
-              <div class="case-thumb-wrap">
-                <img src="images/Portfolio/Branding/LUZANA Consulting Holdings/495131422_1276640777802763_8756452767998894368_n.jpg" alt="LUZANA Consulting Holdings" class="case-thumb-img" />
-              </div>
-              <div class="case-card-body">
-                <h3 class="case-card-title">LUZANA Consulting</h3>
-                <p class="case-card-desc">Brand Identity • Print • System</p>
-                <span class="case-card-btn">View project →</span>
-              </div>
-            </a>
-
-            <!-- Card 4: INGELOSI Employment Law -->
-            <a href="portfolio.html" class="case-card" data-case="ingelosi">
-              <div class="case-thumb-wrap">
-                <img src="images/Portfolio/Branding/INGELOSI/INGELOSI Employment Law_1771003275551.webp" alt="INGELOSI Employment Law" class="case-thumb-img" />
-              </div>
-              <div class="case-card-body">
-                <h3 class="case-card-title">INGELOSI Employment Law</h3>
-                <p class="case-card-desc">Legal Identity • Corporate Stationery</p>
-                <span class="case-card-btn">View project →</span>
-              </div>
-            </a>
-
-            <!-- Card 5: IRAZA Footwear Packaging -->
-            <a href="portfolio.html" class="case-card" data-case="iraza">
-              <div class="case-thumb-wrap">
-                <img src="images/Portfolio/Packaging/IRAZA footwear package design_1771003502648.jpg" alt="IRAZA Footwear Packaging" class="case-thumb-img" />
-              </div>
-              <div class="case-card-body">
-                <h3 class="case-card-title">IRAZA Packaging</h3>
-                <p class="case-card-desc">Packaging Design • Custom Box & Label</p>
-                <span class="case-card-btn">View project →</span>
-              </div>
-            </a>
-
-            <!-- Card 6: CashWave Finance -->
-            <a href="portfolio.html" class="case-card" data-case="cashwave">
-              <div class="case-thumb-wrap">
-                <img src="images/Portfolio/Branding/5/CashWave Branding 3_1771002250185.webp" alt="CashWave Finance" class="case-thumb-img" />
-              </div>
-              <div class="case-card-body">
-                <h3 class="case-card-title">CashWave Finance</h3>
-                <p class="case-card-desc">Brand Identity • FinTech & Cards</p>
-                <span class="case-card-btn">View project →</span>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Client Partner Marquee (White Logos) -->
-        <div class="client-section" style="margin-top: 32px; padding-top: 16px;">
-          <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 16px; font-weight: 600;">TRUSTED BY AMBITIOUS BUSINESSES &amp; FOUNDERS</p>
-          <div class="client-box">
-            <div class="marquee-gradient left"></div>
-            <div class="marquee-gradient right"></div>
-            <div class="marquee-wrapper">
-              <div class="marquee-track">
-                <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client Partner" width="136" height="59" />
-                <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client Partner" width="136" height="59" />
-                <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client Partner" width="121" height="48" />
-                <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client Partner" width="136" height="59" />
-                <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client Partner" width="136" height="59" />
-                <!-- Loop duplicates -->
-                <img loading="lazy" src="images/imgi_4_68b2ebe207a63221a4013bc7_bzgGV9K5z80arAe2nvCcgqIE.png" alt="Client Partner" width="136" height="59" />
-                <img loading="lazy" src="images/imgi_5_68b2ebe207a63221a4013bd3_2.png" alt="Client Partner" width="136" height="59" />
-                <img loading="lazy" src="images/imgi_6_68b2ebe207a63221a4013bcb_3.png" alt="Client Partner" width="121" height="48" />
-                <img loading="lazy" src="images/imgi_7_68b2ebe207a63221a4013bcf_4.png" alt="Client Partner" width="136" height="59" />
-                <img loading="lazy" src="images/imgi_8_68b2ebe207a63221a4013bd7_5.png" alt="Client Partner" width="136" height="59" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Studio Highlights & Authentic Information -->
-        <div style="margin-top: 48px;">
-          <div class="about-top-grid">
-            <div>
-              <span class="section-eyebrow">ABOUT DUBANI CREATIVES</span>
-              <h2 class="section-title">Beyond just design,<br>we build brands.</h2>
-              <p class="section-desc">We are a specialized creative studio dedicated to helping businesses craft meaningful identities. Our team believes in strategic thinking, bold design, and flawless execution to give your brand a decisive competitive edge.</p>
-              <div style="margin-top: 20px;">
-                <a href="about.html" class="btn-ghost">Learn our story & founder →</a>
-              </div>
-            </div>
-            <div class="about-studio-card">
-              <img src="images/studio_workspace.jpg" alt="Dubani Creatives Studio - Good Ideas Build Brighter Tomorrows" class="about-studio-img" />
-            </div>
-          </div>
-
-          <!-- Live Stats Row -->
-          <div class="about-stats-row">
-            <div class="stat-item-box">
-              <p class="stat-number">+50</p>
-              <p class="stat-label">Projects completed</p>
-            </div>
-            <div class="stat-item-box">
-              <p class="stat-number">+30</p>
-              <p class="stat-label">Happy clients</p>
-            </div>
-            <div class="stat-item-box">
-              <p class="stat-number">6+</p>
-              <p class="stat-label">Years experience</p>
-            </div>
-            <div class="stat-item-box">
-              <p class="stat-number">ZA</p>
-              <p class="stat-label">Proudly South African</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Client Testimonials from Previous Website -->
-        <div style="margin-top: 48px;">
-          <span class="section-eyebrow">CLIENT FEEDBACK</span>
-          <h2 class="section-title">What Founders Say</h2>
-          <div class="testimonials-grid">
-            <div class="testimonial-card">
-              <p class="testimonial-card-quote">“Dubani completely transformed our brand. The logo feels exactly like us — clean, bold, and memorable. We get compliments on it constantly.”</p>
-              <div class="testimonial-card-author">
-                <div class="testimonial-author-info">
-                  <h4>LUZANA Consulting Holdings</h4>
-                  <p>Advisory & Corporate Client</p>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-card">
-              <p class="testimonial-card-quote">“Working with Dubani was effortless. He understood the brief immediately and delivered packaging that truly made our product stand out on the shelf.”</p>
-              <div class="testimonial-card-author">
-                <div class="testimonial-author-info">
-                  <h4>Artisan Retail Brand</h4>
-                  <p>Packaging & Print Client</p>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-card">
-              <p class="testimonial-card-quote">“The pitch deck and digital assets Dubani designed helped us close our funding round. It was polished, clear, and told our story in a way we never could have done alone.”</p>
-              <div class="testimonial-card-author">
-                <div class="testimonial-author-info">
-                  <h4>Tech Startup Founder</h4>
-                  <p>Brand Strategy & Digital</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Home CTA Banner -->
-        <div class="cta-banner-strip" style="margin-top: 48px;">
-          <div class="cta-banner-left">
-            <span class="cta-banner-eyebrow">READY TO GROW?</span>
-            <h3 class="cta-banner-title">Let's craft your next brand milestone.</h3>
-            <p class="cta-banner-desc">Direct partnership with our creative director — zero agency bloat, maximum impact.</p>
-          </div>
-          <a href="contact.html" class="btn-primary">Start a project →</a>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- Interactive Case Study Detail Modal -->
-  <div class="case-modal" id="case-modal" role="dialog" aria-modal="true">
-    <div class="case-modal-content">
-      <button class="case-modal-close" id="case-modal-close" aria-label="Close dialog">✕</button>
-      <div id="case-modal-body"></div>
-    </div>
-  </div>
-
-  <!-- Apps Sidebar Overlay & Aside -->
-  <div class="apps-sidebar-overlay" id="apps-sidebar-overlay"></div>
-  <aside class="apps-sidebar" id="apps-sidebar">
-    <div class="sidebar-header">
-      <h2 class="sidebar-title">Dubani <span>Apps</span></h2>
-      <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">&times;</button>
-    </div>
-    <div class="sidebar-content">
-      <p class="sidebar-desc">Explore our custom utility tools designed to streamline your business workflow.</p>
-      <div class="app-list">
-        <!-- Invoice App -->
-        <a href="invoice.html" class="app-item">
-          <div class="app-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          </div>
-          <div class="app-info">
-            <h3 class="app-name">Invoice Generator</h3>
-            <p class="app-tagline">Create & manage professional invoices.</p>
-          </div>
-          <div class="app-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <div class="work-grid">
+        <a class="work-card lead" href="/work/fci.html">
+          <img src="/images/Portfolio/Brochure/FCI%20Company%20Profile_1771002467429.webp" alt="Company profile cover for FCI Community Housing Services" width="1600" height="1200" loading="lazy">
+          <div>
+            <small>Case study</small>
+            <h3>FCI Community Housing Services</h3>
+            <p>A full rebrand from DCI to FCI: new name and domain, website, brand pack, company profile, forms, and ongoing management.</p>
           </div>
         </a>
-
-        <!-- Handscribe App -->
-        <a href="handscribe/" class="app-item">
-          <div class="app-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path><path d="M15 5l4 4"></path></svg>
-          </div>
-          <div class="app-info">
-            <h3 class="app-name">Handscribe</h3>
-            <p class="app-tagline">Convert text to beautiful handwriting.</p>
-          </div>
-          <div class="app-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <a class="work-card" href="/portfolio.html">
+          <img src="/images/Portfolio/Branding/5/CashWave%20Branding%203_1771002250185.webp" alt="CashWave branded collateral" width="1600" height="1080" loading="lazy">
+          <div>
+            <small>Brand and print</small>
+            <h3>CashWave</h3>
+            <p>Logo, letterhead, gazebo, flags, banners, a trailer banner and calendars.</p>
           </div>
         </a>
-
-        <!-- PatternForge App -->
-        <a href="patternforge/" class="app-item">
-          <div class="app-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          </div>
-          <div class="app-info">
-            <h3 class="app-name">PatternForge</h3>
-            <p class="app-tagline">Generate seamless SVG patterns.</p>
-          </div>
-          <div class="app-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <a class="work-card" href="/portfolio.html">
+          <img src="/images/Portfolio/Web%20Design/Regimed/510031467_1275716064561901_6212627077468128073_n.jpg" alt="Regimed Health website shown on a laptop" width="1000" height="750" loading="lazy">
+          <div>
+            <small>Website</small>
+            <h3>Regimed Health</h3>
+            <p>Group brand architecture across sub-brands, and a website.</p>
           </div>
         </a>
       </div>
+      <p style="margin-top:1.25rem"><a class="btn btn-ghost" href="/portfolio.html">View the work</a></p>
     </div>
-    <div class="sidebar-footer">
-      <p>&copy; 2026 Dubani Creatives</p>
+  </section>
+  <section class="section" style="padding-top:0" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Services</p>
+        <h2 id="services-title">What the studio is hired to do.</h2>
+      </div>
+      <div class="service-list">
+        <a class="service-item" href="/services.html#identity"><span>01</span><div><h3>Brand identity and logos</h3><p>Names, marks, colour, type and the files an organisation needs to look like itself.</p></div></a>
+        <a class="service-item" href="/services.html#print"><span>02</span><div><h3>Print and marketing collateral</h3><p>Annual reports, company profiles, signage, banners, hoardings, stationery and calendars.</p></div></a>
+        <a class="service-item" href="/services.html#social"><span>03</span><div><h3>Social media content and management</h3><p>Posts, campaigns and ongoing social media management, including monthly retainers.</p></div></a>
+        <a class="service-item" href="/services.html#web"><span>04</span><div><h3>Custom websites</h3><p>Design, build, hosting and maintenance. We also repair sites after they have been compromised.</p></div></a>
+        <a class="service-item" href="/services.html#direction"><span>05</span><div><h3>Creative direction</h3><p>A clear point of view across brand, print, events and digital, so the work holds together.</p></div></a>
+      </div>
     </div>
-  </aside>
-
-  <!-- WhatsApp Chat Widget with Robot SVG -->
-  <div class="wa-widget-container">
-    <div class="wa-tooltip">Chat with me on WhatsApp 👋</div>
-    <div class="wa-bot-and-btn">
-      <svg class="wa-chatbot" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <rect x="16" y="22" width="32" height="28" rx="6" fill="#25D366"/>
-        <rect x="22" y="14" width="20" height="12" rx="4" fill="#1ebe57"/>
-        <circle cx="28" cy="20" r="2.5" fill="#fff"/>
-        <circle cx="36" cy="20" r="2.5" fill="#fff"/>
-        <rect x="30" y="8" width="4" height="8" rx="2" fill="#1ebe57"/>
-        <circle cx="32" cy="6" r="3" fill="#25D366"/>
-        <rect x="26" y="36" width="12" height="3" rx="1.5" fill="#fff"/>
-        <rect x="10" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
-        <rect x="46" y="30" width="8" height="4" rx="2" fill="#1ebe57"/>
-      </svg>
-      <a href="https://wa.link/rs6bee" class="wa-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-      </a>
+  </section>
+  <section class="section" style="padding-top:0" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How a project runs</p>
+        <h2 id="process-title">A short path from brief to files.</h2>
+      </div>
+      <div class="steps">
+        <article class="step"><strong>1. Listen</strong><p>We start with a free consultation and a written brief: who the work is for, what must change, and what already exists.</p></article>
+        <article class="step"><strong>2. Make</strong><p>We design, revise with you, and prepare the print, social or website files the project needs.</p></article>
+        <article class="step"><strong>3. Stay</strong><p>Some projects end with a handover. Others continue as a monthly retainer for the website, social media, or both.</p></article>
+      </div>
     </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <figure class="quote-panel">
+        <p>Fezile Calana, CEO of FCI Community Housing Services, said he was thoroughly impressed.</p>
+      </figure>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <p class="eyebrow" style="color:#9a3412">Start a project</p>
+          <h2>Tell us what you need. We will reply.</h2>
+          <p>Book a free consultation, send a brief, or message us on WhatsApp at 073 346 4805.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/brief.html">Book a free consultation</a>
+          <a class="btn btn-ghost" href="/contact.html">Contact the studio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="footer-brand" href="/">Dubani Creatives</a>
+      <p class="fine" style="margin-top:0.6rem">A Cape Town studio led by Silulamele Dubani. Founded in 2020.</p>
+      <p class="fine"><a href="tel:+27733464805">073 346 4805</a><br><a href="mailto:dubanicreatives@gmail.com">dubanicreatives@gmail.com</a></p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="/portfolio.html">Work</a>
+      <a href="/services.html">Services</a>
+      <a href="/packages.html">Packages</a>
+      <a href="/about.html">About</a>
+      <a href="/work/fci.html">FCI case study</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/brief.html">Book a free consultation</a>
+    </nav>
+    <nav aria-label="Social">
+      <a href="https://www.instagram.com/dubanicreatives/" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/dubanicreativespage/" rel="noopener">Facebook</a>
+      <a href="https://www.linkedin.com/company/dubani-creatives" rel="noopener">LinkedIn</a>
+      <a href="https://www.behance.net/dubanicreatives1" rel="noopener">Behance</a>
+      <a href="https://www.behance.net/DubaniCreatives" rel="noopener">Behance archive</a>
+      <a href="https://x.com/Dubanicreative2" rel="noopener">X</a>
+      <a href="https://www.tiktok.com/@dubanicreatives" rel="noopener">TikTok</a>
+    </nav>
   </div>
-
-  <!-- Core Javascript Engine -->
-  <script src="main.js?v=20260925-03"></script>
+  <div class="wrap"><p class="fine" style="margin-top:1.5rem">© <span id="year">2026</span> Dubani Creatives. Cape Town, South Africa.</p></div>
+</footer>
+<a class="wa-float" href="https://wa.me/27733464805" rel="noopener" target="_blank">
+  <span class="sr-only">WhatsApp 073 346 4805</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.1 16.8L1 23l6.4-1.1A11 11 0 0 0 20.5 3.5zM12 20.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3.8.6.6-3.7-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.1-.3a.5.5 0 0 0 0-.4c0-.1-.5-1.3-.7-1.7s-.4-.4-.5-.4h-.4a.8.8 0 0 0-.6.3 2.4 2.4 0 0 0-.8 1.8 4.2 4.2 0 0 0 .9 2.2 9.6 9.6 0 0 0 3.6 3.2 4 4 0 0 0 2.5.7 2.1 2.1 0 0 0 1.4-.6 1.7 1.7 0 0 0 .4-1.2c0-.1-.1-.2-.3-.2z"/></svg>
+</a>
+<script src="/js/site.js" defer></script>
 </body>
 </html>
