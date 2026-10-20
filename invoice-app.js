@@ -9,7 +9,7 @@ const App = {
         companyName: "Dubani Creatives Pty.Ltd",
         address: "11553 Ndwana crescent Browns farm Philippi, Cape Town\nSouth Africa",
         email: "dubanicreatives@gmail.com",
-        phone: "+27 733464805",
+        phone: "073 346 4805",
         website: "admin@dubanicreatives.com",
         taxReg: "Tax Reg No.9695889171 : 2020/073382/07",
         bankDetails: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503",

@@ -9,7 +9,7 @@ const cvHtmlStr = `
         <div class="cv-contact-bar mt-4" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; font-size: 14px; color: rgba(255,255,255,0.7);">
             <span><i class="fas fa-map-marker-alt"></i> Cape Town, SA</span>
             <span><i class="fas fa-envelope"></i> silulamele4664@gmail.com</span>
-            <span><i class="fas fa-phone"></i> +27 73 346 4805 / +27 63 180 2483</span>
+            <span><i class="fas fa-phone"></i> 073 346 4805</span>
             <a href="https://dubanicreatives.tech" style="color: #fff; text-decoration: none;"><i class="fas fa-globe"></i> Website</a>
         </div>
         <div class="mt-5">

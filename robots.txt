@@ -5,6 +5,7 @@ Allow: /
 Disallow: /my-apps.html
 Disallow: /handscribe/
 Disallow: /invoice.html
+Disallow: /patternforge/
 
 # Sitemap location
 Sitemap: https://dubanicreatives.tech/sitemap.xml
