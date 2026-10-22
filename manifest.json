@@ -1,0 +1,21 @@
+{
+  "name": "Dubani Creatives",
+  "short_name": "Dubani",
+  "description": "Cape Town design studio founded in 2020 by Silulamele Dubani. Brand identity, print, signage, and bespoke websites.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E1112",
+  "theme_color": "#0E1112",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
