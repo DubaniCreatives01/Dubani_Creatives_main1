@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /dashboard/
 Disallow: /login/
+Disallow: /reset-password/
 
 Sitemap: https://dubanicreatives.tech/sitemap.xml

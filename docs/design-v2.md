@@ -1,1 +1,0 @@
-# Redesign v2: Cape Town Ribbon`n`nThe supplied mockups are layout and mood references. Placeholder names, images, prices and claims are not site content.`n`nRoutes: /, /work, /work/[slug], /services, /packages, /about, /contact.
