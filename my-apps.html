@@ -260,6 +260,56 @@
         }
         .add-new p { font-size: 0.82rem; color: var(--muted); }
 
+        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+        .signed-in {
+            font-size: 0.78rem;
+            color: var(--muted);
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 0 auto 36px;
+            max-width: 980px;
+        }
+        .stat-card, .recent-panel, .import-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+        }
+        .stat-card { padding: 16px 18px; text-align: left; }
+        .stat-card span { display: block; color: var(--muted); font-size: 0.75rem; margin-bottom: 6px; }
+        .stat-card strong { font-family: var(--font-heading); font-size: 1.15rem; }
+        .recent-panel, .import-panel { max-width: 980px; margin: 0 auto 28px; padding: 18px 20px; text-align: left; }
+        .recent-panel h2, .import-panel h2 { font-family: var(--font-heading); font-size: 1rem; margin-bottom: 12px; }
+        .recent-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            color: inherit;
+            text-decoration: none;
+            font-size: 0.88rem;
+        }
+        .overdue { color: #ff5e00; font-style: normal; font-weight: 700; }
+        .empty-note, #dash-status, #import-result { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+        #dash-status { color: #ff8a80; margin-bottom: 18px; }
+        #import-result { white-space: pre-wrap; margin-top: 12px; }
+        .import-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .apps-footer {
             position: relative;
             z-index: 1;
@@ -275,10 +325,14 @@
             .apps-header { padding: 20px; }
             .apps-header-title { font-size: 0.95rem; }
             .apps-main { padding: 40px 16px 60px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .recent-row { flex-direction: column; }
             .apps-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
             .app-card { padding: 22px 18px; }
         }
         @media (max-width: 400px) { .apps-grid { grid-template-columns: 1fr; } }
+        html:not(.dc-ready) body { visibility: hidden; }
+        button.back-btn { font: inherit; }
     </style>
 </head>
 <body>
@@ -288,20 +342,42 @@
     <header class="apps-header">
         <div class="apps-header-left">
             <img src="images/logo.png" alt="Dubani Creatives" class="apps-logo">
-            <span class="apps-header-title">My <span>Apps</span></span>
+            <span class="apps-header-title">Owner <span>dashboard</span></span>
         </div>
-        <a href="https://dubanicreatives.tech" class="back-btn">
+        <div class="header-actions">
+            <span class="signed-in" id="signed-in-email"></span>
+            <button type="button" class="back-btn" id="logout-btn">Log out</button>
+            <a href="https://dubanicreatives.tech" class="back-btn">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             Back to Site
-        </a>
+            </a>
+        </div>
     </header>
 
     <main class="apps-main">
         <div class="apps-intro">
             <div class="apps-badge">Private Hub</div>
-            <h1>My Apps</h1>
-            <p>Your personal toolkit — internal tools, generators, and utilities all in one place.</p>
+            <h1>Dashboard</h1>
+            <p>Invoices, clients and studio tools for the signed-in owner.</p>
         </div>
+
+        <p id="dash-status" hidden></p>
+        <section class="stats-grid" aria-label="Invoice stats">
+            <article class="stat-card"><span>Outstanding balance</span><strong id="stat-outstanding">—</strong></article>
+            <article class="stat-card"><span>Overdue (count · amount)</span><strong id="stat-overdue">—</strong></article>
+            <article class="stat-card"><span>Paid this month</span><strong id="stat-paid">—</strong></article>
+            <article class="stat-card"><span>Clients</span><strong id="stat-clients">—</strong></article>
+        </section>
+        <section class="recent-panel">
+            <h2>Recent invoices</h2>
+            <div id="recent-invoices"><p class="empty-note">Loading invoices…</p></div>
+        </section>
+        <section class="import-panel">
+            <h2>Import old browser data</h2>
+            <p class="empty-note">Reads clients and services saved in this browser and adds any that are missing. Invoices are listed only — their numbers have to be imported with the SQL file.</p>
+            <button type="button" class="import-btn" id="import-legacy-btn">Import old browser data</button>
+            <p id="import-result" hidden></p>
+        </section>
 
         <div class="apps-grid">
 
@@ -324,6 +400,18 @@
                 <div class="app-info">
                     <h3 class="app-name">Invoice Generator</h3>
                     <p class="app-desc">Create, preview, and send branded invoices to clients via PDF or WhatsApp.</p>
+                </div>
+                <span class="app-tag">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    Open App
+                </span>
+            </a>
+
+            <a href="patternforge/" class="app-card">
+                <div class="app-icon">◆</div>
+                <div class="app-info">
+                    <h3 class="app-name">PatternForge</h3>
+                    <p class="app-desc">Generate seamless SVG patterns and export them for client work.</p>
                 </div>
                 <span class="app-tag">
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
@@ -372,12 +460,6 @@
         DUBANI CREATIVES &mdash; PRIVATE &mdash; DO NOT SHARE
     </footer>
 
-    <script>
-        const pass = prompt("🔒 Dubani Apps is password protected.\nEnter password (4 digits) to access:");
-        if (pass !== "4664") {
-            alert("❌ Incorrect password. Access denied.");
-            window.location.href = "index.html";
-        }
-    </script>
+    <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>

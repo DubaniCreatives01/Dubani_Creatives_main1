@@ -1,63 +1,166 @@
-/* ========================================
-   Dubani Creatives — Invoice Generator
-   Application Logic
-======================================== */
+import { supabase } from "./js/supabase-client.js";
+import { requireOwner } from "./js/auth-guard.js";
+
+const $ = (id) => document.getElementById(id);
+
+function errText(error) {
+    if (!error) return "Request failed.";
+    return [error.message, error.details, error.hint].filter(Boolean).join(" — ");
+}
+
+function round2(value) {
+    return Math.round((Number(value) || 0) * 100) / 100;
+}
+
+function saToday() {
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Africa/Johannesburg",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(new Date());
+}
+
+function addDays(iso, days) {
+    const [year, month, day] = iso.split("-").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    date.setUTCDate(date.getUTCDate() + Number(days || 0));
+    return date.toISOString().slice(0, 10);
+}
+
+function esc(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+
+function money(amount) {
+    return `ZAR ${round2(amount).toFixed(2)}`;
+}
+
+function isOverdue(row) {
+    return row.kind === "invoice"
+        && (row.status === "sent" || row.status === "partially_paid")
+        && row.due_date
+        && row.due_date < saToday();
+}
+
+const STATUS_LABEL = {
+    draft: "Draft",
+    sent: "Sent",
+    partially_paid: "Partially paid",
+    paid: "Paid",
+    void: "Void",
+    accepted: "Accepted",
+    declined: "Declined",
+    converted: "Converted",
+};
 
 const App = {
-    // Default business info from the user's existing invoice
-    defaults: {
-        companyName: "Dubani Creatives Pty.Ltd",
-        address: "11553 Ndwana crescent Browns farm Philippi, Cape Town\nSouth Africa",
-        email: "dubanicreatives@gmail.com",
-        phone: "+27 733464805",
-        website: "admin@dubanicreatives.com",
-        taxReg: "Tax Reg No.9695889171 : 2020/073382/07",
-        bankDetails: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503",
-        paymentNote: "A payment of the quoted fee will become immediately due upon acceptance of the project. Additional inter-est may be charged on payment received more than 5 days past its due date.",
-        terms: "The following Terms and Conditions of Service apply to all products and services provided by Dubani Creatives Pty.Ltd and in the event of any dispute are governed by the laws of South Africa.\nAll work is carried out by Dubani Creatives on the understanding that the client has agreed to our terms and conditions.\nCopyright is retained by Dubani Creatives on all design work including words, pictures, ideas, visuals and illustrations unless specifically released in writing and after all costs have been settled.",
-        taxRate: 0,
-        currency: "ZAR"
+    session: null,
+    settings: {},
+    clients: [],
+    services: [],
+    documents: [],
+    payments: [],
+    logoBase64: "images/logo1.png",
+    state: null,
+
+    blankState() {
+        const today = saToday();
+        const dueDays = Number(this.settings.default_due_days ?? 7);
+        return {
+            id: null,
+            kind: "invoice",
+            status: "draft",
+            reference: "",
+            number: null,
+            nextRef: "",
+            title: "",
+            issueDate: today,
+            dueDate: addDays(today, dueDays),
+            clientId: null,
+            client: { name: "", email: "", phone: "", address: "" },
+            vatEnabled: Boolean(this.settings.vat_registered),
+            vatRate: 15,
+            discountInput: 0,
+            discountType: "fixed",
+            amountPaid: 0,
+            balanceDue: 0,
+            notes: "",
+            paymentInstructions: this.settings.payment_instructions || "",
+            items: [{ serviceId: "", title: "", description: "", quantity: 1, unitPrice: 0 }],
+        };
     },
 
-    state: {
-        invoiceNumber: 389,
-        items: [{ service: "", description: "", qty: 1, rate: 0 }],
-        client: { name: "", email: "", phone: "", address: "" },
-        invoiceDate: "",
-        dueDate: "",
-        discount: 0,
-        discountType: "percent",
-        taxRate: 0,
-        notes: "",
-        status: "UNPAID",
-        amountPaid: 0,
+    showBanner(text, kind) {
+        const banner = $("appBanner");
+        banner.hidden = false;
+        banner.className = "app-banner " + (kind || "");
+        banner.textContent = text;
     },
 
-    cloudDbUrl: "https://jsonblob.com/api/jsonBlob/019fb7a8-8e8d-79f8-b9f8-8a28ac9722e8",
+    clearBanner() {
+        $("appBanner").hidden = true;
+        $("appBanner").textContent = "";
+    },
 
-    init() {
-        const pass = prompt("🔒 Dubani Apps is password protected.\nPlease enter password (4 digits) to access:");
-        if (pass !== "4664") {
-            alert("❌ Incorrect password. Access denied.");
-            window.location.href = "index.html";
+    setLinkStatus(ok, message) {
+        const badge = $("cloudStatusBadge");
+        badge.classList.toggle("synced", ok);
+        badge.classList.toggle("error", !ok);
+        badge.textContent = ok ? "Connected" : (message || "Not connected");
+    },
+
+    async init() {
+        this.session = await requireOwner();
+        if (!this.session) return;
+        this.bindStaticEvents();
+        this.showBanner("Loading documents from Supabase…", "loading");
+        const setup = await supabase.rpc("ensure_owner_setup");
+        if (setup.error) {
+            this.setLinkStatus(false, "Setup failed");
+            this.showBanner(errText(setup.error), "error");
             return;
         }
-        this.loadData();
-        this.setDefaultDates();
-        this.preloadLogo().then(() => {
-            this.bindEvents();
-            this.renderForm();
-            this.updatePreview();
-            this.syncFromCloud();
-        });
+        const loaded = await this.loadReferenceData();
+        if (!loaded) return;
+        await this.preloadLogo();
+        const requested = new URLSearchParams(location.search).get("id");
+        if (requested) {
+            const opened = await this.openDocument(requested);
+            if (!opened) await this.newDocument();
+        } else {
+            await this.newDocument();
+        }
+        this.setLinkStatus(true);
+        if (!$("appBanner").classList.contains("error")) this.clearBanner();
     },
 
-    logoBase64: "",
+    async loadReferenceData() {
+        const [settingsRes, clientsRes, servicesRes] = await Promise.all([
+            supabase.from("business_settings").select("*").maybeSingle(),
+            supabase.from("clients").select("*").order("name"),
+            supabase.from("services").select("*").eq("active", true).order("sort_order"),
+        ]);
+        const error = settingsRes.error || clientsRes.error || servicesRes.error;
+        if (error) {
+            this.setLinkStatus(false, "Could not load");
+            this.showBanner(errText(error), "error");
+            return false;
+        }
+        this.settings = settingsRes.data || {};
+        this.clients = clientsRes.data || [];
+        this.services = servicesRes.data || [];
+        this.fillClientPickers();
+        return true;
+    },
 
     async preloadLogo() {
         try {
             const img = new Image();
-            img.crossOrigin = "anonymous";
             img.src = "images/logo1.png";
             await new Promise((resolve, reject) => {
                 img.onload = resolve;
@@ -68,1973 +171,1161 @@ const App = {
             canvas.height = img.naturalHeight;
             canvas.getContext("2d").drawImage(img, 0, 0);
             this.logoBase64 = canvas.toDataURL("image/png");
-        } catch (e) {
-            // Fallback: use relative path
+        } catch {
             this.logoBase64 = "images/logo1.png";
         }
     },
 
-    // ---- LocalStorage & Seed Data Engine ----
-    seedDefaults(force = false) {
-        // 1. Default Clients (Extracted from system browser storage)
-        const defaultClients = [
-            { name: "Gugulethu Sports Council", email: "sandlananceba1@gmail.com", phone: "", address: "Gugulethu Sport Council Ny2, Gugulethu, 7750" },
-            { name: "INGELOSI Employment Law", email: "info@ingelosi.co.za", phone: "+27 21 555 0192", address: "Cape Town, South Africa" },
-            { name: "LUZANA Consulting Holdings", email: "admin@luzana.co.za", phone: "+27 11 432 8900", address: "Johannesburg, South Africa" },
-            { name: "IRAZA Footwear", email: "orders@iraza.co.za", phone: "+27 82 491 2230", address: "Durban, South Africa" },
-            { name: "Khayelitsha Community Trust", email: "info@kct.org.za", phone: "+27 21 361 5400", address: "Khayelitsha, Cape Town" },
-            { name: "FCI Community Housing Services", email: "housing@fci.org.za", phone: "+27 21 400 1111", address: "Western Cape, South Africa" },
-            { name: "KwaZulu-Natal Legislature", email: "info@kznlegislature.gov.za", phone: "+27 33 355 7600", address: "Pietermaritzburg, KZN" },
-            { name: "City of Cape Town", email: "enquiries@capetown.gov.za", phone: "+27 860 103 089", address: "Civic Centre, Cape Town" }
-        ];
-
-        const localClients = JSON.parse(localStorage.getItem("dc_clients") || "[]");
-        let mergedClients = force ? [...defaultClients] : [...localClients];
-        if (!force) {
-            defaultClients.forEach(dc => {
-                if (!mergedClients.some(lc => (lc.name || "").trim().toLowerCase() === dc.name.toLowerCase())) {
-                    mergedClients.push(dc);
-                }
-            });
-        }
-        localStorage.setItem("dc_clients", JSON.stringify(mergedClients));
-
-        // 2. Default Services / Products
-        const defaultServices = [
-            { name: "Logo Design & Visual Identity Package", price: 2500 },
-            { name: "Complete Brand Identity System & Brand Guidelines", price: 5500 },
-            { name: "Packaging & Product Label Design", price: 3800 },
-            { name: "Custom Website Design & Development", price: 8500 },
-            { name: "Social Media Graphics & Campaign Package", price: 3200 },
-            { name: "Print & Merchandise Stationery Suite", price: 2200 },
-            { name: "Company Profile & Brochure Design", price: 2800 },
-            { name: "Roll Up Banner & Marketing Signage", price: 1800 },
-            { name: "Gazebo Special - 3x3m Economy Steel (Design)", price: 350 },
-            { name: "2250x3000mm Bannerwall complete - Full colour single sided (Design)", price: 350 },
-            { name: "2x0.850m PVC Economy Roll Up complete - Full colour (Design)", price: 250 },
-            { name: "3m Sharkfin Flag complete - Full colour single sided (Design)", price: 250 },
-            { name: "2000x1000mm PVC Banner - Full Color Print (Design)", price: 250 },
-            { name: "3000x2000mm Polytwirl Banner - Full Color Single Sided (Design)", price: 300 }
-        ];
-
-        const localServices = JSON.parse(localStorage.getItem("dc_services") || "[]");
-        let mergedServices = force ? [...defaultServices] : [...localServices];
-        if (!force) {
-            defaultServices.forEach(ds => {
-                if (!mergedServices.some(ls => (ls.name || "").trim().toLowerCase() === ds.name.toLowerCase())) {
-                    mergedServices.push(ds);
-                }
-            });
-        }
-        localStorage.setItem("dc_services", JSON.stringify(mergedServices));
-
-        // 3. Default Invoices (Exact user invoices recovered from system storage)
-        const defaultInvoices = [
-            {
-                invoiceNumber: 389,
-                invoiceDate: "2026-08-07",
-                dueDate: "2026-08-31",
-                clientName: "Gugulethu Sports Council",
-                client: {
-                    name: "Gugulethu Sports Council",
-                    email: "sandlananceba1@gmail.com",
-                    phone: "",
-                    address: "Gugulethu Sport Council Ny2, Gugulethu, 7750"
-                },
-                items: [
-                    { service: "Gazebo Special - 3x3m Economy Steel (Design)", description: "", qty: 2, rate: 350 },
-                    { service: "2250x3000mm Bannerwall complete - Full colour single sided (Design)", description: "", qty: 1, rate: 350 },
-                    { service: "2x0.850m PVC Economy Roll Up complete - Full colour (Design)", description: "", qty: 1, rate: 250 },
-                    { service: "3m Sharkfin Flag complete - Full colour single sided (Design)", description: "", qty: 1, rate: 250 },
-                    { service: "2000x1000mm PVC Banner - Full Color Print (Design)", description: "", qty: 1, rate: 250 },
-                    { service: "3000x2000mm Polytwirl Banner - Full Color Single Sided (Design)", description: "", qty: 1, rate: 300 }
-                ],
-                taxRate: 0,
-                discount: 0,
-                discountType: "percent",
-                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project. Additional inter-est may be charged on payment received more than 5 days past its due date.",
-                total: 2100,
-                status: "UNPAID",
-                amountPaid: 0,
-                balance: 2100,
-                currency: "ZAR",
-                itemsCount: 6,
-                savedAt: "2026-08-07T09:48:41.433Z"
-            },
-            {
-                invoiceNumber: 388,
-                invoiceDate: "2026-07-28",
-                dueDate: "2026-08-04",
-                clientName: "INGELOSI Employment Law",
-                client: { name: "INGELOSI Employment Law", email: "info@ingelosi.co.za", phone: "+27 21 555 0192", address: "Cape Town, South Africa" },
-                items: [{ service: "Complete Brand Identity System & Brand Guidelines", description: "Full branding, logo suite & corporate guidelines", qty: 1, rate: 5500 }],
-                taxRate: 0,
-                discount: 0,
-                discountType: "percent",
-                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project.",
-                total: 5500,
-                status: "PARTIALLY PAID",
-                amountPaid: 2750,
-                balance: 2750,
-                currency: "ZAR",
-                itemsCount: 1,
-                savedAt: "2026-07-28T10:30:00.000Z"
-            },
-            {
-                invoiceNumber: 387,
-                invoiceDate: "2026-07-15",
-                dueDate: "2026-07-22",
-                clientName: "IRAZA Footwear",
-                client: { name: "IRAZA Footwear", email: "orders@iraza.co.za", phone: "+27 82 491 2230", address: "Durban, South Africa" },
-                items: [{ service: "Packaging & Product Label Design", description: "Shoe box packaging mockup and print-ready files", qty: 1, rate: 3800 }],
-                taxRate: 0,
-                discount: 0,
-                discountType: "percent",
-                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project.",
-                total: 3800,
-                status: "PAID",
-                amountPaid: 3800,
-                balance: 0,
-                currency: "ZAR",
-                itemsCount: 1,
-                savedAt: "2026-07-15T14:15:00.000Z"
-            },
-            {
-                invoiceNumber: 386,
-                invoiceDate: "2026-07-02",
-                dueDate: "2026-07-09",
-                clientName: "Khayelitsha Community Trust",
-                client: { name: "Khayelitsha Community Trust", email: "info@kct.org.za", phone: "+27 21 361 5400", address: "Khayelitsha, Cape Town" },
-                items: [{ service: "Company Profile & Brochure Design", description: "Annual report brochure & corporate profile design", qty: 1, rate: 6200 }],
-                taxRate: 0,
-                discount: 0,
-                discountType: "percent",
-                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project.",
-                total: 6200,
-                status: "PAID",
-                amountPaid: 6200,
-                balance: 0,
-                currency: "ZAR",
-                itemsCount: 1,
-                savedAt: "2026-07-02T09:45:00.000Z"
-            },
-            {
-                invoiceNumber: 385,
-                invoiceDate: "2026-06-20",
-                dueDate: "2026-06-27",
-                clientName: "FCI Community Housing Services",
-                client: { name: "FCI Community Housing Services", email: "housing@fci.org.za", phone: "+27 21 400 1111", address: "Western Cape, South Africa" },
-                items: [{ service: "Logo Design & Visual Identity Package", description: "Brand logo refresh and stationery suite", qty: 1, rate: 4500 }],
-                taxRate: 0,
-                discount: 0,
-                discountType: "percent",
-                notes: "Capitec, (Account Number) 1444414540, (Account Holder) MR SC DUBANI Capitec Client pay : 0719721503\n\nA payment of the quoted fee will become immediately due upon acceptance of the project.",
-                total: 4500,
-                status: "PAID",
-                amountPaid: 4500,
-                balance: 0,
-                currency: "ZAR",
-                itemsCount: 1,
-                savedAt: "2026-06-20T11:20:00.000Z"
-            }
-        ];
-
-        const localInvoices = JSON.parse(localStorage.getItem("dc_invoices") || "[]");
-        let mergedInvoices = force ? [...defaultInvoices] : [...localInvoices];
-        if (!force) {
-            defaultInvoices.forEach(di => {
-                if (!mergedInvoices.some(li => String(li.invoiceNumber).trim() === String(di.invoiceNumber).trim())) {
-                    mergedInvoices.push(di);
-                }
-            });
-        }
-        mergedInvoices.sort((a, b) => (parseInt(b.invoiceNumber) || 0) - (parseInt(a.invoiceNumber) || 0));
-        localStorage.setItem("dc_invoices", JSON.stringify(mergedInvoices));
-
-        // Invoice Counter calculation
-        const highestNum = Math.max(389, ...mergedInvoices.map(i => parseInt(i.invoiceNumber) || 0));
-        const currentCounter = parseInt(localStorage.getItem("dc_invoice_counter") || "0");
-        if (highestNum > currentCounter) {
-            localStorage.setItem("dc_invoice_counter", highestNum);
-            this.state.invoiceNumber = highestNum;
-        }
+    fillClientPickers() {
+        const options = ['<option value="">— Select saved client —</option>']
+            .concat(this.clients.filter((client) => !client.archived).map((client) =>
+                `<option value="${esc(client.id)}">${esc(client.name)}</option>`));
+        $("clientSelect").innerHTML = options.join("");
+        $("filterClient").innerHTML = ['<option value="">All clients</option>']
+            .concat(this.clients.map((client) => `<option value="${esc(client.id)}">${esc(client.name)}</option>`))
+            .join("");
+        $("clientNames").innerHTML = this.clients
+            .filter((client) => !client.archived)
+            .map((client) => `<option value="${esc(client.name)}"></option>`)
+            .join("");
     },
 
-    loadData() {
-        this.seedDefaults();
-
-        const counter = localStorage.getItem("dc_invoice_counter");
-        if (counter) this.state.invoiceNumber = parseInt(counter);
-
-        const settings = localStorage.getItem("dc_settings");
-        if (settings) Object.assign(this.defaults, JSON.parse(settings));
-
-        // Update/migrate Capitec contact number in bankDetails if old number exists
-        if (this.defaults.bankDetails && this.defaults.bankDetails.includes("0733464805")) {
-            this.defaults.bankDetails = this.defaults.bankDetails.replace(/0733464805/g, "0719721503");
-            localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
+    async peekNext(kind) {
+        const { data, error } = await supabase.rpc("peek_next_reference", { p_kind: kind });
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return "";
         }
-
-        this.state.taxRate = this.defaults.taxRate;
-        this.state.notes = this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote;
+        return data || "";
     },
 
-    saveCounter() {
-        localStorage.setItem("dc_invoice_counter", this.state.invoiceNumber);
+    async newDocument() {
+        this.state = this.blankState();
+        this.state.nextRef = await this.peekNext(this.state.kind);
+        this.payments = [];
+        history.replaceState(null, "", "invoice.html");
+        this.render();
     },
 
-    getClients() {
-        let clients = JSON.parse(localStorage.getItem("dc_clients") || "[]");
-        if (clients.length === 0) {
-            this.seedDefaults();
-            clients = JSON.parse(localStorage.getItem("dc_clients") || "[]");
-        }
-        return clients;
+    readForm() {
+        const state = this.state;
+        state.kind = $("docKind").value;
+        state.title = $("docTitle").value.trim();
+        state.issueDate = $("invoiceDate").value;
+        state.dueDate = $("dueDate").value;
+        state.client.name = $("clientName").value.trim();
+        state.client.email = $("clientEmail").value.trim();
+        state.client.phone = $("clientPhone").value.trim();
+        state.client.address = $("clientAddress").value.trim();
+        state.vatEnabled = $("vatEnabled").value === "on";
+        state.discountInput = Number($("discount").value) || 0;
+        state.discountType = $("discountType").value;
+        state.notes = $("invoiceNotes").value;
+        state.paymentInstructions = $("paymentInstructions").value;
     },
 
-    getServices() {
-        let services = JSON.parse(localStorage.getItem("dc_services") || "[]");
-        if (services.length === 0) {
-            this.seedDefaults();
-            services = JSON.parse(localStorage.getItem("dc_services") || "[]");
-        }
-        return services;
+    lineTotal(item) {
+        return round2((Number(item.quantity) || 0) * (Number(item.unitPrice) || 0));
     },
 
-    getInvoices() {
-        let invoices = JSON.parse(localStorage.getItem("dc_invoices") || "[]");
-        if (invoices.length === 0) {
-            this.seedDefaults();
-            invoices = JSON.parse(localStorage.getItem("dc_invoices") || "[]");
-        }
-        return invoices;
+    subtotal() {
+        return round2(this.state.items.reduce((sum, item) => sum + this.lineTotal(item), 0));
     },
 
-    saveClient(client) {
-        const clients = this.getClients();
-        const existing = clients.findIndex(c => c.name.toLowerCase() === client.name.toLowerCase());
-        if (existing >= 0) {
-            clients[existing] = client;
-        } else {
-            clients.push(client);
-        }
-        localStorage.setItem("dc_clients", JSON.stringify(clients));
-        this.syncToCloud();
+    discountAmount() {
+        const sub = this.subtotal();
+        const raw = Math.max(0, Number(this.state.discountInput) || 0);
+        if (this.state.discountType === "percent") return Math.min(sub, round2(sub * raw / 100));
+        return Math.min(sub, round2(raw));
     },
 
-    deleteClient(name) {
-        const clients = this.getClients().filter(c => c.name !== name);
-        localStorage.setItem("dc_clients", JSON.stringify(clients));
-        this.syncToCloud();
+    vatAmount() {
+        if (!this.state.vatEnabled) return 0;
+        return round2((this.subtotal() - this.discountAmount()) * 15 / 100);
     },
 
-    getServices() {
-        return JSON.parse(localStorage.getItem("dc_services") || "[]");
+    total() {
+        return round2(this.subtotal() - this.discountAmount() + this.vatAmount());
     },
 
-    saveService(service) {
-        const services = this.getServices();
-        const existing = services.findIndex(s => s.name.toLowerCase() === service.name.toLowerCase());
-        if (existing >= 0) {
-            services[existing] = service;
-        } else {
-            services.push(service);
-        }
-        localStorage.setItem("dc_services", JSON.stringify(services));
-        this.syncToCloud();
+    balance() {
+        return round2(this.total() - (Number(this.state.amountPaid) || 0));
     },
 
-    deleteService(name) {
-        const services = this.getServices().filter(s => s.name !== name);
-        localStorage.setItem("dc_services", JSON.stringify(services));
-        this.syncToCloud();
+    companyLines() {
+        const settings = this.settings;
+        return [
+            settings.trading_name,
+            settings.legal_name && settings.legal_name !== settings.trading_name ? settings.legal_name : "",
+            settings.address,
+            [settings.city, settings.country].filter(Boolean).join(", "),
+            settings.email,
+            settings.phone,
+            settings.website,
+            settings.company_reg_number ? `Reg. ${settings.company_reg_number}` : "",
+            settings.tax_number ? `Tax ${settings.tax_number}` : "",
+            settings.vat_number ? `VAT ${settings.vat_number}` : "",
+        ].filter(Boolean);
     },
 
-    // ---- Invoices History & Saved Invoices ----
-    getInvoices() {
-        return JSON.parse(localStorage.getItem("dc_invoices") || "[]");
+    paymentBlock() {
+        const settings = this.settings;
+        return [
+            settings.bank_name,
+            settings.account_holder ? `Account holder: ${settings.account_holder}` : "",
+            settings.account_number ? `Account: ${settings.account_number}` : "",
+            settings.branch_code ? `Branch: ${settings.branch_code}` : "",
+            settings.account_type || "",
+            settings.payment_instructions || "",
+        ].filter(Boolean).join("\n");
     },
 
-    saveInvoiceRecord(quiet = true) {
-        if (!this.state.client.name && !this.state.items.some(i => i.service)) {
-            if (!quiet) alert("Please enter a client name or at least one service line item before saving.");
-            return false;
-        }
-        const invoices = this.getInvoices();
-        const existingIdx = invoices.findIndex(i => String(i.invoiceNumber).trim() === String(this.state.invoiceNumber).trim());
-
-        const record = {
-            invoiceNumber: parseInt(this.state.invoiceNumber) || this.state.invoiceNumber,
-            invoiceDate: this.state.invoiceDate,
-            dueDate: this.state.dueDate,
-            clientName: this.state.client.name || "Unnamed Client",
-            client: { ...this.state.client },
-            items: JSON.parse(JSON.stringify(this.state.items)),
-            taxRate: this.state.taxRate,
-            discount: this.state.discount,
-            discountType: this.state.discountType,
-            notes: this.state.notes,
-            total: this.calcTotal(),
-            status: this.state.status || "UNPAID",
-            amountPaid: parseFloat(this.state.amountPaid) || 0,
-            balance: this.calcBalance(),
-            currency: this.defaults.currency,
-            itemsCount: this.state.items.filter(i => i.service).length,
-            savedAt: new Date().toISOString()
-        };
-
-        if (existingIdx >= 0) {
-            invoices[existingIdx] = record;
-        } else {
-            invoices.push(record);
-        }
-
-        // Sort descending by number
-        invoices.sort((a, b) => (parseInt(b.invoiceNumber) || 0) - (parseInt(a.invoiceNumber) || 0));
-        localStorage.setItem("dc_invoices", JSON.stringify(invoices));
-        this.syncToCloud();
-
-        if (!quiet) {
-            this.showToast(`💾 Invoice #${this.state.invoiceNumber} saved & synced to database!`);
-        }
-        return true;
-    },
-
-    loadInvoiceIntoForm(invoiceNumber) {
-        const invoices = this.getInvoices();
-        const inv = invoices.find(i => String(i.invoiceNumber) === String(invoiceNumber));
-        if (!inv) {
-            alert("Saved invoice not found.");
-            return;
-        }
-
-        this.state.invoiceNumber = parseInt(inv.invoiceNumber) || inv.invoiceNumber;
-        this.state.invoiceDate = inv.invoiceDate || inv.date || this.formatDateInput(new Date());
-        this.state.dueDate = inv.dueDate || this.state.invoiceDate;
-
-        // Client lookup: if client object missing or incomplete, lookup in saved clients
-        let clientObj = inv.client ? { ...inv.client } : { name: inv.clientName || "", email: "", phone: "", address: "" };
-        if (!clientObj.phone || !clientObj.email) {
-            const savedClients = this.getClients();
-            const matchedClient = savedClients.find(c => c.name.toLowerCase() === (clientObj.name || "").toLowerCase());
-            if (matchedClient) {
-                clientObj = {
-                    name: matchedClient.name || clientObj.name,
-                    email: matchedClient.email || clientObj.email,
-                    phone: matchedClient.phone || clientObj.phone,
-                    address: matchedClient.address || clientObj.address
-                };
-            }
-        }
-        this.state.client = clientObj;
-
-        // Items lookup: if items array is missing/empty but invoice total > 0, generate line item for total
-        const invTotal = parseFloat(inv.total) || 0;
-        if (Array.isArray(inv.items) && inv.items.length > 0) {
-            this.state.items = inv.items.map(item => ({
-                service: item.service || item.name || item.title || "Services",
-                description: item.description || item.desc || "",
-                qty: typeof item.qty !== "undefined" ? parseFloat(item.qty) : (item.quantity ? parseFloat(item.quantity) : 1),
-                rate: typeof item.rate !== "undefined" ? parseFloat(item.rate) : (item.price ? parseFloat(item.price) : 0)
-            }));
-        } else if (invTotal > 0) {
-            this.state.items = [{
-                service: "Design & Development Services",
-                description: `Services rendered for Invoice #${this.state.invoiceNumber}`,
-                qty: 1,
-                rate: invTotal
-            }];
-        } else {
-            this.state.items = [{ service: "", description: "", qty: 1, rate: 0 }];
-        }
-
-        this.state.taxRate = typeof inv.taxRate !== "undefined" ? parseFloat(inv.taxRate) : this.defaults.taxRate;
-        this.state.discount = typeof inv.discount !== "undefined" ? parseFloat(inv.discount) : 0;
-        this.state.discountType = inv.discountType || "percent";
-        this.state.notes = typeof inv.notes !== "undefined" ? inv.notes : (this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote);
-        this.state.status = inv.status || "UNPAID";
-        this.state.amountPaid = typeof inv.amountPaid !== "undefined" ? parseFloat(inv.amountPaid) : 0;
-
-        const invNumInput = document.getElementById("invoiceNumber");
-        if (invNumInput) invNumInput.value = this.state.invoiceNumber;
-
-        const invDateInput = document.getElementById("invoiceDate");
-        if (invDateInput) invDateInput.value = this.state.invoiceDate;
-
-        const dueDateInput = document.getElementById("dueDate");
-        if (dueDateInput) dueDateInput.value = this.state.dueDate;
-
-        const taxRateInput = document.getElementById("taxRate");
-        if (taxRateInput) taxRateInput.value = this.state.taxRate;
-
-        const discountInput = document.getElementById("discount");
-        if (discountInput) discountInput.value = this.state.discount;
-
-        const discountTypeInput = document.getElementById("discountType");
-        if (discountTypeInput) discountTypeInput.value = this.state.discountType;
-
-        const notesInput = document.getElementById("invoiceNotes");
-        if (notesInput) notesInput.value = this.state.notes;
-
-        const clientNameInput = document.getElementById("clientName");
-        if (clientNameInput) clientNameInput.value = this.state.client.name || "";
-
-        const clientEmailInput = document.getElementById("clientEmail");
-        if (clientEmailInput) clientEmailInput.value = this.state.client.email || "";
-
-        const clientPhoneInput = document.getElementById("clientPhone");
-        if (clientPhoneInput) clientPhoneInput.value = this.state.client.phone || "";
-
-        const clientAddressInput = document.getElementById("clientAddress");
-        if (clientAddressInput) clientAddressInput.value = this.state.client.address || "";
-
-        this.populateClientSelect();
-        const select = document.getElementById("clientSelect");
-        if (select) {
-            const opt = Array.from(select.options).find(o => o.value.toLowerCase() === (this.state.client.name || "").toLowerCase());
-            if (opt) select.value = opt.value;
-        }
-
+    render() {
+        const state = this.state;
+        const locked = state.status !== "draft";
+        $("docKind").value = state.kind;
+        $("docKind").disabled = Boolean(state.id);
+        $("docReference").value = state.reference || (state.nextRef ? `Draft · next ${state.nextRef}` : "Draft");
+        $("docStatus").value = STATUS_LABEL[state.status] || state.status;
+        $("docTitle").value = state.title || "";
+        $("invoiceDate").value = state.issueDate || "";
+        $("dueDate").value = state.dueDate || "";
+        $("clientSelect").value = state.clientId || "";
+        $("clientName").value = state.client.name || "";
+        $("clientEmail").value = state.client.email || "";
+        $("clientPhone").value = state.client.phone || "";
+        $("clientAddress").value = state.client.address || "";
+        $("vatEnabled").value = state.vatEnabled ? "on" : "off";
+        $("discount").value = String(state.discountInput ?? 0);
+        $("discountType").value = state.discountType || "fixed";
+        $("invoiceNotes").value = state.notes || "";
+        $("paymentInstructions").value = state.paymentInstructions || "";
+        [
+            "docTitle", "invoiceDate", "dueDate", "clientSelect", "clientName", "clientEmail",
+            "clientPhone", "clientAddress", "vatEnabled", "discount", "discountType",
+            "invoiceNotes", "paymentInstructions", "saveClientBtn", "addItemBtn",
+        ].forEach((id) => { $(id).disabled = locked; });
+        $("saveInvoiceBtn").hidden = locked;
+        $("finaliseBtn").hidden = locked;
+        $("deleteDraftBtn").hidden = !(state.id && !locked);
+        $("duplicateBtn").hidden = !state.id;
+        $("markPaidBtn").hidden = !(state.kind === "invoice" && ["sent", "partially_paid", "paid"].includes(state.status));
+        $("convertBtn").hidden = !(state.kind === "quote" && ["sent", "accepted"].includes(state.status));
+        $("acceptBtn").hidden = !(state.kind === "quote" && state.status === "sent");
+        $("declineBtn").hidden = !(state.kind === "quote" && ["sent", "accepted"].includes(state.status));
+        $("voidBtn").hidden = !state.id || ["draft", "void", "converted"].includes(state.status);
         this.renderItems();
         this.updatePreview();
-
-        document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
-        this.showToast(`✏️ Loaded Invoice #${inv.invoiceNumber} (${this.formatCurrency(this.calcTotal())}) for editing.`);
-    },
-
-    downloadPDFForInvoice(invoiceNumber) {
-        this.loadInvoiceIntoForm(invoiceNumber);
-        this.downloadPDF();
-    },
-
-    deleteInvoiceRecord(invoiceNumber) {
-        let invoices = this.getInvoices();
-        invoices = invoices.filter(i => String(i.invoiceNumber) !== String(invoiceNumber));
-        localStorage.setItem("dc_invoices", JSON.stringify(invoices));
-        this.syncToCloud();
-        this.showToast(`Deleted Invoice #${invoiceNumber}.`);
-    },
-
-    showToast(msg) {
-        let container = document.getElementById("toastContainer");
-        if (!container) {
-            container = document.createElement("div");
-            container.id = "toastContainer";
-            container.style.cssText = "position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none;";
-            document.body.appendChild(container);
-        }
-
-        const toast = document.createElement("div");
-        toast.style.cssText = "background: #1a1a1a; border: 1px solid #ff5e00; color: #fff; padding: 12px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.6); pointer-events: auto; transition: all 0.3s ease;";
-        toast.innerHTML = msg;
-
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform = "translateY(10px)";
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    },
-
-    // ---- Cloud Database Sync Engine (Self-Healing & Fail-Safe) ----
-    updateCloudStatus(status, text) {
-        const badge = document.getElementById("cloudStatusBadge");
-        if (!badge) return;
-        badge.className = `cloud-status-badge ${status}`;
-        badge.innerHTML = text;
-    },
-
-    restoreSeedData() {
-        if (confirm("Restore all default Dubani Creatives clients, products/services, and previous invoices (#385–#389)?")) {
-            this.seedDefaults(true);
-            this.populateClientSelect();
-            this.renderForm();
-            this.updatePreview();
-            if (document.getElementById("invoicesModal").classList.contains("active")) this.renderInvoicesModal();
-            if (document.getElementById("clientsModal").classList.contains("active")) this.renderClientsModal();
-            if (document.getElementById("servicesModal").classList.contains("active")) this.renderServicesModal();
-            this.syncToCloud();
-            this.showToast("🔄 All previous clients, products, and invoices restored!");
-        }
-    },
-
-    async syncFromCloud() {
-        try {
-            this.updateCloudStatus("", "☁️ Syncing...");
-            const res = await fetch(this.cloudDbUrl, { cache: "no-store" }).catch(() => null);
-            if (res && res.ok) {
-                const cloudData = await res.json().catch(() => null);
-
-                if (cloudData && typeof cloudData === "object") {
-                    let updated = false;
-
-                    // Merge clients safely
-                    if (Array.isArray(cloudData.clients) && cloudData.clients.length > 0) {
-                        const localClients = this.getClients();
-                        const mergedClients = [...localClients];
-                        cloudData.clients.forEach(cc => {
-                            const idx = mergedClients.findIndex(lc => (lc.name || "").trim().toLowerCase() === (cc.name || "").trim().toLowerCase());
-                            if (idx >= 0) {
-                                mergedClients[idx] = { ...mergedClients[idx], ...cc };
-                            } else {
-                                mergedClients.push(cc);
-                            }
-                        });
-                        localStorage.setItem("dc_clients", JSON.stringify(mergedClients));
-                        updated = true;
-                    }
-
-                    // Merge invoices safely
-                    if (Array.isArray(cloudData.invoices) && cloudData.invoices.length > 0) {
-                        const localInvoices = this.getInvoices();
-                        const mergedInvoices = [...localInvoices];
-                        cloudData.invoices.forEach(ci => {
-                            const idx = mergedInvoices.findIndex(li => String(li.invoiceNumber).trim() === String(ci.invoiceNumber).trim());
-                            if (idx >= 0) {
-                                mergedInvoices[idx] = { ...mergedInvoices[idx], ...ci };
-                            } else {
-                                mergedInvoices.push(ci);
-                            }
-                        });
-                        mergedInvoices.sort((a, b) => (parseInt(b.invoiceNumber) || 0) - (parseInt(a.invoiceNumber) || 0));
-                        localStorage.setItem("dc_invoices", JSON.stringify(mergedInvoices));
-                        updated = true;
-                    }
-
-                    // Merge services safely
-                    if (Array.isArray(cloudData.services) && cloudData.services.length > 0) {
-                        const localServices = this.getServices();
-                        const mergedServices = [...localServices];
-                        cloudData.services.forEach(cs => {
-                            const idx = mergedServices.findIndex(ls => (ls.name || "").trim().toLowerCase() === (cs.name || "").trim().toLowerCase());
-                            if (idx >= 0) {
-                                mergedServices[idx] = { ...mergedServices[idx], ...cs };
-                            } else {
-                                mergedServices.push(cs);
-                            }
-                        });
-                        localStorage.setItem("dc_services", JSON.stringify(mergedServices));
-                        updated = true;
-                    }
-
-                    // Settings
-                    if (cloudData.settings && typeof cloudData.settings === "object") {
-                        Object.assign(this.defaults, cloudData.settings);
-                        localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
-                    }
-
-                    // Counter
-                    if (cloudData.invoiceCounter && cloudData.invoiceCounter > this.state.invoiceNumber) {
-                        this.state.invoiceNumber = cloudData.invoiceCounter;
-                        this.saveCounter();
-                        const numInput = document.getElementById("invoiceNumber");
-                        if (numInput) numInput.value = this.state.invoiceNumber;
-                    }
-
-                    if (updated) {
-                        this.populateClientSelect();
-                        this.renderItems();
-                        this.updatePreview();
-                    }
-
-                    this.updateCloudStatus("synced", "☁️ Database Active");
-                    return;
-                }
-            }
-            this.updateCloudStatus("synced", "☁️ Protected DB Active");
-        } catch (err) {
-            console.warn("Cloud DB fetch fallback to local cache:", err);
-            this.updateCloudStatus("synced", "☁️ Protected DB Active");
-        }
-    },
-
-    async syncToCloud() {
-        try {
-            this.updateCloudStatus("", "☁️ Saving...");
-            const payload = {
-                clients: this.getClients(),
-                invoices: this.getInvoices(),
-                services: this.getServices(),
-                settings: this.defaults,
-                invoiceCounter: this.state.invoiceNumber,
-                lastUpdated: new Date().toISOString()
-            };
-
-            const res = await fetch(this.cloudDbUrl, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify(payload)
-            }).catch(() => null);
-
-            if (res && (res.ok || res.status === 200 || res.status === 201)) {
-                this.updateCloudStatus("synced", "☁️ Database Synced");
-            } else {
-                // If existing blob endpoint returns error or 404, auto-create a new jsonblob
-                const createRes = await fetch("https://jsonblob.com/api/jsonBlob", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify(payload)
-                }).catch(() => null);
-
-                if (createRes && createRes.ok) {
-                    const blobLocation = createRes.headers.get("Location");
-                    if (blobLocation) {
-                        this.cloudDbUrl = blobLocation;
-                        this.updateCloudStatus("synced", "☁️ Database Synced");
-                    } else {
-                        this.updateCloudStatus("synced", "☁️ Protected DB Active");
-                    }
-                } else {
-                    this.updateCloudStatus("synced", "☁️ Protected DB Active");
-                }
-            }
-        } catch (err) {
-            console.warn("Cloud DB push fallback to protected local storage:", err);
-            this.updateCloudStatus("synced", "☁️ Protected DB Active");
-        }
-    },
-
-    exportBackup() {
-        const backupData = {
-            version: 1,
-            exportDate: new Date().toISOString(),
-            clients: this.getClients(),
-            invoices: this.getInvoices(),
-            services: this.getServices(),
-            settings: this.defaults,
-            invoiceCounter: this.state.invoiceNumber
-        };
-
-        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        const dateStr = new Date().toISOString().split("T")[0];
-        a.href = url;
-        a.download = `dubani_creatives_backup_${dateStr}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        this.showToast("📥 Data Backup Exported Successfully!");
-    },
-
-    importBackup(file) {
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async e => {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (Array.isArray(data.clients)) localStorage.setItem("dc_clients", JSON.stringify(data.clients));
-                if (Array.isArray(data.invoices)) localStorage.setItem("dc_invoices", JSON.stringify(data.invoices));
-                if (Array.isArray(data.services)) localStorage.setItem("dc_services", JSON.stringify(data.services));
-                if (data.settings) {
-                    Object.assign(this.defaults, data.settings);
-                    localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
-                }
-                if (data.invoiceCounter) {
-                    this.state.invoiceNumber = parseInt(data.invoiceCounter);
-                    this.saveCounter();
-                }
-
-                this.renderForm();
-                this.updatePreview();
-                await this.syncToCloud();
-                this.showToast("📤 Backup Imported & Synced to Cloud!");
-            } catch (err) {
-                alert("Failed to import backup file. Invalid format: " + err.message);
-            }
-        };
-        reader.readAsText(file);
-    },
-
-    // ---- Dates ----
-    setDefaultDates() {
-        const today = new Date();
-        this.state.invoiceDate = this.formatDateInput(today);
-        this.state.dueDate = this.formatDateInput(today);
-    },
-
-    formatDateInput(date) {
-        return date.toISOString().split("T")[0];
-    },
-
-    formatDateDisplay(dateStr) {
-        if (!dateStr) return "";
-        const d = new Date(dateStr + "T00:00:00");
-        return d.toLocaleDateString("en-ZA", { year: "numeric", month: "short", day: "numeric" });
-    },
-
-    // ---- Calculations ----
-    calcLineTotal(item) {
-        return (parseFloat(item.qty) || 0) * (parseFloat(item.rate) || 0);
-    },
-
-    calcSubtotal() {
-        return this.state.items.reduce((sum, item) => sum + this.calcLineTotal(item), 0);
-    },
-
-    calcDiscount() {
-        const sub = this.calcSubtotal();
-        if (this.state.discountType === "percent") {
-            return sub * ((parseFloat(this.state.discount) || 0) / 100);
-        }
-        return parseFloat(this.state.discount) || 0;
-    },
-
-    calcTax() {
-        return (this.calcSubtotal() - this.calcDiscount()) * ((parseFloat(this.state.taxRate) || 0) / 100);
-    },
-
-    calcTotal() {
-        return this.calcSubtotal() - this.calcDiscount() + this.calcTax();
-    },
-
-    calcBalance() {
-        const total = this.calcTotal();
-        if (this.state.status === "PAID") return 0;
-        if (this.state.status === "PARTIALLY PAID") {
-            const paid = parseFloat(this.state.amountPaid) || 0;
-            return Math.max(0, total - paid);
-        }
-        return total;
-    },
-
-    formatCurrency(amount) {
-        return `${this.defaults.currency} ${amount.toFixed(2)}`;
-    },
-
-    // ---- Event Binding ----
-    bindEvents() {
-        // Invoice number
-        document.getElementById("invoiceNumber").addEventListener("input", e => {
-            this.state.invoiceNumber = parseInt(e.target.value) || 0;
-            this.updatePreview();
-        });
-
-        // Dates
-        document.getElementById("invoiceDate").addEventListener("change", e => {
-            this.state.invoiceDate = e.target.value;
-            this.updatePreview();
-        });
-        document.getElementById("dueDate").addEventListener("change", e => {
-            this.state.dueDate = e.target.value;
-            this.updatePreview();
-        });
-
-        // Client fields
-        ["clientName", "clientEmail", "clientPhone", "clientAddress"].forEach(id => {
-            document.getElementById(id).addEventListener("input", e => {
-                const key = id.replace("client", "").toLowerCase();
-                this.state.client[key] = e.target.value;
-                this.updatePreview();
-            });
-        });
-
-        // Client select
-        document.getElementById("clientSelect").addEventListener("change", e => {
-            if (e.target.value === "") return;
-            const client = this.getClients().find(c => c.name === e.target.value);
-            if (client) {
-                this.state.client = { ...client };
-                document.getElementById("clientName").value = client.name;
-                document.getElementById("clientEmail").value = client.email || "";
-                document.getElementById("clientPhone").value = client.phone || "";
-                document.getElementById("clientAddress").value = client.address || "";
-                this.updatePreview();
-            }
-        });
-
-        // Tax & Discount
-        document.getElementById("taxRate").addEventListener("input", e => {
-            this.state.taxRate = parseFloat(e.target.value) || 0;
-            this.updatePreview();
-        });
-
-        document.getElementById("discount").addEventListener("input", e => {
-            this.state.discount = parseFloat(e.target.value) || 0;
-            this.updatePreview();
-        });
-
-        document.getElementById("discountType").addEventListener("change", e => {
-            this.state.discountType = e.target.value;
-            this.updatePreview();
-        });
-
-        // Notes
-        document.getElementById("invoiceNotes").addEventListener("input", e => {
-            this.state.notes = e.target.value;
-            this.updatePreview();
-        });
-
-        // Add item button
-        document.getElementById("addItemBtn").addEventListener("click", () => {
-            this.state.items.push({ service: "", description: "", qty: 1, rate: 0 });
-            this.renderItems();
-            this.updatePreview();
-        });
-
-        // Export buttons
-        const saveInvoiceBtn = document.getElementById("saveInvoiceBtn");
-        if (saveInvoiceBtn) {
-            saveInvoiceBtn.addEventListener("click", () => this.saveInvoiceRecord(false));
-        }
-        const markPaidBtn = document.getElementById("markPaidBtn");
-        if (markPaidBtn) {
-            markPaidBtn.addEventListener("click", () => this.openPaymentModal());
-        }
-        document.getElementById("downloadPdf").addEventListener("click", () => this.downloadPDF());
-        document.getElementById("shareWhatsapp").addEventListener("click", () => this.shareWhatsApp());
-        document.getElementById("shareEmail").addEventListener("click", () => this.shareEmail());
-
-        // Payment Form events
-        const paymentForm = document.getElementById("paymentForm");
-        if (paymentForm) {
-            paymentForm.addEventListener("submit", e => this.applyPayment(e));
-        }
-        document.querySelectorAll('input[name="payOption"]').forEach(radio => {
-            radio.addEventListener("change", () => this.updatePaymentSummary());
-        });
-        const customPaidInput = document.getElementById("customPaidAmount");
-        if (customPaidInput) {
-            customPaidInput.addEventListener("input", () => this.updatePaymentSummary());
-        }
-
-        // Save client button
-        document.getElementById("saveClientBtn").addEventListener("click", () => {
-            if (this.state.client.name.trim()) {
-                this.saveClient({ ...this.state.client });
-                this.populateClientSelect();
-                this.showToast("👤 Client saved successfully!");
-            }
-        });
-
-        // Modal buttons
-        const manageInvoicesBtn = document.getElementById("manageInvoicesBtn");
-        if (manageInvoicesBtn) {
-            manageInvoicesBtn.addEventListener("click", () => this.showModal("invoicesModal"));
-        }
-        document.getElementById("manageClientsBtn").addEventListener("click", () => this.showModal("clientsModal"));
-        document.getElementById("manageServicesBtn").addEventListener("click", () => this.showModal("servicesModal"));
-        document.getElementById("settingsBtn").addEventListener("click", () => this.showModal("settingsModal"));
-
-        // Search invoices
-        const searchInvoicesInput = document.getElementById("searchInvoicesInput");
-        if (searchInvoicesInput) {
-            searchInvoicesInput.addEventListener("input", e => this.renderInvoicesModal(e.target.value.toLowerCase().trim()));
-        }
-
-        // Close modals
-        document.querySelectorAll(".modal-close").forEach(btn => {
-            btn.addEventListener("click", () => {
-                btn.closest(".modal-overlay").classList.remove("active");
-            });
-        });
-
-        document.querySelectorAll(".modal-overlay").forEach(overlay => {
-            overlay.addEventListener("click", e => {
-                if (e.target === overlay) overlay.classList.remove("active");
-            });
-        });
-
-        // Add service form
-        document.getElementById("addServiceForm").addEventListener("submit", e => {
-            e.preventDefault();
-            const name = document.getElementById("newServiceName").value.trim();
-            const price = parseFloat(document.getElementById("newServicePrice").value) || 0;
-            if (name) {
-                this.saveService({ name, price });
-                document.getElementById("newServiceName").value = "";
-                document.getElementById("newServicePrice").value = "";
-                this.renderServicesModal();
-                this.renderItems();
-            }
-        });
-
-        // Add client form
-        document.getElementById("addClientForm").addEventListener("submit", e => {
-            e.preventDefault();
-            const name = document.getElementById("newClientName").value.trim();
-            const email = document.getElementById("newClientEmail").value.trim();
-            const phone = document.getElementById("newClientPhone").value.trim();
-            if (name) {
-                this.saveClient({ name, email, phone, address: "" });
-                document.getElementById("newClientName").value = "";
-                document.getElementById("newClientEmail").value = "";
-                document.getElementById("newClientPhone").value = "";
-                this.renderClientsModal();
-                this.populateClientSelect();
-            }
-        });
-
-        // Backup & Restore
-        const exportBackupBtn = document.getElementById("exportBackupBtn");
-        if (exportBackupBtn) {
-            exportBackupBtn.addEventListener("click", () => this.exportBackup());
-        }
-
-        const importBackupBtn = document.getElementById("importBackupBtn");
-        const importBackupFile = document.getElementById("importBackupFile");
-        if (importBackupBtn && importBackupFile) {
-            importBackupBtn.addEventListener("click", () => importBackupFile.click());
-            importBackupFile.addEventListener("change", e => {
-                if (e.target.files && e.target.files[0]) {
-                    this.importBackup(e.target.files[0]);
-                }
-            });
-        }
-
-        // Settings save
-        document.getElementById("saveSettingsBtn").addEventListener("click", () => this.saveSettings());
-
-        // New invoice
-        document.getElementById("newInvoiceBtn").addEventListener("click", () => this.newInvoice());
-    },
-
-    // ---- Render ----
-    renderForm() {
-        document.getElementById("invoiceNumber").value = this.state.invoiceNumber;
-        document.getElementById("invoiceDate").value = this.state.invoiceDate;
-        document.getElementById("dueDate").value = this.state.dueDate;
-        document.getElementById("taxRate").value = this.state.taxRate;
-        document.getElementById("invoiceNotes").value = this.state.notes;
-
-        this.populateClientSelect();
-        this.renderItems();
-    },
-
-    populateClientSelect() {
-        const select = document.getElementById("clientSelect");
-        const clients = this.getClients();
-        select.innerHTML = '<option value="">— Select saved client —</option>';
-        clients.forEach(c => {
-            select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
-        });
     },
 
     renderItems() {
-        const tbody = document.getElementById("itemsBody");
-        const services = this.getServices();
-
-        tbody.innerHTML = "";
-        this.state.items.forEach((item, idx) => {
-            const serviceOptions = services.map(s =>
-                `<option value="${s.name}" ${item.service === s.name ? "selected" : ""}>${s.name}</option>`
-            ).join("");
-
-            const total = this.calcLineTotal(item);
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>
-                        <select class="item-input item-service" data-idx="${idx}">
-                            <option value="">Type or select...</option>
-                            ${serviceOptions}
-                        </select>
-                        <input type="text" class="item-input item-service-custom" data-idx="${idx}" placeholder="Or type service name" value="${item.service}" style="margin-top:4px;">
-                    </td>
-                    <td><input type="text" class="item-input item-desc" data-idx="${idx}" placeholder="Description" value="${item.description}"></td>
-                    <td><input type="number" class="item-input item-qty" data-idx="${idx}" min="1" value="${item.qty}"></td>
-                    <td><input type="number" class="item-input item-rate" data-idx="${idx}" min="0" step="0.01" value="${item.rate}"></td>
-                    <td><span class="line-total">${this.formatCurrency(total)}</span></td>
-                    <td><button class="remove-item-btn" data-idx="${idx}">×</button></td>
-                </tr>
-            `;
+        const locked = this.state.status !== "draft";
+        const serviceOptions = ['<option value="">Service catalogue</option>']
+            .concat(this.services.map((service) => `<option value="${esc(service.id)}">${esc(service.name)}</option>`))
+            .join("");
+        $("itemsBody").innerHTML = this.state.items.map((item, index) => `
+            <tr data-idx="${index}">
+                <td>
+                    <select class="form-select item-service" ${locked ? "disabled" : ""}>${serviceOptions}</select>
+                    <input class="form-input item-title" value="${esc(item.title)}" placeholder="Line title" ${locked ? "disabled" : ""}>
+                </td>
+                <td><input class="form-input item-desc" value="${esc(item.description)}" ${locked ? "disabled" : ""}></td>
+                <td><input class="form-input item-qty" type="number" min="0.01" step="0.01" value="${esc(item.quantity)}" ${locked ? "disabled" : ""}></td>
+                <td><input class="form-input item-rate" type="number" min="0" step="0.01" value="${esc(item.unitPrice)}" ${locked ? "disabled" : ""}></td>
+                <td><span class="line-total">${money(this.lineTotal(item))}</span></td>
+                <td>${locked ? "" : `<button type="button" class="btn btn-danger btn-sm remove-item">×</button>`}</td>
+            </tr>
+        `).join("");
+        $("itemsBody").querySelectorAll(".item-service").forEach((select, index) => {
+            select.value = this.state.items[index].serviceId || "";
         });
+        this.paintTotals();
+    },
 
-        // Bind item events
-        tbody.querySelectorAll(".item-service").forEach(el => {
-            el.addEventListener("change", e => {
-                const idx = parseInt(e.target.dataset.idx);
-                const service = services.find(s => s.name === e.target.value);
-                if (service) {
-                    this.state.items[idx].service = service.name;
-                    this.state.items[idx].rate = service.price;
-                    this.renderItems();
-                    this.updatePreview();
-                }
-            });
-        });
-
-        tbody.querySelectorAll(".item-service-custom").forEach(el => {
-            el.addEventListener("input", e => {
-                this.state.items[parseInt(e.target.dataset.idx)].service = e.target.value;
-                this.updatePreview();
-            });
-        });
-
-        tbody.querySelectorAll(".item-desc").forEach(el => {
-            el.addEventListener("input", e => {
-                this.state.items[parseInt(e.target.dataset.idx)].description = e.target.value;
-                this.updatePreview();
-            });
-        });
-
-        tbody.querySelectorAll(".item-qty").forEach(el => {
-            el.addEventListener("input", e => {
-                this.state.items[parseInt(e.target.dataset.idx)].qty = parseFloat(e.target.value) || 0;
-                this.renderItems();
-                this.updatePreview();
-            });
-        });
-
-        tbody.querySelectorAll(".item-rate").forEach(el => {
-            el.addEventListener("input", e => {
-                this.state.items[parseInt(e.target.dataset.idx)].rate = parseFloat(e.target.value) || 0;
-                this.renderItems();
-                this.updatePreview();
-            });
-        });
-
-        tbody.querySelectorAll(".remove-item-btn").forEach(el => {
-            el.addEventListener("click", e => {
-                const idx = parseInt(e.target.dataset.idx);
-                if (this.state.items.length > 1) {
-                    this.state.items.splice(idx, 1);
-                    this.renderItems();
-                    this.updatePreview();
-                }
-            });
-        });
-
-        // Update form totals
-        document.getElementById("formSubtotal").textContent = this.formatCurrency(this.calcSubtotal());
-        document.getElementById("formDiscount").textContent = "- " + this.formatCurrency(this.calcDiscount());
-        document.getElementById("formTax").textContent = this.formatCurrency(this.calcTax());
-        document.getElementById("formTotal").textContent = this.formatCurrency(this.calcTotal());
+    paintTotals() {
+        $("formSubtotal").textContent = money(this.subtotal());
+        $("formDiscount").textContent = "- " + money(this.discountAmount());
+        $("formTax").textContent = money(this.vatAmount());
+        $("formTotal").textContent = money(this.total());
     },
 
     updatePreview() {
-        const p = document.getElementById("invoicePreview");
-        const subtotal = this.calcSubtotal();
-        const discount = this.calcDiscount();
-        const tax = this.calcTax();
-        const total = this.calcTotal();
-        const balance = this.calcBalance();
-        const amountPaid = parseFloat(this.state.amountPaid) || 0;
-
-        let watermarkHtml = "";
-        if (this.state.status === "PAID") {
-            watermarkHtml = `<div class="inv-watermark-stamp">PAID FULL</div>`;
-        } else if (this.state.status === "PARTIALLY PAID") {
-            watermarkHtml = `
-                <div class="inv-watermark-stamp partial">
-                    PARTIALLY PAID
-                    <div style="font-size: 13px; font-weight: 800; margin-top: 2px;">PAID: ${this.formatCurrency(amountPaid)}</div>
-                    <div style="font-size: 13px; font-weight: 800;">BAL: ${this.formatCurrency(balance)}</div>
-                </div>
-            `;
+        const state = this.state;
+        const sub = this.subtotal();
+        const discount = this.discountAmount();
+        const vat = this.vatAmount();
+        const total = this.total();
+        const balance = this.balance();
+        const paid = Number(state.amountPaid) || 0;
+        const heading = state.kind === "quote" ? "QUOTE" : "INVOICE";
+        const number = state.reference || "DRAFT";
+        let watermark = "";
+        if (state.status === "paid") watermark = `<div class="inv-watermark-stamp">PAID FULL</div>`;
+        else if (state.status === "partially_paid") {
+            watermark = `<div class="inv-watermark-stamp partial">PARTIALLY PAID<div style="font-size:13px;">PAID ${money(paid)} · BAL ${money(balance)}</div></div>`;
+        } else if (state.status === "void") {
+            watermark = `<div class="inv-watermark-stamp" style="color:#ff4444;border-color:#ff4444;">VOID</div>`;
         }
-
-        const itemsHtml = this.state.items.filter(i => i.service).map(item => `
+        const rows = state.items.filter((item) => item.title).map((item) => `
             <tr>
-                <td>
-                    <div class="inv-item-name">${this.escHtml(item.service)}</div>
-                    ${item.description ? `<div class="inv-item-desc">${this.escHtml(item.description)}</div>` : ""}
-                </td>
-                <td>${item.qty}</td>
-                <td>${this.formatCurrency(parseFloat(item.rate) || 0)}</td>
-                <td>${this.formatCurrency(this.calcLineTotal(item))}</td>
-            </tr>
-        `).join("");
-
-        const notesHtml = this.state.notes ? this.state.notes.replace(/\n/g, "<br>") : "";
-
-        p.innerHTML = `
-            ${watermarkHtml}
+                <td><div class="inv-item-name">${esc(item.title)}</div>${item.description ? `<div class="inv-item-desc">${esc(item.description)}</div>` : ""}</td>
+                <td>${esc(item.quantity)}</td>
+                <td>${money(item.unitPrice)}</td>
+                <td>${money(this.lineTotal(item))}</td>
+            </tr>`).join("");
+        const from = this.companyLines().map(esc).join("<br>");
+        const late = isOverdue(state);
+        $("invoicePreview").innerHTML = `
+            ${watermark}
             <div class="inv-header">
                 <div class="inv-logo"><img src="${this.logoBase64}" alt="Dubani Creatives"></div>
                 <div class="inv-title-block">
-                    <div class="inv-title">INVOICE</div>
-                    <div class="inv-number"># ${this.state.invoiceNumber}</div>
+                    <div class="inv-title">${heading}</div>
+                    <div class="inv-number">${esc(number)}</div>
                 </div>
             </div>
-
             <div class="inv-details-grid">
-                <div class="inv-from">
-                    <p>
-                        <strong>${this.defaults.companyName}</strong><br>
-                        ${this.defaults.address.replace(/\n/g, "<br>")}<br>
-                        ${this.defaults.email}<br>
-                        ${this.defaults.phone}<br>
-                        ${this.defaults.website}<br>
-                        ${this.defaults.taxReg}
-                    </p>
-                </div>
+                <div class="inv-from"><p>${from || "Business details load from settings."}</p></div>
                 <div class="inv-dates">
                     <table class="inv-dates-table">
-                        <tr><td>Date:</td><td>${this.formatDateDisplay(this.state.invoiceDate)}</td></tr>
-                        <tr><td>Due Date:</td><td>${this.formatDateDisplay(this.state.dueDate)}</td></tr>
+                        <tr><td>Date:</td><td>${esc(state.issueDate || "—")}</td></tr>
+                        <tr><td>Due:</td><td>${esc(state.dueDate || "—")}</td></tr>
                     </table>
-                    <div class="inv-balance-due" style="${this.state.status === 'PAID' ? 'background:#25D366;' : (this.state.status === 'PARTIALLY PAID' ? 'background:#ff9900;' : '')}">
-                        <span>Balance Due:</span>
-                        <span>${this.formatCurrency(balance)}</span>
+                    <div class="inv-balance-due" style="${state.status === "paid" ? "background:#25D366;" : ""}">
+                        <span>Balance due${late ? " · overdue" : ""}:</span>
+                        <span>${money(balance)}</span>
                     </div>
                 </div>
             </div>
-
-            <div style="margin-bottom: 24px;">
-                <h4 style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#999; margin-bottom:4px;">Bill To:</h4>
-                <p style="font-size:14px; color:#1a1a1a;">
-                    <strong>${this.escHtml(this.state.client.name) || "—"}</strong><br>
-                    ${this.state.client.phone ? this.escHtml(this.state.client.phone) + "<br>" : ""}
-                    ${this.state.client.email ? this.escHtml(this.state.client.email) + "<br>" : ""}
-                    ${this.state.client.address ? this.escHtml(this.state.client.address) : ""}
-                </p>
+            <div style="margin-bottom:24px;">
+                <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:4px;">Bill to</h4>
+                <p style="font-size:14px;color:#1a1a1a;"><strong>${esc(state.client.name) || "—"}</strong><br>
+                ${state.client.phone ? esc(state.client.phone) + "<br>" : ""}
+                ${state.client.email ? esc(state.client.email) + "<br>" : ""}
+                ${esc(state.client.address || "")}</p>
             </div>
-
             <table class="inv-items-table">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Quantity</th>
-                        <th>Rate</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>${itemsHtml || '<tr><td colspan="4" style="text-align:center; color:#ccc; padding:20px;">No items added yet</td></tr>'}</tbody>
+                <thead><tr><th>Item</th><th>Quantity</th><th>Rate</th><th>Amount</th></tr></thead>
+                <tbody>${rows || '<tr><td colspan="4" style="text-align:center;color:#ccc;padding:20px;">No items yet</td></tr>'}</tbody>
             </table>
-
-            <div class="inv-totals">
-                <table class="inv-totals-table">
-                    <tr><td>Subtotal:</td><td>${this.formatCurrency(subtotal)}</td></tr>
-                    ${discount > 0 ? `<tr><td>Discount:</td><td>- ${this.formatCurrency(discount)}</td></tr>` : ""}
-                    <tr><td>Tax (${this.state.taxRate}%):</td><td>${this.formatCurrency(tax)}</td></tr>
-                    <tr class="inv-grand-total"><td>Total:</td><td>${this.formatCurrency(total)}</td></tr>
-                    ${amountPaid > 0 ? `<tr><td style="color:#25D366; font-weight:600;">Amount Paid:</td><td style="color:#25D366; font-weight:600;">- ${this.formatCurrency(amountPaid)}</td></tr>` : ""}
-                    ${this.state.status !== "UNPAID" ? `<tr style="border-top:2px solid #1a1a1a;"><td style="font-size:15px; font-weight:700; color:${balance === 0 ? '#25D366' : '#ff5e00'};">Balance Due:</td><td style="font-size:15px; font-weight:700; color:${balance === 0 ? '#25D366' : '#ff5e00'};">${this.formatCurrency(balance)}</td></tr>` : ""}
-                </table>
-            </div>
-
-            ${this.state.notes ? `
-                <div class="inv-notes">
-                    <h4>Notes:</h4>
-                    <p>${notesHtml}</p>
-                </div>
-            ` : ""}
-
-            <div class="inv-terms">
-                <h4>Terms:</h4>
-                <p>${this.defaults.terms.replace(/\n/g, "<br>")}</p>
-            </div>
+            <div class="inv-totals"><table class="inv-totals-table">
+                <tr><td>Subtotal:</td><td>${money(sub)}</td></tr>
+                ${discount > 0 ? `<tr><td>Discount:</td><td>- ${money(discount)}</td></tr>` : ""}
+                <tr><td>VAT${state.vatEnabled ? " (15%)" : ""}:</td><td>${money(vat)}</td></tr>
+                <tr class="inv-grand-total"><td>Total:</td><td>${money(total)}</td></tr>
+                ${paid > 0 ? `<tr><td>Amount paid:</td><td>- ${money(paid)}</td></tr>` : ""}
+                <tr><td>Balance due:</td><td>${money(balance)}</td></tr>
+            </table></div>
+            ${state.notes ? `<div class="inv-notes"><h4>Notes</h4><p>${esc(state.notes).replace(/\n/g, "<br>")}</p></div>` : ""}
+            ${state.paymentInstructions ? `<div class="inv-notes"><h4>Payment</h4><p>${esc(state.paymentInstructions).replace(/\n/g, "<br>")}</p></div>` : ""}
+            ${(this.settings.payment_terms || this.settings.terms_and_conditions) ? `<div class="inv-terms"><h4>Terms</h4><p>${esc([this.settings.payment_terms, this.settings.terms_and_conditions].filter(Boolean).join("\n\n")).replace(/\n/g, "<br>")}</p></div>` : ""}
         `;
     },
 
-    escHtml(str) {
-        const div = document.createElement("div");
-        div.textContent = str || "";
-        return div.innerHTML;
-    },
-
-    // ---- Export (jsPDF) ----
-    _getFilename() {
-        const clientName = (this.state.client.name || "Client").replace(/[^a-zA-Z0-9]/g, "_");
-        return `Invoice_${this.state.invoiceNumber}_${clientName}.pdf`;
-    },
-
-    _buildPDF() {
-        // Handle different global names jsPDF may use
-        const JsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
-        if (!JsPDF) {
-            throw new Error("jsPDF library not loaded. Please check your internet connection and refresh.");
-        }
-        const doc = new JsPDF({ unit: "mm", format: "a4" });
-        const pageW = doc.internal.pageSize.getWidth();
-        const margin = 20;
-        const rightCol = pageW - margin;
-        let y = 25;
-
-        // --- Header ---
-        doc.setFontSize(28);
-        doc.setFont("helvetica", "bold");
-        doc.text("INVOICE", rightCol, y, { align: "right" });
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(120);
-        doc.text(`# ${this.state.invoiceNumber}`, rightCol, y + 8, { align: "right" });
-
-        // Company name (left)
-        doc.setTextColor(30);
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text(this.defaults.companyName, margin, y);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(80);
-        y += 7;
-        const addressLines = this.defaults.address.split("\n");
-        addressLines.forEach(line => {
-            doc.text(line, margin, y);
-            y += 4;
-        });
-        doc.text(this.defaults.email, margin, y); y += 4;
-        doc.text(this.defaults.phone, margin, y); y += 4;
-        doc.text(this.defaults.website, margin, y); y += 4;
-        doc.text(this.defaults.taxReg, margin, y); y += 4;
-
-        // Separator line
-        y += 2;
-        doc.setDrawColor(30);
-        doc.setLineWidth(0.5);
-        doc.line(margin, y, rightCol, y);
-        y += 6;
-
-        // --- Dates (right side) ---
-        const dateStartY = y;
-        doc.setFontSize(9);
-        doc.setTextColor(120);
-        doc.text("Date:", rightCol - 45, y);
-        doc.setTextColor(30);
-        doc.text(this.formatDateDisplay(this.state.invoiceDate), rightCol, y, { align: "right" });
-        y += 5;
-        doc.setTextColor(120);
-        doc.text("Due Date:", rightCol - 45, y);
-        doc.setTextColor(30);
-        doc.text(this.formatDateDisplay(this.state.dueDate), rightCol, y, { align: "right" });
-        y += 7;
-
-        // Balance Due box
-        const balance = this.calcBalance();
-        if (this.state.status === "PAID") {
-            doc.setFillColor(37, 211, 102);
-        } else if (this.state.status === "PARTIALLY PAID") {
-            doc.setFillColor(255, 153, 0);
-        } else {
-            doc.setFillColor(30, 30, 30);
-        }
-        doc.rect(rightCol - 80, y - 1, 80, 10, "F");
-        doc.setTextColor(255);
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text("Balance Due:", rightCol - 76, y + 5);
-        doc.text(this.formatCurrency(balance), rightCol - 4, y + 5, { align: "right" });
-        doc.setFont("helvetica", "normal");
-
-        // --- Bill To (left side, same height) ---
-        let billY = dateStartY;
-        doc.setFontSize(8);
-        doc.setTextColor(150);
-        doc.text("Bill To:", margin, billY);
-        billY += 5;
-        doc.setFontSize(11);
-        doc.setTextColor(30);
-        doc.setFont("helvetica", "bold");
-        doc.text(this.state.client.name || "—", margin, billY);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        billY += 5;
-        if (this.state.client.phone) { doc.text(this.state.client.phone, margin, billY); billY += 4; }
-        if (this.state.client.email) { doc.text(this.state.client.email, margin, billY); billY += 4; }
-        if (this.state.client.address) { doc.text(this.state.client.address, margin, billY); billY += 4; }
-
-        y += 16;
-
-        // --- Items Table ---
-        const items = this.state.items.filter(i => i.service);
-        const tableBody = items.map(item => [
-            item.service + (item.description ? "\n" + item.description : ""),
-            String(item.qty),
-            this.formatCurrency(parseFloat(item.rate) || 0),
-            this.formatCurrency(this.calcLineTotal(item))
-        ]);
-
-        if (tableBody.length === 0) {
-            tableBody.push(["No items added", "", "", ""]);
-        }
-
-        doc.autoTable({
-            startY: y,
-            head: [["Item", "Qty", "Rate", "Amount"]],
-            body: tableBody,
-            margin: { left: margin, right: margin },
-            headStyles: {
-                fillColor: [255, 94, 0],
-                textColor: 255,
-                fontStyle: "bold",
-                fontSize: 9
-            },
-            bodyStyles: {
-                fontSize: 9,
-                textColor: [50, 50, 50]
-            },
-            columnStyles: {
-                0: { cellWidth: 80 },
-                1: { cellWidth: 20, halign: "center" },
-                2: { cellWidth: 35, halign: "right" },
-                3: { cellWidth: 35, halign: "right" }
-            },
-            alternateRowStyles: { fillColor: [248, 248, 248] },
-            theme: "grid"
-        });
-
-        y = doc.lastAutoTable.finalY + 8;
-
-        // --- Totals ---
-        const subtotal = this.calcSubtotal();
-        const discount = this.calcDiscount();
-        const tax = this.calcTax();
-        const total = this.calcTotal();
-
-        doc.setFontSize(9);
-        doc.setTextColor(120);
-        doc.text("Subtotal:", rightCol - 50, y);
-        doc.setTextColor(30);
-        doc.text(this.formatCurrency(subtotal), rightCol, y, { align: "right" });
-        y += 5;
-
-        if (discount > 0) {
-            doc.setTextColor(120);
-            doc.text("Discount:", rightCol - 50, y);
-            doc.setTextColor(30);
-            doc.text("- " + this.formatCurrency(discount), rightCol, y, { align: "right" });
-            y += 5;
-        }
-
-        doc.setTextColor(120);
-        doc.text(`Tax (${this.state.taxRate}%):`, rightCol - 50, y);
-        doc.setTextColor(30);
-        doc.text(this.formatCurrency(tax), rightCol, y, { align: "right" });
-        y += 3;
-
-        doc.setDrawColor(30);
-        doc.setLineWidth(0.5);
-        doc.line(rightCol - 55, y, rightCol, y);
-        y += 6;
-
-        doc.setFontSize(13);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(30);
-        doc.text("Total:", rightCol - 50, y);
-        doc.text(this.formatCurrency(total), rightCol, y, { align: "right" });
-        doc.setFont("helvetica", "normal");
-
-        if (this.state.status === "PARTIALLY PAID" || (this.state.amountPaid > 0 && this.state.amountPaid < total)) {
-            y += 5;
-            doc.setFontSize(9);
-            doc.setTextColor(37, 211, 102);
-            doc.text("Amount Paid:", rightCol - 50, y);
-            doc.text("- " + this.formatCurrency(this.state.amountPaid), rightCol, y, { align: "right" });
-            y += 5;
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(255, 94, 0);
-            doc.text("Balance Due:", rightCol - 50, y);
-            doc.text(this.formatCurrency(balance), rightCol, y, { align: "right" });
-            doc.setFont("helvetica", "normal");
-        }
-        y += 12;
-
-        // --- Notes ---
-        if (this.state.notes) {
-            doc.setFontSize(10);
-            doc.setTextColor(255, 94, 0);
-            doc.setFont("helvetica", "bold");
-            doc.text("Notes:", margin, y);
-            doc.setFont("helvetica", "normal");
-            y += 5;
-            doc.setFontSize(8);
-            doc.setTextColor(100);
-            const noteLines = doc.splitTextToSize(this.state.notes, pageW - margin * 2);
-            doc.text(noteLines, margin, y);
-            y += noteLines.length * 3.5 + 6;
-        }
-
-        // --- Terms ---
-        if (y > 250) { doc.addPage(); y = 20; }
-        doc.setFontSize(10);
-        doc.setTextColor(255, 94, 0);
-        doc.setFont("helvetica", "bold");
-        doc.text("Terms:", margin, y);
-        doc.setFont("helvetica", "normal");
-        y += 5;
-        doc.setFontSize(8);
-        doc.setTextColor(100);
-        const termLines = doc.splitTextToSize(this.defaults.terms, pageW - margin * 2);
-        doc.text(termLines, margin, y);
-
-        // --- Watermark Stamp ---
-        if (this.state.status === "PAID" || this.state.status === "PARTIALLY PAID") {
-            try {
-                if (typeof doc.saveGraphicsState === "function") doc.saveGraphicsState();
-                if (typeof doc.setGState === "function") {
-                    doc.setGState(new doc.GState({ opacity: 0.25 }));
-                }
-
-                doc.setFont("helvetica", "bold");
-                const centerX = pageW / 2;
-                const centerY = 140;
-
-                if (this.state.status === "PAID") {
-                    doc.setTextColor(37, 211, 102);
-                    doc.setFontSize(54);
-                    doc.text("PAID FULL", centerX, centerY, { align: "center", angle: 25 });
-                    doc.setDrawColor(37, 211, 102);
-                    doc.setLineWidth(2.5);
-                    doc.rect(centerX - 60, centerY - 20, 120, 26, "S");
-                } else {
-                    doc.setTextColor(255, 140, 0);
-                    doc.setFontSize(36);
-                    doc.text("PARTIALLY PAID", centerX, centerY - 6, { align: "center", angle: 25 });
-                    doc.setFontSize(16);
-                    doc.text(`PAID: ${this.formatCurrency(this.state.amountPaid || 0)} | BAL: ${this.formatCurrency(balance)}`, centerX, centerY + 8, { align: "center", angle: 25 });
-                    doc.setDrawColor(255, 140, 0);
-                    doc.setLineWidth(2.5);
-                    doc.rect(centerX - 70, centerY - 20, 140, 36, "S");
-                }
-                if (typeof doc.restoreGraphicsState === "function") doc.restoreGraphicsState();
-            } catch (e) {
-                console.warn("Watermark rendering warning:", e);
-            }
-        }
-
-        return doc;
-    },
-
-    downloadPDF() {
-        const btn = document.getElementById("downloadPdf");
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "⏳ Generating...";
-        btn.disabled = true;
-
-        try {
-            this.saveInvoiceRecord(); // Auto-save to history
-            const doc = this._buildPDF();
-            doc.save(this._getFilename());
-        } catch (err) {
-            console.error("PDF generation failed:", err);
-            alert("PDF generation failed: " + err.message);
-        } finally {
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 500);
-        }
-    },
-
-    shareWhatsApp() {
-        const btn = document.getElementById("shareWhatsapp");
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "⏳ Preparing...";
-        btn.disabled = true;
-
-        try {
-            this.saveInvoiceRecord(); // Auto-save to history
-            const doc = this._buildPDF();
-            const total = this.formatCurrency(this.calcTotal());
-            const clientName = this.state.client.name || "Valued Client";
-
-            // Build a professional WhatsApp message
-            const items = this.state.items.filter(i => i.service);
-            const itemsList = items.map(i => `  • ${i.service} — ${this.formatCurrency(this.calcLineTotal(i))}`).join("\n");
-
-            const msg =
-                `🟠 *DUBANI CREATIVES*\n` +
-                `━━━━━━━━━━━━━━━━━━\n\n` +
-                `Hi *${clientName}* 👋\n\n` +
-                `Thank you for choosing Dubani Creatives! Please find your invoice details below:\n\n` +
-                `📄 *Invoice #${this.state.invoiceNumber}*\n` +
-                `📅 Date: ${this.formatDateDisplay(this.state.invoiceDate)}\n` +
-                `⏰ Due: ${this.formatDateDisplay(this.state.dueDate)}\n\n` +
-                `*Services:*\n${itemsList}\n\n` +
-                `━━━━━━━━━━━━━━━━━━\n` +
-                `💰 *Total: ${total}*\n` +
-                `━━━━━━━━━━━━━━━━━━\n\n` +
-                `🏦 *Banking Details:*\n${this.defaults.bankDetails}\n\n` +
-                `📌 ${this.defaults.paymentNote}\n\n` +
-                `Your invoice PDF is attached below. If you have any questions, feel free to reach out!\n\n` +
-                `Thank you for your business! 🙏\n` +
-                `— *${this.defaults.companyName}*\n` +
-                `📧 ${this.defaults.email}\n` +
-                `📞 ${this.defaults.phone}`;
-
-            // Try Web Share API with PDF attachment
-            const blob = doc.output("blob");
-            const file = new File([blob], this._getFilename(), { type: "application/pdf" });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({
-                    title: `Invoice #${this.state.invoiceNumber} — ${this.defaults.companyName}`,
-                    text: msg,
-                    files: [file]
-                }).catch(err => {
-                    if (err.name !== "AbortError") {
-                        // User didn't cancel, share failed — fallback
-                        this._whatsappFallback(doc, msg);
-                    }
-                });
-            } else {
-                // Desktop fallback: download PDF + open WhatsApp
-                this._whatsappFallback(doc, msg);
-            }
-        } catch (err) {
-            console.error("WhatsApp share failed:", err);
-            alert("Could not generate invoice. Error: " + err.message);
-        } finally {
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 1000);
-        }
-    },
-
-    _whatsappFallback(doc, msg) {
-        // Save PDF first
-        doc.save(this._getFilename());
-
-        // Open WhatsApp with message
-        const phone = (this.state.client.phone || "").replace(/[^0-9]/g, "");
-        const waUrl = phone
-            ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
-            : `https://wa.me/?text=${encodeURIComponent(msg)}`;
-
-        setTimeout(() => {
-            window.open(waUrl, "_blank");
-        }, 600);
-    },
-
-    shareEmail() {
-        const btn = document.getElementById("shareEmail");
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "⏳ Preparing...";
-        btn.disabled = true;
-
-        try {
-            this.saveInvoiceRecord(); // Auto-save to history
-            const doc = this._buildPDF();
-            const total = this.formatCurrency(this.calcTotal());
-            const clientName = this.state.client.name || "Valued Client";
-
-            // Build a professional email body
-            const items = this.state.items.filter(i => i.service);
-            const itemsList = items.map(i => `  • ${i.service} — ${this.formatCurrency(this.calcLineTotal(i))}`).join("\n");
-
-            const subject = `Invoice #${this.state.invoiceNumber} from ${this.defaults.companyName}`;
-            const emailBody =
-                `Dear ${clientName},\n\n` +
-                `Thank you for choosing Dubani Creatives! Please find your invoice attached.\n\n` +
-                `INVOICE SUMMARY\n` +
-                `─────────────────────────\n` +
-                `Invoice #: ${this.state.invoiceNumber}\n` +
-                `Date: ${this.formatDateDisplay(this.state.invoiceDate)}\n` +
-                `Due Date: ${this.formatDateDisplay(this.state.dueDate)}\n\n` +
-                `Services:\n${itemsList}\n\n` +
-                `Total: ${total}\n` +
-                `─────────────────────────\n\n` +
-                `BANKING DETAILS\n` +
-                `${this.defaults.bankDetails}\n\n` +
-                `${this.defaults.paymentNote}\n\n` +
-                `Please don't hesitate to contact us if you have any questions.\n\n` +
-                `Kind regards,\n` +
-                `${this.defaults.companyName}\n` +
-                `${this.defaults.email}\n` +
-                `${this.defaults.phone}`;
-
-            // Try Web Share API with PDF attachment
-            const blob = doc.output("blob");
-            const file = new File([blob], this._getFilename(), { type: "application/pdf" });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({
-                    title: subject,
-                    text: emailBody,
-                    files: [file]
-                }).catch(err => {
-                    if (err.name !== "AbortError") {
-                        this._emailFallback(doc, subject, emailBody);
-                    }
-                });
-            } else {
-                // Desktop fallback: download PDF + open mailto
-                this._emailFallback(doc, subject, emailBody);
-            }
-        } catch (err) {
-            console.error("Email share failed:", err);
-            alert("Could not generate invoice. Error: " + err.message);
-        } finally {
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 1000);
-        }
-    },
-
-    _emailFallback(doc, subject, body) {
-        // Save PDF first
-        doc.save(this._getFilename());
-
-        // Open email client
-        const mailto = `mailto:${this.state.client.email || ""}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        setTimeout(() => {
-            window.open(mailto);
-        }, 600);
-    },
-
-    // ---- New Invoice ----
-    newInvoice() {
-        this.state.invoiceNumber++;
-        this.saveCounter();
-        this.state.items = [{ service: "", description: "", qty: 1, rate: 0 }];
-        this.state.client = { name: "", email: "", phone: "", address: "" };
-        this.state.discount = 0;
-        this.state.status = "UNPAID";
-        this.state.amountPaid = 0;
-        this.setDefaultDates();
-
-        document.getElementById("clientName").value = "";
-        document.getElementById("clientEmail").value = "";
-        document.getElementById("clientPhone").value = "";
-        document.getElementById("clientAddress").value = "";
-        document.getElementById("clientSelect").value = "";
-        document.getElementById("discount").value = "0";
-
-        this.renderForm();
-        this.updatePreview();
-    },
-
-    // ---- Payment & Watermark Logic ----
-    openPaymentModal(targetInvNum) {
-        if (targetInvNum) {
-            this.loadInvoiceIntoForm(targetInvNum);
-        }
-        const total = this.calcTotal();
-        const invNumEl = document.getElementById("payModalInvNum");
-        const totalEl = document.getElementById("payModalTotal");
-        const halfDesc = document.getElementById("payHalfDesc");
-
-        if (invNumEl) invNumEl.textContent = `#${this.state.invoiceNumber}`;
-        if (totalEl) totalEl.textContent = this.formatCurrency(total);
-        if (halfDesc) halfDesc.textContent = `Pay 50% (${this.formatCurrency(total / 2)}) & auto-create balance invoice`;
-
-        const fullRadio = document.querySelector('input[name="payOption"][value="full"]');
-        if (fullRadio) fullRadio.checked = true;
-
-        const customGroup = document.getElementById("customAmountGroup");
-        if (customGroup) customGroup.style.display = "none";
-
-        const customInput = document.getElementById("customPaidAmount");
-        if (customInput) customInput.value = "";
-
-        this.updatePaymentSummary();
-        this.showModal("paymentModal");
-    },
-
-    updatePaymentSummary() {
-        const total = this.calcTotal();
-        const selectedOpt = document.querySelector('input[name="payOption"]:checked')?.value || "full";
-        const customGroup = document.getElementById("customAmountGroup");
-
-        let amountPaid = total;
-        if (selectedOpt === "full") {
-            if (customGroup) customGroup.style.display = "none";
-            amountPaid = total;
-        } else if (selectedOpt === "half") {
-            if (customGroup) customGroup.style.display = "none";
-            amountPaid = total / 2;
-        } else if (selectedOpt === "custom") {
-            if (customGroup) customGroup.style.display = "block";
-            const customVal = parseFloat(document.getElementById("customPaidAmount")?.value) || 0;
-            amountPaid = Math.min(total, Math.max(0, customVal));
-        } else if (selectedOpt === "unpaid") {
-            if (customGroup) customGroup.style.display = "none";
-            amountPaid = 0;
-        }
-
-        const balance = Math.max(0, total - amountPaid);
-
-        const paidValEl = document.getElementById("summaryPaidVal");
-        const balValEl = document.getElementById("summaryBalanceVal");
-
-        if (paidValEl) paidValEl.textContent = this.formatCurrency(amountPaid);
-        if (balValEl) balValEl.textContent = this.formatCurrency(balance);
-    },
-
-    applyPayment(e) {
-        if (e) e.preventDefault();
-        const total = this.calcTotal();
-        const selectedOpt = document.querySelector('input[name="payOption"]:checked')?.value || "full";
-        const origNum = this.state.invoiceNumber;
-
-        if (selectedOpt === "unpaid") {
-            this.retractPaymentStatus();
-            document.getElementById("paymentModal").classList.remove("active");
-            return;
-        }
-
-        let amountPaid = total;
-        if (selectedOpt === "full") {
-            amountPaid = total;
-        } else if (selectedOpt === "half") {
-            amountPaid = total / 2;
-        } else if (selectedOpt === "custom") {
-            const customVal = parseFloat(document.getElementById("customPaidAmount")?.value) || 0;
-            amountPaid = Math.max(0, customVal);
-        }
-
-        const balance = Math.max(0, total - amountPaid);
-        const clientObj = { ...this.state.client };
-        const mainService = this.state.items.find(i => i.service)?.service || "Services";
-
-        if (balance <= 0) {
-            this.state.status = "PAID";
-            this.state.amountPaid = total;
-        } else {
-            this.state.status = "PARTIALLY PAID";
-            this.state.amountPaid = amountPaid;
-        }
-
-        this.saveInvoiceRecord(true);
-        this.updatePreview();
-        document.getElementById("paymentModal").classList.remove("active");
-
-        if (balance > 0) {
-            const newNum = this.createBalanceInvoice(origNum, balance, clientObj, mainService);
-            this.showToast(`💳 Payment recorded! Balance invoice #${newNum} created for ${this.formatCurrency(balance)}.`);
-        } else {
-            this.showToast(`💳 Invoice #${origNum} stamped as PAID FULL!`);
-        }
-    },
-
-    retractPaymentStatus(targetInvNum) {
-        if (targetInvNum) {
-            this.loadInvoiceIntoForm(targetInvNum);
-        }
-        this.state.status = "UNPAID";
-        this.state.amountPaid = 0;
-        this.saveInvoiceRecord(true);
-        this.updatePreview();
-
-        if (document.getElementById("invoicesModal").classList.contains("active")) {
-            this.renderInvoicesModal();
-        }
-        if (document.getElementById("clientsModal").classList.contains("active")) {
-            this.renderClientsModal();
-        }
-        this.showToast(`↩️ Retracted payment status for Invoice #${this.state.invoiceNumber}. Marked as UNPAID.`);
-    },
-
-    createBalanceInvoice(origNum, balance, client, serviceName) {
-        const newInvoiceNum = this.state.invoiceNumber + 1;
-        this.state.invoiceNumber = newInvoiceNum;
-        this.saveCounter();
-
-        const todayStr = this.formatDateInput(new Date());
-
-        const balanceRecord = {
-            invoiceNumber: newInvoiceNum,
-            invoiceDate: todayStr,
-            dueDate: todayStr,
-            clientName: client.name || "Valued Client",
-            client: { ...client },
-            items: [{
-                service: `Balance Due (Inv #${origNum})`,
-                description: `Remaining balance for Invoice #${origNum} — ${serviceName}`,
-                qty: 1,
-                rate: balance
-            }],
-            taxRate: 0,
-            discount: 0,
-            discountType: "percent",
-            notes: `Reference: Outstanding balance for Invoice #${origNum}.\n\n` + this.defaults.bankDetails + "\n\n" + this.defaults.paymentNote,
-            total: balance,
-            status: "UNPAID",
-            amountPaid: 0,
-            balance: balance,
-            currency: this.defaults.currency,
-            itemsCount: 1,
-            savedAt: new Date().toISOString()
+    applyClient(client) {
+        this.state.clientId = client.id;
+        this.state.client = {
+            name: client.name || "",
+            email: client.email || "",
+            phone: client.phone || "",
+            address: client.address || "",
         };
-
-        const invoices = this.getInvoices();
-        invoices.push(balanceRecord);
-        invoices.sort((a, b) => b.invoiceNumber - a.invoiceNumber);
-        localStorage.setItem("dc_invoices", JSON.stringify(invoices));
-        this.syncToCloud();
-
-        return newInvoiceNum;
-    },
-
-    // ---- Modals ----
-    showModal(id) {
-        document.getElementById(id).classList.add("active");
-        if (id === "invoicesModal") this.renderInvoicesModal();
-        if (id === "clientsModal") this.renderClientsModal();
-        if (id === "servicesModal") this.renderServicesModal();
-        if (id === "settingsModal") this.renderSettingsModal();
-    },
-
-    renderInvoicesModal(searchTerm = "") {
-        const list = document.getElementById("invoicesList");
-        if (!list) return;
-        let invoices = this.getInvoices();
-
-        if (searchTerm) {
-            invoices = invoices.filter(i => 
-                (i.invoiceNumber + "").includes(searchTerm) ||
-                (i.clientName || "").toLowerCase().includes(searchTerm) ||
-                (i.items && i.items.some(item => (item.service || "").toLowerCase().includes(searchTerm)))
-            );
+        const snapshot = client;
+        if (this.state.status === "draft" && snapshot.payment_terms_days != null && this.state.issueDate) {
+            this.state.dueDate = addDays(this.state.issueDate, snapshot.payment_terms_days);
         }
+        this.render();
+    },
 
-        if (invoices.length === 0) {
-            list.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 24px;">${searchTerm ? "No matching invoices found." : "No saved invoices yet. Click 'Save Invoice' to save invoices for future editing or download."}</p>`;
+    async ensureClient() {
+        this.readForm();
+        const name = this.state.client.name;
+        if (!name) throw new Error("Choose or enter a client before saving.");
+        const match = this.clients.find((client) => client.name.trim().toLowerCase() === name.toLowerCase() && !client.archived);
+        if (this.state.clientId) return this.state.clientId;
+        if (match) {
+            this.state.clientId = match.id;
+            return match.id;
+        }
+        const { data, error } = await supabase.from("clients").insert({
+            name,
+            email: this.state.client.email || null,
+            phone: this.state.client.phone || null,
+            address: this.state.client.address || null,
+        }).select("*").single();
+        if (error) throw error;
+        this.clients.push(data);
+        this.fillClientPickers();
+        this.state.clientId = data.id;
+        return data.id;
+    },
+
+    async replaceItems(invoiceId) {
+        const rows = this.state.items
+            .filter((item) => item.title && item.title.trim())
+            .map((item, position) => ({
+                invoice_id: invoiceId,
+                position,
+                service_id: item.serviceId || null,
+                title: item.title.trim(),
+                description: item.description || null,
+                quantity: Number(item.quantity),
+                unit_price: Number(item.unitPrice) || 0,
+            }));
+        for (const row of rows) {
+            if (!(row.quantity > 0)) throw new Error(`Quantity for “${row.title}” must be greater than 0.`);
+            if (row.unit_price < 0) throw new Error(`Price for “${row.title}” cannot be negative.`);
+        }
+        const existing = await supabase.from("invoice_items").select("id").eq("invoice_id", invoiceId);
+        if (existing.error) throw existing.error;
+        if (existing.data.length) {
+            const removed = await supabase.from("invoice_items").delete().in("id", existing.data.map((row) => row.id));
+            if (removed.error) throw removed.error;
+        }
+        if (!rows.length) return;
+        const inserted = await supabase.from("invoice_items").insert(rows);
+        if (inserted.error) throw inserted.error;
+    },
+
+    async saveDraft(quiet) {
+        try {
+            if (this.state.status !== "draft") {
+                this.showBanner("Finalised documents cannot be edited. Duplicate it, or void it with a reason.", "error");
+                return false;
+            }
+            const clientId = await this.ensureClient();
+            const payload = {
+                client_id: clientId,
+                title: this.state.title || null,
+                issue_date: this.state.issueDate || null,
+                due_date: this.state.dueDate || null,
+                currency: "ZAR",
+                vat_enabled: this.state.vatEnabled,
+                vat_rate: 15,
+                discount_amount: this.discountAmount(),
+                notes: this.state.notes || null,
+                payment_instructions: this.state.paymentInstructions || null,
+            };
+            let id = this.state.id;
+            if (!id) {
+                const { data, error } = await supabase.from("invoices").insert({
+                    kind: this.state.kind,
+                    status: "draft",
+                    ...payload,
+                }).select("id").single();
+                if (error) throw error;
+                id = data.id;
+                this.state.id = id;
+            } else {
+                const { error } = await supabase.from("invoices").update(payload).eq("id", id);
+                if (error) throw error;
+            }
+            await this.replaceItems(id);
+            await this.openDocument(id);
+            if (!quiet) this.showBanner("Draft saved.", "ok");
+            return true;
+        } catch (error) {
+            this.showBanner(errText(error), "error");
+            return false;
+        }
+    },
+
+    async openDocument(id) {
+        const { data, error } = await supabase.from("invoices").select("*, clients(*), invoice_items(*), payments(*)").eq("id", id).maybeSingle();
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return false;
+        }
+        if (!data) {
+            this.showBanner("That document was not found.", "error");
+            return false;
+        }
+        const client = data.clients || {};
+        const snapshot = data.client_snapshot || {};
+        const source = data.status === "draft" ? client : { ...client, ...snapshot };
+        this.payments = (data.payments || []).sort((a, b) => String(a.paid_on).localeCompare(String(b.paid_on)));
+        this.state = {
+            id: data.id,
+            kind: data.kind,
+            status: data.status,
+            reference: data.reference || "",
+            number: data.number,
+            nextRef: "",
+            title: data.title || "",
+            issueDate: data.issue_date || "",
+            dueDate: data.due_date || "",
+            clientId: data.client_id,
+            client: {
+                name: source.name || "",
+                email: source.email || "",
+                phone: source.phone || "",
+                address: source.address || "",
+            },
+            vatEnabled: Boolean(data.vat_enabled),
+            vatRate: Number(data.vat_rate) || 15,
+            discountInput: Number(data.discount_amount) || 0,
+            discountType: "fixed",
+            amountPaid: Number(data.amount_paid) || 0,
+            balanceDue: Number(data.balance_due) || 0,
+            notes: data.notes || "",
+            paymentInstructions: data.payment_instructions || "",
+            items: (data.invoice_items || [])
+                .sort((a, b) => a.position - b.position)
+                .map((item) => ({
+                    serviceId: item.service_id || "",
+                    title: item.title || "",
+                    description: item.description || "",
+                    quantity: Number(item.quantity),
+                    unitPrice: Number(item.unit_price),
+                })),
+        };
+        if (!this.state.items.length && data.status === "draft") {
+            this.state.items.push({ serviceId: "", title: "", description: "", quantity: 1, unitPrice: 0 });
+        }
+        if (data.status === "draft" && !data.reference) this.state.nextRef = await this.peekNext(data.kind);
+        history.replaceState(null, "", `invoice.html?id=${encodeURIComponent(data.id)}`);
+        this.render();
+        return true;
+    },
+
+    async finalise() {
+        const saved = await this.saveDraft(true);
+        if (!saved || !this.state.id) return;
+        const { error } = await supabase.rpc("finalise_document", { p_id: this.state.id });
+        if (error) {
+            this.showBanner(errText(error), "error");
             return;
         }
+        await this.openDocument(this.state.id);
+        this.showBanner(`Issued ${this.state.reference || "document"}.`, "ok");
+    },
 
-        list.innerHTML = invoices.map(inv => {
-            const clientName = this.escHtml(inv.clientName || (inv.client && inv.client.name) || "Unnamed Client");
-            const dateStr = this.formatDateDisplay(inv.invoiceDate || inv.date);
-            const dueDateStr = this.formatDateDisplay(inv.dueDate);
-            const itemsCount = inv.itemsCount || (inv.items ? inv.items.length : 0);
-            const formattedTotal = this.formatCurrency(parseFloat(inv.total) || 0);
+    async duplicate() {
+        if (!this.state.id) return;
+        const { data, error } = await supabase.rpc("duplicate_document", { p_id: this.state.id });
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        await this.openDocument(data);
+        this.showBanner("Duplicated as a new draft.", "ok");
+    },
 
-            const status = inv.status || "UNPAID";
-            const paidAmount = parseFloat(inv.amountPaid) || 0;
-            const bal = typeof inv.balance !== "undefined" ? parseFloat(inv.balance) : (status === "PAID" ? 0 : parseFloat(inv.total) || 0);
+    async convertQuote() {
+        const { data, error } = await supabase.rpc("convert_quote_to_invoice", { p_quote_id: this.state.id });
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        await this.openDocument(data);
+        this.showBanner("Quote converted to a draft invoice.", "ok");
+    },
 
-            let statusBadge = `<span class="status-tag unpaid">UNPAID</span>`;
-            if (status === "PAID") {
-                statusBadge = `<span class="status-tag paid">PAID FULL</span>`;
-            } else if (status === "PARTIALLY PAID") {
-                statusBadge = `<span class="status-tag partial">PAID: ${this.formatCurrency(paidAmount)}</span>`;
-            }
+    async setStatus(status, extra) {
+        const { error } = await supabase.from("invoices").update({ status, ...extra }).eq("id", this.state.id);
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        await this.openDocument(this.state.id);
+        this.showBanner(`Status is now ${STATUS_LABEL[status] || status}.`, "ok");
+    },
 
-            const invNumSafe = String(inv.invoiceNumber).replace(/'/g, "\\'");
+    async voidDocument() {
+        const reason = window.prompt("Reason for voiding this document:");
+        if (!reason || !reason.trim()) {
+            this.showBanner("A reason is required to void a document.", "error");
+            return;
+        }
+        await this.setStatus("void", { void_reason: reason.trim() });
+    },
 
-            return `
-                <div class="saved-item" style="flex-direction: column; align-items: stretch; gap: 12px; cursor: default;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                                <span style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--accent);">#${inv.invoiceNumber}</span>
-                                <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);">${clientName}</span>
-                                ${statusBadge}
-                            </div>
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                                Date: ${dateStr}${dueDateStr ? ' • Due: ' + dueDateStr : ''} • ${itemsCount} Item${itemsCount === 1 ? '' : 's'}
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">${formattedTotal}</div>
-                            ${status === "PARTIALLY PAID" ? `<div style="font-size: 12px; color: var(--accent); font-weight: 600;">Bal: ${this.formatCurrency(bal)}</div>` : ''}
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-primary btn-sm" onclick="window.App.loadInvoiceIntoForm('${invNumSafe}')">✏️ Edit / Load</button>
-                        <button class="btn btn-success btn-sm" style="background:#25D366; color:#fff;" onclick="window.App.openPaymentModal('${invNumSafe}')">💳 ${status === 'UNPAID' ? 'Mark Paid' : 'Update Paid'}</button>
-                        ${(status === 'PAID' || status === 'PARTIALLY PAID') ? `<button class="btn btn-secondary btn-sm" style="border-color:rgba(255,68,68,0.5); color:#ff4444;" onclick="if(confirm('Retract payment status for Invoice #${invNumSafe}?')) window.App.retractPaymentStatus('${invNumSafe}')">↩️ Retract Paid</button>` : ''}
-                        <button class="btn btn-secondary btn-sm" onclick="window.App.downloadPDFForInvoice('${invNumSafe}')">📄 PDF</button>
-                        <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete Invoice #${invNumSafe}?')) { window.App.deleteInvoiceRecord('${invNumSafe}'); window.App.renderInvoicesModal('${this.escHtml(searchTerm)}'); }">Delete</button>
-                    </div>
+    async deleteDraft() {
+        if (!this.state.id || this.state.status !== "draft") return;
+        if (!window.confirm("Delete this draft? This cannot be undone.")) return;
+        const { error: itemError } = await supabase.from("invoice_items").delete().eq("invoice_id", this.state.id);
+        if (itemError) {
+            this.showBanner(errText(itemError), "error");
+            return;
+        }
+        const { error } = await supabase.from("invoices").delete().eq("id", this.state.id);
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.showBanner("Draft deleted.", "ok");
+        await this.newDocument();
+    },
+
+    async loadDocuments() {
+        const { data, error } = await supabase.from("invoices")
+            .select("id, kind, number, reference, status, title, issue_date, due_date, total, amount_paid, balance_due, client_id, clients(name)")
+            .order("created_at", { ascending: false });
+        if (error) {
+            $("invoicesList").innerHTML = `<p class="empty-state">${esc(errText(error))}</p>`;
+            return;
+        }
+        this.documents = data || [];
+        this.renderDocumentList();
+    },
+
+    filteredDocuments() {
+        const query = $("searchInvoicesInput").value.trim().toLowerCase();
+        const kind = $("filterKind").value;
+        const status = $("filterStatus").value;
+        const clientId = $("filterClient").value;
+        const from = $("filterFrom").value;
+        const to = $("filterTo").value;
+        return this.documents.filter((row) => {
+            if (kind && row.kind !== kind) return false;
+            if (status && row.status !== status) return false;
+            if (clientId && row.client_id !== clientId) return false;
+            if (from && (!row.issue_date || row.issue_date < from)) return false;
+            if (to && (!row.issue_date || row.issue_date > to)) return false;
+            if (!query) return true;
+            const hay = `${row.reference || ""} ${row.number || ""} ${row.title || ""} ${row.clients?.name || ""}`.toLowerCase();
+            return hay.includes(query);
+        });
+    },
+
+    renderDocumentList() {
+        const rows = this.filteredDocuments();
+        if (!rows.length) {
+            $("invoicesList").innerHTML = `<p class="empty-state">${this.documents.length ? "Nothing matches those filters." : "No invoices or quotes yet."}</p>`;
+            return;
+        }
+        $("invoicesList").innerHTML = rows.map((row) => {
+            const label = row.reference || (row.number ? `#${row.number}` : "Draft");
+            const late = isOverdue(row);
+            return `<div class="saved-item">
+                <div class="saved-item-info">
+                    <h4>${esc(label)} · ${esc(row.clients?.name || "No client")}${late ? '<span class="badge-overdue">Overdue</span>' : ""}</h4>
+                    <p>${esc(row.kind)} · ${esc(STATUS_LABEL[row.status] || row.status)} · ${esc(row.issue_date || "no date")} · ${money(row.total)} · due ${money(row.balance_due)}</p>
                 </div>
-            `;
+                <div class="saved-item-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" data-open="${esc(row.id)}">Open</button>
+                </div>
+            </div>`;
         }).join("");
     },
 
-    renderClientsModal() {
-        const list = document.getElementById("clientsList");
-        const clients = this.getClients();
-        const allInvoices = this.getInvoices();
+    exportCsv() {
+        const rows = this.filteredDocuments();
+        if (!rows.length) {
+            this.showBanner("There are no rows to export for the current filters.", "error");
+            return;
+        }
+        const header = ["type", "reference", "number", "status", "client", "issue_date", "due_date", "total", "amount_paid", "balance_due", "overdue"];
+        const body = rows.map((row) => [
+            row.kind,
+            row.reference || "",
+            row.number || "",
+            row.status,
+            row.clients?.name || "",
+            row.issue_date || "",
+            row.due_date || "",
+            row.total,
+            row.amount_paid,
+            row.balance_due,
+            isOverdue(row) ? "yes" : "no",
+        ]);
+        const csv = [header, ...body].map((line) => line.map((cell) => {
+            const text = String(cell ?? "");
+            return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+        }).join(",")).join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `dubani-documents-${saToday()}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+        this.showBanner(`Exported ${rows.length} row${rows.length === 1 ? "" : "s"}.`, "ok");
+    },
 
-        list.innerHTML = clients.length === 0
-            ? '<p style="color: var(--text-muted); font-size: 13px;">No saved clients yet.</p>'
-            : clients.map(c => {
-                const cName = (c.name || "").trim().toLowerCase();
-                const clientInvoices = allInvoices.filter(i => {
-                    const iName = (i.clientName || (i.client && i.client.name) || "").trim().toLowerCase();
-                    return iName === cName || (iName && cName && (iName.includes(cName) || cName.includes(iName)));
-                });
-
-                const invoicesHtml = clientInvoices.length > 0
-                    ? `<div class="client-history-list" style="margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px;">
-                        <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Past Invoices (${clientInvoices.length})</span>
-                        <div style="margin-top: 6px; display: grid; gap: 6px;">
-                            ${clientInvoices.map(inv => {
-                                const invNumSafe = String(inv.invoiceNumber).replace(/'/g, "\\'");
-                                const dateVal = this.formatDateDisplay(inv.invoiceDate || inv.date);
-                                const totVal = parseFloat(inv.total) || 0;
-                                return `
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 6px 10px; border-radius: 6px; font-size: 12px; flex-wrap: wrap; gap: 6px;">
-                                    <div>
-                                        <span style="color: var(--accent); font-weight: bold;">#${inv.invoiceNumber}</span>
-                                        <span style="color: var(--text-muted); margin-left: 6px;">${dateVal}</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 6px;">
-                                        <span style="color: var(--text-primary); font-weight: 600;">${inv.currency || 'ZAR'} ${totVal.toFixed(2)}</span>
-                                        <button class="btn btn-primary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="window.App.loadInvoiceIntoForm('${invNumSafe}')">✏️ Edit</button>
-                                        <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="window.App.downloadPDFForInvoice('${invNumSafe}')">📄 PDF</button>
-                                        <button class="btn btn-sm" style="padding: 2px 6px; background: transparent; color: #ff4444;" onclick="if(confirm('Delete Invoice #${invNumSafe}?')) { window.App.deleteInvoiceRecord('${invNumSafe}'); window.App.renderClientsModal(); }">×</button>
-                                    </div>
-                                </div>
-                            `;
-                            }).join('')}
-                        </div>
-                       </div>`
-                    : '<div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">No invoices generated for this client yet.</div>';
-
-                const cNameSafe = (c.name || "").replace(/'/g, "\\'");
-
-                return `
-                <div class="saved-item" style="flex-direction: column; align-items: stretch; cursor: default;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <div class="saved-item-info">
-                            <h4>${this.escHtml(c.name)}</h4>
-                            <p>${this.escHtml(c.phone || "")} ${c.email ? "• " + this.escHtml(c.email) : ""}</p>
-                        </div>
-                        <div class="saved-item-actions">
-                            <button class="btn btn-danger btn-sm" onclick="window.App.deleteClient('${cNameSafe}'); window.App.renderClientsModal(); window.App.populateClientSelect();">Delete Client</button>
-                        </div>
-                    </div>
-                    ${invoicesHtml}
+    renderClients() {
+        const query = $("searchClientsInput").value.trim().toLowerCase();
+        const rows = this.clients.filter((client) => {
+            const hay = `${client.name} ${client.email || ""} ${client.phone || ""}`.toLowerCase();
+            return !query || hay.includes(query);
+        });
+        if (!rows.length) {
+            $("clientsList").innerHTML = `<p class="empty-state">No clients yet.</p>`;
+            return;
+        }
+        $("clientsList").innerHTML = rows.map((client) => `
+            <div class="saved-item">
+                <div class="saved-item-info">
+                    <h4>${esc(client.name)}${client.archived ? " · archived" : ""}</h4>
+                    <p>${esc(client.email || "")} ${esc(client.phone || "")}</p>
                 </div>
-            `}).join("");
-    },
-
-    renderServicesModal() {
-        const list = document.getElementById("servicesList");
-        const services = this.getServices();
-        list.innerHTML = services.length === 0
-            ? '<p style="color: var(--text-muted); font-size: 13px;">No saved services yet.</p>'
-            : services.map(s => `
-                <div class="saved-item">
-                    <div class="saved-item-info">
-                        <h4>${this.escHtml(s.name)}</h4>
-                        <p>${App.formatCurrency(s.price)}</p>
-                    </div>
-                    <div class="saved-item-actions">
-                        <button class="btn btn-danger btn-sm" onclick="App.deleteService('${s.name.replace(/'/g, "\\'")}'); App.renderServicesModal(); App.renderItems();">Delete</button>
-                    </div>
+                <div class="saved-item-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" data-edit-client="${esc(client.id)}">Edit</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-archive-client="${esc(client.id)}">${client.archived ? "Restore" : "Archive"}</button>
                 </div>
-            `).join("");
+            </div>`).join("");
     },
 
-    renderSettingsModal() {
-        document.getElementById("settCompany").value = this.defaults.companyName;
-        document.getElementById("settAddress").value = this.defaults.address;
-        document.getElementById("settEmail").value = this.defaults.email;
-        document.getElementById("settPhone").value = this.defaults.phone;
-        document.getElementById("settBank").value = this.defaults.bankDetails;
-        document.getElementById("settTaxReg").value = this.defaults.taxReg;
-        document.getElementById("settDefaultTax").value = this.defaults.taxRate;
+    renderServices() {
+        if (!this.services.length) {
+            $("servicesList").innerHTML = `<p class="empty-state">No services yet. Add one to use it on line items.</p>`;
+            return;
+        }
+        $("servicesList").innerHTML = this.services.map((service) => `
+            <div class="saved-item">
+                <div class="saved-item-info">
+                    <h4>${esc(service.name)}</h4>
+                    <p>${money(service.unit_price)}</p>
+                </div>
+                <div class="saved-item-actions">
+                    <button type="button" class="btn btn-danger btn-sm" data-archive-service="${esc(service.id)}">Archive</button>
+                </div>
+            </div>`).join("");
     },
 
-    saveSettings() {
-        this.defaults.companyName = document.getElementById("settCompany").value;
-        this.defaults.address = document.getElementById("settAddress").value;
-        this.defaults.email = document.getElementById("settEmail").value;
-        this.defaults.phone = document.getElementById("settPhone").value;
-        this.defaults.bankDetails = document.getElementById("settBank").value;
-        this.defaults.taxReg = document.getElementById("settTaxReg").value;
-        this.defaults.taxRate = parseFloat(document.getElementById("settDefaultTax").value) || 0;
+    fillSettingsForm() {
+        const settings = this.settings;
+        $("settTrading").value = settings.trading_name || "";
+        $("settLegal").value = settings.legal_name || "";
+        $("settAddress").value = settings.address || "";
+        $("settCity").value = settings.city || "";
+        $("settCountry").value = settings.country || "";
+        $("settEmail").value = settings.email || "";
+        $("settPhone").value = settings.phone || "";
+        $("settWebsite").value = settings.website || "";
+        $("settReg").value = settings.company_reg_number || "";
+        $("settTax").value = settings.tax_number || "";
+        $("settVatNo").value = settings.vat_number || "";
+        $("settVatRegistered").value = settings.vat_registered ? "true" : "false";
+        $("settBank").value = settings.bank_name || "";
+        $("settHolder").value = settings.account_holder || "";
+        $("settAccount").value = settings.account_number || "";
+        $("settBranch").value = settings.branch_code || "";
+        $("settAccountType").value = settings.account_type || "";
+        $("settPay").value = settings.payment_instructions || "";
+        $("settTermsShort").value = settings.payment_terms || "";
+        $("settTerms").value = settings.terms_and_conditions || "";
+        $("settDueDays").value = settings.default_due_days ?? 7;
+    },
 
-        localStorage.setItem("dc_settings", JSON.stringify(this.defaults));
-        this.syncToCloud();
-        this.updatePreview();
-        document.getElementById("settingsModal").classList.remove("active");
-        this.showToast("⚙️ Settings saved & synced to database!");
-    }
+    async saveSettings(event) {
+        event.preventDefault();
+        const blank = (id) => $(id).value.trim() || null;
+        const payload = {
+            trading_name: $("settTrading").value.trim() || "Dubani Creatives",
+            legal_name: blank("settLegal"),
+            address: blank("settAddress"),
+            city: blank("settCity"),
+            country: $("settCountry").value.trim() || "South Africa",
+            email: blank("settEmail"),
+            phone: blank("settPhone"),
+            website: blank("settWebsite"),
+            company_reg_number: blank("settReg"),
+            tax_number: blank("settTax"),
+            vat_number: blank("settVatNo"),
+            vat_registered: $("settVatRegistered").value === "true",
+            bank_name: blank("settBank"),
+            account_holder: blank("settHolder"),
+            account_number: blank("settAccount"),
+            branch_code: blank("settBranch"),
+            account_type: blank("settAccountType"),
+            payment_instructions: blank("settPay"),
+            payment_terms: blank("settTermsShort"),
+            terms_and_conditions: blank("settTerms"),
+            default_due_days: Math.min(120, Math.max(0, Number($("settDueDays").value) || 0)),
+        };
+        const { data, error } = await supabase.from("business_settings").update(payload).eq("owner_id", this.session.user.id).select("*").single();
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.settings = data;
+        this.hideModal("settingsModal");
+        this.render();
+        this.showBanner("Business settings saved.", "ok");
+    },
+
+    showModal(id) { $(id).classList.add("active"); },
+    hideModal(id) { $(id).classList.remove("active"); },
+
+    async openPayments() {
+        if (!this.state.id || this.state.kind !== "invoice" || this.state.status === "draft") {
+            this.showBanner("Issue the invoice before recording a payment.", "error");
+            return;
+        }
+        $("payDate").value = saToday();
+        $("payAmount").value = this.balance() > 0 ? this.balance().toFixed(2) : "";
+        $("payReference").value = "";
+        $("payNote").value = "";
+        this.renderPaymentHistory();
+        $("paymentForm").hidden = this.balance() <= 0 || ["void", "draft"].includes(this.state.status);
+        this.showModal("paymentModal");
+    },
+
+    renderPaymentHistory() {
+        if (!this.payments.length) {
+            $("payHistory").innerHTML = `<p class="empty-state">No payments yet.</p>`;
+            return;
+        }
+        $("payHistory").innerHTML = this.payments.map((payment) => `
+            <article>
+                <span>${esc(payment.paid_on)} · ${esc(payment.method)} · ${money(payment.amount)}${payment.reference ? " · " + esc(payment.reference) : ""}</span>
+                <button type="button" class="btn btn-danger btn-sm" data-delete-payment="${esc(payment.id)}">Delete</button>
+            </article>`).join("");
+    },
+
+    async savePayment(event) {
+        event.preventDefault();
+        const amount = Number($("payAmount").value);
+        const { error } = await supabase.from("payments").insert({
+            invoice_id: this.state.id,
+            amount,
+            paid_on: $("payDate").value,
+            method: $("payMethod").value,
+            reference: $("payReference").value.trim() || null,
+            note: $("payNote").value.trim() || null,
+        });
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.hideModal("paymentModal");
+        await this.openDocument(this.state.id);
+        this.showBanner("Payment recorded. The balance was updated by the database.", "ok");
+    },
+
+    async deletePayment(id) {
+        if (!window.confirm("Delete this payment? The invoice balance will be recalculated.")) return;
+        const { error } = await supabase.from("payments").delete().eq("id", id);
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        await this.openDocument(this.state.id);
+        this.renderPaymentHistory();
+        $("paymentForm").hidden = this.balance() <= 0;
+        this.showBanner("Payment deleted.", "ok");
+    },
+
+    buildPdf() {
+        const JsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+        if (!JsPDF) throw new Error("jsPDF did not load. Check your connection and refresh.");
+        const doc = new JsPDF({ unit: "mm", format: "a4" });
+        const pageW = doc.internal.pageSize.getWidth();
+        const margin = 20;
+        const right = pageW - margin;
+        let y = 22;
+        const state = this.state;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text(state.kind === "quote" ? "QUOTE" : "INVOICE", right, y, { align: "right" });
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.setTextColor(120);
+        doc.text(state.reference || "DRAFT", right, y + 8, { align: "right" });
+        doc.setTextColor(30);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        const lines = this.companyLines();
+        doc.text(lines[0] || "Dubani Creatives", margin, y);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(80);
+        y += 6;
+        lines.slice(1).forEach((line) => {
+            doc.text(String(line), margin, y);
+            y += 4;
+        });
+        y += 4;
+        doc.setDrawColor(30);
+        doc.line(margin, y, right, y);
+        y += 8;
+        doc.setTextColor(120);
+        doc.text("Date", right - 45, y);
+        doc.setTextColor(30);
+        doc.text(state.issueDate || "—", right, y, { align: "right" });
+        y += 5;
+        doc.setTextColor(120);
+        doc.text("Due", right - 45, y);
+        doc.setTextColor(30);
+        doc.text(state.dueDate || "—", right, y, { align: "right" });
+        y += 8;
+        doc.setFont("helvetica", "bold");
+        doc.text("Bill to", margin, y);
+        y += 5;
+        doc.setFont("helvetica", "normal");
+        [state.client.name, state.client.phone, state.client.email, state.client.address].filter(Boolean).forEach((line) => {
+            doc.text(String(line), margin, y);
+            y += 4;
+        });
+        y += 4;
+        const body = state.items.filter((item) => item.title).map((item) => [
+            item.description ? `${item.title}\n${item.description}` : item.title,
+            String(item.quantity),
+            money(item.unitPrice),
+            money(this.lineTotal(item)),
+        ]);
+        doc.autoTable({
+            startY: y,
+            head: [["Item", "Qty", "Rate", "Amount"]],
+            body: body.length ? body : [["No items", "", "", ""]],
+            theme: "grid",
+            styles: { fontSize: 9, textColor: 30 },
+            headStyles: { fillColor: [255, 94, 0], textColor: 255 },
+            margin: { left: margin, right: margin },
+        });
+        y = doc.lastAutoTable.finalY + 8;
+        const totals = [
+            ["Subtotal", money(this.subtotal())],
+            ["Discount", "- " + money(this.discountAmount())],
+            ["VAT", money(this.vatAmount())],
+            ["Total", money(this.total())],
+            ["Paid", "- " + money(this.state.amountPaid)],
+            ["Balance due", money(this.balance())],
+        ];
+        totals.forEach(([label, value]) => {
+            doc.text(label, right - 50, y);
+            doc.text(value, right, y, { align: "right" });
+            y += 5;
+        });
+        y += 4;
+        const notes = [state.notes, state.paymentInstructions, this.paymentBlock(), this.settings.payment_terms, this.settings.terms_and_conditions]
+            .filter(Boolean).join("\n\n");
+        if (notes) {
+            const wrapped = doc.splitTextToSize(notes, pageW - margin * 2);
+            doc.setFontSize(8);
+            doc.setTextColor(90);
+            doc.text(wrapped, margin, y);
+        }
+        if (state.status === "paid" || state.status === "partially_paid" || state.status === "void") {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(state.status === "void" ? 48 : 36);
+            doc.setTextColor(state.status === "paid" ? 37 : state.status === "void" ? 200 : 255, state.status === "paid" ? 160 : 80, state.status === "void" ? 60 : 0);
+            const stamp = state.status === "paid" ? "PAID" : state.status === "void" ? "VOID" : "PARTIALLY PAID";
+            doc.text(stamp, pageW / 2, 150, { align: "center", angle: 25 });
+        }
+        return doc;
+    },
+
+    fileName() {
+        const who = (this.state.client.name || "client").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+        const ref = this.state.reference || "draft";
+        return `${ref}-${who || "client"}.pdf`;
+    },
+
+    async downloadPdf() {
+        try {
+            if (this.state.status === "draft") {
+                const saved = await this.saveDraft(true);
+                if (!saved) return;
+            }
+            const doc = this.buildPdf();
+            doc.save(this.fileName());
+            if (!this.state.reference) {
+                this.showBanner("PDF downloaded. It is uploaded after the document is issued and has a number.", "ok");
+                return;
+            }
+            const blob = doc.output("blob");
+            const path = `${this.session.user.id}/${this.state.reference}.pdf`;
+            const upload = await supabase.storage.from("invoices-pdf").upload(path, blob, {
+                upsert: true,
+                contentType: "application/pdf",
+            });
+            if (upload.error) {
+                this.showBanner(`PDF downloaded, but upload failed: ${errText(upload.error)}`, "error");
+                return;
+            }
+            const saved = await supabase.from("invoices").update({ pdf_path: path }).eq("id", this.state.id);
+            if (saved.error) {
+                this.showBanner(`PDF uploaded, but pdf_path was not saved: ${errText(saved.error)}`, "error");
+                return;
+            }
+            this.showBanner("PDF downloaded and stored.", "ok");
+        } catch (error) {
+            this.showBanner(errText(error), "error");
+        }
+    },
+
+    shareText() {
+        const state = this.state;
+        const lines = state.items.filter((item) => item.title)
+            .map((item) => `• ${item.title} — ${money(this.lineTotal(item))}`);
+        const bank = this.paymentBlock();
+        return [
+            `${state.kind === "quote" ? "Quote" : "Invoice"} ${state.reference || "(draft)"}`,
+            `For ${state.client.name || "client"}`,
+            state.issueDate ? `Date: ${state.issueDate}` : "",
+            state.dueDate ? `Due: ${state.dueDate}` : "",
+            lines.join("\n"),
+            `Total: ${money(this.total())}`,
+            `Balance: ${money(this.balance())}`,
+            bank ? `Payment details:\n${bank}` : "",
+        ].filter(Boolean).join("\n");
+    },
+
+    showShare(label, href) {
+        $("shareLinks").innerHTML = `${esc(label)}: <a href="${esc(href)}" target="_blank" rel="noopener">${esc(href)}</a>`;
+        window.open(href, "_blank", "noopener");
+    },
+
+    shareWhatsApp() {
+        this.readForm();
+        const phone = (this.state.client.phone || "").replace(/[^\d]/g, "");
+        const text = encodeURIComponent(this.shareText());
+        const href = phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
+        this.showShare("WhatsApp", href);
+    },
+
+    shareEmail() {
+        this.readForm();
+        const subject = encodeURIComponent(`${this.state.kind === "quote" ? "Quote" : "Invoice"} ${this.state.reference || "draft"}`);
+        const href = `mailto:${encodeURIComponent(this.state.client.email || "")}?subject=${subject}&body=${encodeURIComponent(this.shareText())}`;
+        this.showShare("Email", href);
+    },
+
+    bindStaticEvents() {
+        const refresh = () => {
+            if (this.state.status !== "draft") return;
+            this.readForm();
+            this.paintTotals();
+            this.updatePreview();
+        };
+        ["docTitle", "invoiceDate", "dueDate", "clientName", "clientEmail", "clientPhone", "clientAddress", "discount", "invoiceNotes", "paymentInstructions"]
+            .forEach((id) => $(id).addEventListener("input", refresh));
+        $("vatEnabled").addEventListener("change", refresh);
+        $("discountType").addEventListener("change", refresh);
+        $("docKind").addEventListener("change", async () => {
+            if (this.state.id) return;
+            this.readForm();
+            this.state.kind = $("docKind").value;
+            this.state.nextRef = await this.peekNext(this.state.kind);
+            this.render();
+        });
+        $("clientSelect").addEventListener("change", () => {
+            const client = this.clients.find((row) => row.id === $("clientSelect").value);
+            if (client) this.applyClient(client);
+        });
+        $("clientName").addEventListener("change", () => {
+            const name = $("clientName").value.trim().toLowerCase();
+            const client = this.clients.find((row) => row.name.trim().toLowerCase() === name && !row.archived);
+            if (client) this.applyClient(client);
+            else {
+                this.state.clientId = null;
+                refresh();
+            }
+        });
+        $("itemsBody").addEventListener("input", (event) => {
+            const row = event.target.closest("tr");
+            if (!row || this.state.status !== "draft") return;
+            const item = this.state.items[Number(row.dataset.idx)];
+            if (event.target.classList.contains("item-title")) item.title = event.target.value;
+            if (event.target.classList.contains("item-desc")) item.description = event.target.value;
+            if (event.target.classList.contains("item-qty")) item.quantity = Number(event.target.value);
+            if (event.target.classList.contains("item-rate")) item.unitPrice = Number(event.target.value);
+            row.querySelector(".line-total").textContent = money(this.lineTotal(item));
+            this.paintTotals();
+            this.updatePreview();
+        });
+        $("itemsBody").addEventListener("change", (event) => {
+            if (!event.target.classList.contains("item-service")) return;
+            const row = event.target.closest("tr");
+            const item = this.state.items[Number(row.dataset.idx)];
+            const service = this.services.find((entry) => entry.id === event.target.value);
+            item.serviceId = event.target.value;
+            if (service) {
+                item.title = service.name;
+                item.unitPrice = Number(service.unit_price) || 0;
+                if (!item.description && service.description) item.description = service.description;
+                this.renderItems();
+                this.updatePreview();
+            }
+        });
+        $("itemsBody").addEventListener("click", (event) => {
+            const button = event.target.closest(".remove-item");
+            if (!button || this.state.status !== "draft") return;
+            const index = Number(button.closest("tr").dataset.idx);
+            if (this.state.items.length === 1) {
+                this.state.items[0] = { serviceId: "", title: "", description: "", quantity: 1, unitPrice: 0 };
+            } else {
+                this.state.items.splice(index, 1);
+            }
+            this.renderItems();
+            this.updatePreview();
+        });
+        $("addItemBtn").addEventListener("click", () => {
+            this.readForm();
+            this.state.items.push({ serviceId: "", title: "", description: "", quantity: 1, unitPrice: 0 });
+            this.renderItems();
+        });
+        $("saveClientBtn").addEventListener("click", async () => {
+            try {
+                await this.ensureClient();
+                this.showBanner("Client saved.", "ok");
+            } catch (error) {
+                this.showBanner(errText(error), "error");
+            }
+        });
+        $("saveInvoiceBtn").addEventListener("click", () => this.saveDraft(false));
+        $("finaliseBtn").addEventListener("click", () => this.finalise());
+        $("duplicateBtn").addEventListener("click", () => this.duplicate());
+        $("convertBtn").addEventListener("click", () => this.convertQuote());
+        $("acceptBtn").addEventListener("click", () => this.setStatus("accepted"));
+        $("declineBtn").addEventListener("click", () => this.setStatus("declined"));
+        $("voidBtn").addEventListener("click", () => this.voidDocument());
+        $("deleteDraftBtn").addEventListener("click", () => this.deleteDraft());
+        $("newInvoiceBtn").addEventListener("click", () => this.newDocument());
+        $("downloadPdf").addEventListener("click", () => this.downloadPdf());
+        $("shareWhatsapp").addEventListener("click", () => this.shareWhatsApp());
+        $("shareEmail").addEventListener("click", () => this.shareEmail());
+        $("markPaidBtn").addEventListener("click", () => this.openPayments());
+        $("paymentForm").addEventListener("submit", (event) => this.savePayment(event));
+        $("payHistory").addEventListener("click", (event) => {
+            const button = event.target.closest("[data-delete-payment]");
+            if (button) this.deletePayment(button.dataset.deletePayment);
+        });
+        $("manageInvoicesBtn").addEventListener("click", async () => {
+            this.showModal("invoicesModal");
+            await this.loadDocuments();
+        });
+        ["searchInvoicesInput", "filterKind", "filterStatus", "filterClient", "filterFrom", "filterTo"].forEach((id) => {
+            $(id).addEventListener("input", () => this.renderDocumentList());
+        });
+        $("invoicesList").addEventListener("click", async (event) => {
+            const button = event.target.closest("[data-open]");
+            if (!button) return;
+            this.hideModal("invoicesModal");
+            await this.openDocument(button.dataset.open);
+        });
+        $("exportCsvBtn").addEventListener("click", () => this.exportCsv());
+        $("manageClientsBtn").addEventListener("click", () => {
+            this.renderClients();
+            this.showModal("clientsModal");
+        });
+        $("searchClientsInput").addEventListener("input", () => this.renderClients());
+        $("addClientForm").addEventListener("submit", (event) => this.submitClient(event));
+        $("clientsList").addEventListener("click", (event) => this.onClientListClick(event));
+        $("manageServicesBtn").addEventListener("click", () => {
+            this.renderServices();
+            this.showModal("servicesModal");
+        });
+        $("addServiceForm").addEventListener("submit", (event) => this.submitService(event));
+        $("servicesList").addEventListener("click", async (event) => {
+            const button = event.target.closest("[data-archive-service]");
+            if (!button) return;
+            const { error } = await supabase.from("services").update({ active: false }).eq("id", button.dataset.archiveService);
+            if (error) {
+                this.showBanner(errText(error), "error");
+                return;
+            }
+            this.services = this.services.filter((service) => service.id !== button.dataset.archiveService);
+            this.renderServices();
+            this.renderItems();
+            this.showBanner("Service archived.", "ok");
+        });
+        $("settingsBtn").addEventListener("click", () => {
+            this.fillSettingsForm();
+            this.showModal("settingsModal");
+        });
+        $("settingsForm").addEventListener("submit", (event) => this.saveSettings(event));
+        document.querySelectorAll(".modal-close").forEach((button) => {
+            button.addEventListener("click", () => button.closest(".modal-overlay").classList.remove("active"));
+        });
+        document.querySelectorAll(".modal-overlay").forEach((overlay) => {
+            overlay.addEventListener("click", (event) => {
+                if (event.target === overlay) overlay.classList.remove("active");
+            });
+        });
+    },
+
+    async submitClient(event) {
+        event.preventDefault();
+        const id = $("editClientId").value;
+        const payload = {
+            name: $("newClientName").value.trim(),
+            contact_person: $("newClientContact").value.trim() || null,
+            email: $("newClientEmail").value.trim() || null,
+            phone: $("newClientPhone").value.trim() || null,
+            address: $("newClientAddress").value.trim() || null,
+            industry: $("newClientIndustry").value.trim() || null,
+            vat_number: $("newClientVat").value.trim() || null,
+            payment_terms_days: Math.min(120, Math.max(0, Number($("newClientTerms").value) || 0)),
+            status: $("newClientStatus").value,
+            notes: $("newClientNotes").value.trim() || null,
+        };
+        const query = id
+            ? supabase.from("clients").update(payload).eq("id", id)
+            : supabase.from("clients").insert(payload);
+        const { data, error } = await query.select("*").single();
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        const index = this.clients.findIndex((client) => client.id === data.id);
+        if (index >= 0) this.clients[index] = data;
+        else this.clients.push(data);
+        this.clients.sort((a, b) => a.name.localeCompare(b.name));
+        this.fillClientPickers();
+        $("addClientForm").reset();
+        $("editClientId").value = "";
+        $("clientFormTitle").textContent = "Add client";
+        $("clientFormSubmit").textContent = "Add client";
+        this.renderClients();
+        this.showBanner(id ? "Client updated." : "Client added.", "ok");
+    },
+
+    async onClientListClick(event) {
+        const edit = event.target.closest("[data-edit-client]");
+        const archive = event.target.closest("[data-archive-client]");
+        if (edit) {
+            const client = this.clients.find((row) => row.id === edit.dataset.editClient);
+            if (!client) return;
+            $("editClientId").value = client.id;
+            $("newClientName").value = client.name || "";
+            $("newClientContact").value = client.contact_person || "";
+            $("newClientEmail").value = client.email || "";
+            $("newClientPhone").value = client.phone || "";
+            $("newClientAddress").value = client.address || "";
+            $("newClientIndustry").value = client.industry || "";
+            $("newClientVat").value = client.vat_number || "";
+            $("newClientTerms").value = client.payment_terms_days ?? 7;
+            $("newClientStatus").value = client.status || "active";
+            $("newClientNotes").value = client.notes || "";
+            $("clientFormTitle").textContent = "Edit client";
+            $("clientFormSubmit").textContent = "Save client";
+        }
+        if (archive) {
+            const client = this.clients.find((row) => row.id === archive.dataset.archiveClient);
+            const { data, error } = await supabase.from("clients").update({ archived: !client.archived }).eq("id", client.id).select("*").single();
+            if (error) {
+                this.showBanner(errText(error), "error");
+                return;
+            }
+            Object.assign(client, data);
+            this.fillClientPickers();
+            this.renderClients();
+            this.showBanner(data.archived ? "Client archived." : "Client restored.", "ok");
+        }
+    },
+
+    async submitService(event) {
+        event.preventDefault();
+        const name = $("newServiceName").value.trim();
+        const price = Number($("newServicePrice").value) || 0;
+        const { data, error } = await supabase.from("services").insert({
+            name,
+            unit_price: price < 0 ? 0 : price,
+            description: $("newServiceDescription").value.trim() || null,
+        }).select("*").single();
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.services.push(data);
+        $("addServiceForm").reset();
+        this.renderServices();
+        this.renderItems();
+        this.showBanner("Service added.", "ok");
+    },
 };
 
-// Boot & Global Bind
-window.App = App;
-document.addEventListener("DOMContentLoaded", () => App.init());
+App.init();

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to dashboard | Dubani Creatives</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #ff5e00;
+            --bg: #0d0d0d;
+            --card: #141414;
+            --text: #f0f0f0;
+            --muted: #888;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+        .glow {
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,94,0,0.16) 0%, transparent 70%);
+            top: -180px;
+            right: -120px;
+            pointer-events: none;
+        }
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+        }
+        .logo { height: 32px; width: auto; margin-bottom: 18px; }
+        h1 {
+            font-family: Outfit, Inter, sans-serif;
+            font-size: 1.7rem;
+            letter-spacing: -0.4px;
+            margin-bottom: 8px;
+        }
+        h1 span { color: var(--primary); }
+        .lede { color: var(--muted); font-size: 0.92rem; margin-bottom: 24px; line-height: 1.5; }
+        label { display: block; font-size: 0.78rem; color: #bbb; margin-bottom: 6px; }
+        input {
+            width: 100%;
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font: inherit;
+            margin-bottom: 14px;
+        }
+        input:focus { outline: 2px solid rgba(255,94,0,0.45); border-color: var(--primary); }
+        button, .linkish {
+            font: inherit;
+            cursor: pointer;
+        }
+        .primary {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-top: 4px;
+        }
+        .primary:disabled { opacity: 0.6; cursor: wait; }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .linkish, .back {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .msg {
+            min-height: 1.2em;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+        .msg.error { color: #ff6b6b; }
+        .msg.ok { color: #25D366; }
+        .hidden { display: none; }
+        @media (max-width: 480px) {
+            .card { padding: 28px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+    <main class="card">
+        <img src="images/logo.png" alt="Dubani Creatives" class="logo">
+        <h1 id="title">Login to <span>dashboard</span></h1>
+        <p class="lede" id="lede">Owner sign-in for invoices, Handscribe and PatternForge. There is no public registration on this page.</p>
+
+        <p class="msg" id="msg" role="alert"></p>
+
+        <form id="login-form">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <button class="primary" type="submit" id="submit-btn">Login to dashboard</button>
+            <div class="row">
+                <button class="linkish" type="button" id="forgot-btn">Forgot password</button>
+                <a class="back" href="index.html">Back to site</a>
+            </div>
+        </form>
+
+        <form id="recovery-form" class="hidden">
+            <label for="new-password">New password</label>
+            <input id="new-password" type="password" autocomplete="new-password" minlength="8" required>
+            <button class="primary" type="submit" id="recovery-btn">Save new password</button>
+        </form>
+    </main>
+    <script type="module" src="js/login.js"></script>
+</body>
+</html>

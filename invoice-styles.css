@@ -754,8 +754,70 @@ body {
     }
 }
 
+.app-banner {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.45;
+}
+.app-banner.error {
+    background: rgba(255, 68, 68, 0.12);
+    border: 1px solid rgba(255, 68, 68, 0.35);
+    color: #ffb4b4;
+}
+.app-banner.loading {
+    background: rgba(255, 94, 0, 0.1);
+    border: 1px solid rgba(255, 94, 0, 0.28);
+    color: #ffb27a;
+}
+.app-banner.ok {
+    background: rgba(37, 211, 102, 0.12);
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    color: #b6f5cf;
+}
+.filter-grid {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.badge-overdue {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255, 94, 0, 0.15);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+.item-service { margin-bottom: 6px; }
+.share-links {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    word-break: break-all;
+}
+.share-links a { color: var(--accent); }
+.pay-history { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.pay-history article {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+}
+.empty-state { color: var(--text-muted); padding: 18px 4px; text-align: center; }
+
 @media (max-width: 600px) {
-    .app-topbar { padding: 12px 16px; }
+    .app-topbar { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
+    .topbar-actions { flex-wrap: wrap; }
+    .filter-grid { grid-template-columns: 1fr; }
     .form-panel, .preview-panel { padding: 20px; }
     .form-row { grid-template-columns: 1fr; }
     .form-row-3 { grid-template-columns: 1fr; }

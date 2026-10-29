@@ -652,138 +652,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- APPS Password Protection Logic (Password: 4664) ---
-    const APPS_PASSWORD = "4664";
-
-    const createAppsPasswordModal = () => {
-        if (document.getElementById('apps-pass-modal')) return;
-
-        const modalOverlay = document.createElement('div');
-        modalOverlay.id = 'apps-pass-modal';
-        modalOverlay.className = 'apps-pass-modal-overlay';
-        modalOverlay.innerHTML = `
-            <div class="apps-pass-modal-card" id="apps-pass-card">
-                <div class="apps-pass-icon">🔒</div>
-                <h3 class="apps-pass-title">Dubani Apps Locked</h3>
-                <p class="apps-pass-desc">Please enter password to access APPS tools.</p>
-                <div class="apps-pass-input-wrapper">
-                    <input type="password" id="apps-pass-input" class="apps-pass-input" placeholder="••••" maxlength="10" autocomplete="off">
-                </div>
-                <div class="apps-pass-error" id="apps-pass-error"></div>
-                <div class="apps-pass-actions">
-                    <button type="button" class="apps-pass-btn-cancel" id="apps-pass-cancel">Cancel</button>
-                    <button type="button" class="apps-pass-btn-submit" id="apps-pass-submit">Unlock APPS</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modalOverlay);
-
-        const card = document.getElementById('apps-pass-card');
-        const input = document.getElementById('apps-pass-input');
-        const errorEl = document.getElementById('apps-pass-error');
-        const cancelBtn = document.getElementById('apps-pass-cancel');
-        const submitBtn = document.getElementById('apps-pass-submit');
-
-        let onUnlockSuccess = null;
-
-        window.openAppsPasswordModal = (callback) => {
-            onUnlockSuccess = callback;
-            errorEl.textContent = '';
-            input.value = '';
-            modalOverlay.classList.add('active');
-            setTimeout(() => input.focus(), 200);
-        };
-
-        const closePasswordModal = () => {
-            modalOverlay.classList.remove('active');
-            errorEl.textContent = '';
-            input.value = '';
-        };
-
-        const verifyPassword = () => {
-            const entered = input.value.trim();
-            if (entered === APPS_PASSWORD) {
-                closePasswordModal();
-                if (onUnlockSuccess) onUnlockSuccess();
-            } else {
-                errorEl.textContent = '❌ Incorrect password. Access denied.';
-                card.classList.remove('shake');
-                void card.offsetWidth; // Force reflow
-                card.classList.add('shake');
-                input.value = '';
-                input.focus();
-            }
-        };
-
-        submitBtn.addEventListener('click', verifyPassword);
-        cancelBtn.addEventListener('click', closePasswordModal);
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') verifyPassword();
-            if (e.key === 'Escape') closePasswordModal();
-        });
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) closePasswordModal();
-        });
-    };
-
-    createAppsPasswordModal();
-
-    const requestAppsAccess = (onSuccess) => {
-        if (window.openAppsPasswordModal) {
-            window.openAppsPasswordModal(onSuccess);
-        }
-    };
-
-    // --- Apps Sidebar Toggle Logic ---
+    // Apps entry is a normal link to login.html (or the dashboard when a session exists).
+    // js/apps-entry.js updates those hrefs. The sidebar can still be closed if it is open.
     const sidebar = document.getElementById('apps-sidebar');
     const sidebarOverlay = document.getElementById('apps-sidebar-overlay');
-    const sidebarBtn = document.getElementById('apps-sidebar-btn');
-    const mobileSidebarBtn = document.getElementById('mobile-apps-btn');
     const sidebarClose = document.getElementById('sidebar-close');
 
-    const toggleSidebar = (force) => {
-        const isOpen = force !== undefined ? force : !sidebar.classList.contains('active');
-        if (sidebar) sidebar.classList.toggle('active', isOpen);
-        if (sidebarOverlay) sidebarOverlay.classList.toggle('active', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
+    const closeAppsSidebar = () => {
+        if (sidebar) sidebar.classList.remove('active');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
     };
 
-    if (sidebarBtn) sidebarBtn.addEventListener('click', () => {
-        requestAppsAccess(() => toggleSidebar(true));
-    });
-
-    if (mobileSidebarBtn) mobileSidebarBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        requestAppsAccess(() => {
-            // Close mobile nav first
-            const mobileNav = document.getElementById('mobile-nav');
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            if (mobileNav && mobileNav.classList.contains('open')) {
-                if (hamburgerBtn) hamburgerBtn.classList.remove('active');
-                mobileNav.classList.remove('open');
-            }
-            toggleSidebar(true);
-        });
-    });
-
-    if (sidebarClose) sidebarClose.addEventListener('click', () => toggleSidebar(false));
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
-
-    // Intercept any direct links to invoice.html or my-apps.html
-    document.querySelectorAll('a[href*="invoice.html"], a[href*="my-apps.html"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetUrl = link.href;
-            requestAppsAccess(() => {
-                window.location.href = targetUrl;
-            });
-        });
-    });
+    if (sidebarClose) sidebarClose.addEventListener('click', closeAppsSidebar);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeAppsSidebar);
 
     // Close sidebar on Escape key
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
-            toggleSidebar(false);
+            closeAppsSidebar();
         }
     });
 

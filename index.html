@@ -65,13 +65,13 @@
                         <span class="btn-text">Get in touch</span>
                     </a>
                     <!-- Apps Sidebar Trigger -->
-                    <button class="theme-btn apps-sidebar-btn" id="apps-sidebar-btn" style="margin-left: 15px; cursor: pointer;">
+                    <a href="login.html?next=%2Fmy-apps.html" class="theme-btn apps-sidebar-btn" id="apps-sidebar-btn" style="margin-left: 15px; cursor: pointer;">
                         <div class="btn-bg" style="background-color: var(--secondary-color); border: 1px solid rgba(255,255,255,0.1);"></div>
-                        <span class="btn-text" style="display: flex; align-items: center; gap: 8px; color: #000000 !important;">
+                        <span class="btn-text" style="display: flex; align-items: center; gap: 8px; color: #000000 !important; white-space: nowrap;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                            Apps
+                            Login to dashboard
                         </span>
-                    </button>
+                    </a>
                     <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">
                         <span></span>
                         <span></span>
@@ -92,7 +92,7 @@
             <a href="brief.html" class="mobile-nav-link env-business">Start a Project</a>
             <a href="skills.html" class="mobile-nav-link env-personal">Skills</a>
             <a href="contact.html" class="mobile-nav-link">Contact</a>
-            <a href="#" class="mobile-nav-link" id="mobile-apps-btn">Apps</a>
+            <a href="login.html?next=%2Fmy-apps.html" class="mobile-nav-link" id="mobile-apps-btn">Login to dashboard</a>
             <div class="mobile-env-switcher">
                 <button class="env-switch-btn" data-env="business">Business</button>
                 <button class="env-switch-btn" data-env="personal">Personal</button>
@@ -898,12 +898,24 @@
     <div class="apps-sidebar-overlay" id="apps-sidebar-overlay"></div>
     <aside class="apps-sidebar" id="apps-sidebar">
         <div class="sidebar-header">
-            <h2 class="sidebar-title">Dubani <span>Apps</span></h2>
+            <h2 class="sidebar-title">Login to <span>dashboard</span></h2>
             <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">&times;</button>
         </div>
         <div class="sidebar-content">
-            <p class="sidebar-desc">Explore our custom utility tools designed to streamline your business workflow.</p>
+            <p class="sidebar-desc">Sign in to the owner dashboard for invoices, Handscribe and PatternForge.</p>
             <div class="app-list">
+                <a href="login.html?next=%2Fmy-apps.html" class="app-item" id="sidebar-dashboard-link">
+                    <div class="app-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                    </div>
+                    <div class="app-info">
+                        <h3 class="app-name">Login to dashboard</h3>
+                        <p class="app-tagline">Opens the dashboard when you are already signed in.</p>
+                    </div>
+                    <div class="app-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </a>
                 <!-- Invoice App -->
                 <a href="invoice.html" class="app-item">
                     <div class="app-icon">
@@ -963,7 +975,8 @@
         </div>
     </aside>
 
-    <script src="main.js?v=35" defer></script>
+    <script type="module" src="js/apps-entry.js"></script>
+    <script src="main.js?v=36" defer></script>
 
     <!-- WhatsApp Chat Widget -->
     <div class="wa-widget-container">

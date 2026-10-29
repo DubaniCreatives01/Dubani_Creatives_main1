@@ -5,89 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
-    <link rel="stylesheet" href="invoice-styles.css?v=31">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="invoice-styles.css?v=32">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>html:not(.dc-ready) body { visibility: hidden; }</style>
 </head>
 <body>
 
-    <!-- Top Bar -->
     <header class="app-topbar">
         <div class="topbar-left">
             <img loading="lazy" src="images/logo1.png" alt="Dubani Creatives">
             <h1 class="topbar-title"><span>Invoice</span> Generator</h1>
-            <span class="cloud-status-badge" id="cloudStatusBadge">☁️ Cloud Active</span>
+            <span class="cloud-status-badge" id="cloudStatusBadge">Checking…</span>
         </div>
         <div class="topbar-actions">
-            <button class="btn btn-secondary btn-sm" id="manageInvoicesBtn">📁 Saved Invoices</button>
-            <button class="btn btn-secondary btn-sm" id="manageClientsBtn">👤 Clients</button>
-            <button class="btn btn-secondary btn-sm" id="manageServicesBtn">📦 Services</button>
-            <button class="btn btn-secondary btn-sm" id="settingsBtn">⚙ Settings</button>
-            <button class="btn btn-primary btn-sm" id="newInvoiceBtn">+ New Invoice</button>
+            <a class="btn btn-secondary btn-sm" href="my-apps.html">Dashboard</a>
+            <button class="btn btn-secondary btn-sm" id="manageInvoicesBtn" type="button">Documents</button>
+            <button class="btn btn-secondary btn-sm" id="manageClientsBtn" type="button">Clients</button>
+            <button class="btn btn-secondary btn-sm" id="manageServicesBtn" type="button">Services</button>
+            <button class="btn btn-secondary btn-sm" id="settingsBtn" type="button">Settings</button>
+            <button class="btn btn-primary btn-sm" id="newInvoiceBtn" type="button">+ New</button>
         </div>
     </header>
 
-    <!-- Main Layout -->
     <div class="app-layout">
-
-        <!-- LEFT: Form Panel -->
         <div class="form-panel">
+            <div id="appBanner" class="app-banner loading">Loading documents from Supabase…</div>
 
-            <!-- Invoice Details -->
             <div class="form-section">
-                <h2 class="form-section-title">Invoice Details</h2>
+                <h2 class="form-section-title">Document</h2>
                 <div class="form-row-3">
                     <div class="form-group">
-                        <label class="form-label">Invoice #</label>
-                        <input type="number" id="invoiceNumber" class="form-input" value="389">
+                        <label class="form-label" for="docKind">Type</label>
+                        <select id="docKind" class="form-select">
+                            <option value="invoice">Invoice</option>
+                            <option value="quote">Quote</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Invoice Date</label>
+                        <label class="form-label" for="docReference">Number</label>
+                        <input type="text" id="docReference" class="form-input" value="Draft" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="docStatus">Status</label>
+                        <input type="text" id="docStatus" class="form-input" value="draft" readonly>
+                    </div>
+                </div>
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label" for="docTitle">Title</label>
+                        <input type="text" id="docTitle" class="form-input" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="invoiceDate">Issue date</label>
                         <input type="date" id="invoiceDate" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Due Date</label>
+                        <label class="form-label" for="dueDate">Due date</label>
                         <input type="date" id="dueDate" class="form-input">
                     </div>
                 </div>
             </div>
 
-            <!-- Client Details -->
             <div class="form-section">
-                <h2 class="form-section-title">Client Details</h2>
+                <h2 class="form-section-title">Client</h2>
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label class="form-label">Saved Clients</label>
+                    <label class="form-label" for="clientSelect">Saved clients</label>
                     <select id="clientSelect" class="form-select">
                         <option value="">— Select saved client —</option>
                     </select>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Client Name</label>
-                        <input type="text" id="clientName" class="form-input" placeholder="e.g. Nosta">
+                        <label class="form-label" for="clientName">Client name</label>
+                        <input type="text" id="clientName" class="form-input" list="clientNames" placeholder="Start typing a client" autocomplete="off">
+                        <datalist id="clientNames"></datalist>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone</label>
-                        <input type="text" id="clientPhone" class="form-input" placeholder="+27 73 922 1011">
+                        <label class="form-label" for="clientPhone">Phone</label>
+                        <input type="text" id="clientPhone" class="form-input">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="clientEmail" class="form-input" placeholder="client@email.com">
+                        <label class="form-label" for="clientEmail">Email</label>
+                        <input type="email" id="clientEmail" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Address</label>
-                        <input type="text" id="clientAddress" class="form-input" placeholder="Optional">
+                        <label class="form-label" for="clientAddress">Address</label>
+                        <input type="text" id="clientAddress" class="form-input">
                     </div>
                 </div>
-                <button class="btn btn-secondary btn-sm" id="saveClientBtn">💾 Save Client</button>
+                <button class="btn btn-secondary btn-sm" id="saveClientBtn" type="button">Save client</button>
             </div>
 
-            <!-- Line Items -->
             <div class="form-section">
-                <h2 class="form-section-title">Line Items</h2>
+                <h2 class="form-section-title">Line items</h2>
                 <table class="items-table">
                     <thead>
                         <tr>
@@ -101,286 +116,261 @@
                     </thead>
                     <tbody id="itemsBody"></tbody>
                 </table>
-                <button class="btn btn-secondary btn-sm" id="addItemBtn" style="margin-top: 12px;">+ Add Item</button>
-
-                <!-- Totals -->
+                <button class="btn btn-secondary btn-sm" id="addItemBtn" type="button" style="margin-top: 12px;">+ Add item</button>
                 <div class="totals-summary">
-                    <div class="total-row">
-                        <span class="total-label">Subtotal:</span>
-                        <span class="total-value" id="formSubtotal">ZAR 0.00</span>
-                    </div>
-                    <div class="total-row">
-                        <span class="total-label">Discount:</span>
-                        <span class="total-value" id="formDiscount">- ZAR 0.00</span>
-                    </div>
-                    <div class="total-row">
-                        <span class="total-label">Tax:</span>
-                        <span class="total-value" id="formTax">ZAR 0.00</span>
-                    </div>
-                    <div class="total-row grand">
-                        <span class="total-label">Total:</span>
-                        <span class="total-value" id="formTotal">ZAR 0.00</span>
-                    </div>
+                    <div class="total-row"><span class="total-label">Subtotal:</span><span class="total-value" id="formSubtotal">ZAR 0.00</span></div>
+                    <div class="total-row"><span class="total-label">Discount:</span><span class="total-value" id="formDiscount">- ZAR 0.00</span></div>
+                    <div class="total-row"><span class="total-label">VAT:</span><span class="total-value" id="formTax">ZAR 0.00</span></div>
+                    <div class="total-row grand"><span class="total-label">Total:</span><span class="total-value" id="formTotal">ZAR 0.00</span></div>
                 </div>
             </div>
 
-            <!-- Tax & Discount -->
             <div class="form-section">
-                <h2 class="form-section-title">Tax & Discount</h2>
+                <h2 class="form-section-title">VAT &amp; discount</h2>
                 <div class="form-row-3">
                     <div class="form-group">
-                        <label class="form-label">Tax Rate (%)</label>
-                        <input type="number" id="taxRate" class="form-input" value="0" min="0" max="100">
+                        <label class="form-label" for="vatEnabled">VAT 15%</label>
+                        <select id="vatEnabled" class="form-select">
+                            <option value="off">VAT off</option>
+                            <option value="on">VAT 15%</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Discount</label>
-                        <input type="number" id="discount" class="form-input" value="0" min="0">
+                        <label class="form-label" for="discount">Discount</label>
+                        <input type="number" id="discount" class="form-input" value="0" min="0" step="0.01">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Discount Type</label>
+                        <label class="form-label" for="discountType">Discount type</label>
                         <select id="discountType" class="form-select">
-                            <option value="percent">Percentage (%)</option>
                             <option value="fixed">Fixed (ZAR)</option>
+                            <option value="percent">Percentage (%)</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- Notes -->
             <div class="form-section">
-                <h2 class="form-section-title">Notes</h2>
+                <h2 class="form-section-title">Notes &amp; payment instructions</h2>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label class="form-label" for="invoiceNotes">Notes</label>
+                    <textarea id="invoiceNotes" class="form-textarea" rows="3"></textarea>
+                </div>
                 <div class="form-group">
-                    <textarea id="invoiceNotes" class="form-textarea" rows="5" placeholder="Bank details, payment terms..."></textarea>
+                    <label class="form-label" for="paymentInstructions">Payment instructions</label>
+                    <textarea id="paymentInstructions" class="form-textarea" rows="3"></textarea>
                 </div>
             </div>
 
-            <!-- Export Actions -->
             <div class="export-actions">
-                <button class="btn btn-primary" id="saveInvoiceBtn">💾 Save Invoice</button>
-                <button class="btn btn-success" id="markPaidBtn">💳 Mark / Clip Paid</button>
-                <button class="btn btn-secondary" id="downloadPdf">📄 Download PDF</button>
-                <button class="btn btn-success" id="shareWhatsapp" style="background:#25D366;">💬 Share via WhatsApp</button>
-                <button class="btn btn-secondary" id="shareEmail">📧 Share via Email</button>
+                <button class="btn btn-primary" id="saveInvoiceBtn" type="button">Save draft</button>
+                <button class="btn btn-primary" id="finaliseBtn" type="button">Issue document</button>
+                <button class="btn btn-success" id="markPaidBtn" type="button">Record payment</button>
+                <button class="btn btn-secondary" id="downloadPdf" type="button">Download PDF</button>
+                <button class="btn btn-success" id="shareWhatsapp" type="button" style="background:#25D366;">WhatsApp link</button>
+                <button class="btn btn-secondary" id="shareEmail" type="button">Email link</button>
+                <button class="btn btn-secondary" id="duplicateBtn" type="button">Duplicate</button>
+                <button class="btn btn-secondary" id="convertBtn" type="button">Convert to invoice</button>
+                <button class="btn btn-secondary" id="acceptBtn" type="button">Accept quote</button>
+                <button class="btn btn-secondary" id="declineBtn" type="button">Decline quote</button>
+                <button class="btn btn-danger" id="voidBtn" type="button">Void</button>
+                <button class="btn btn-danger" id="deleteDraftBtn" type="button">Delete draft</button>
             </div>
+            <div class="share-links" id="shareLinks"></div>
         </div>
 
-        <!-- RIGHT: Preview Panel -->
         <div class="preview-panel">
             <h2 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); margin-bottom: 20px; align-self: flex-start;">Live Preview</h2>
-            <div class="invoice-preview" id="invoicePreview">
-                <!-- Rendered by JS -->
-            </div>
+            <div class="invoice-preview" id="invoicePreview"></div>
         </div>
     </div>
 
-    <!-- ======== MODALS ======== -->
-
-    <!-- Payment Modal -->
     <div class="modal-overlay" id="paymentModal">
-        <div class="modal" style="max-width: 500px;">
+        <div class="modal" style="max-width: 560px;">
             <div class="modal-title">
-                <span>💳 Record Payment & Watermark</span>
-                <button class="modal-close">×</button>
+                <span>Record payment</span>
+                <button class="modal-close" type="button">×</button>
             </div>
-            <div style="background: var(--bg-input); padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px; border: 1px solid var(--border);">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="font-size: 13px; color: var(--text-secondary);">Target Invoice:</span>
-                    <strong style="color: var(--accent);" id="payModalInvNum">#389</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="font-size: 13px; color: var(--text-secondary);">Total Invoice Amount:</span>
-                    <strong style="color: var(--text-primary); font-size: 16px;" id="payModalTotal">ZAR 0.00</strong>
-                </div>
-            </div>
-
+            <div id="payHistory" class="pay-history"></div>
             <form id="paymentForm">
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-                    <label class="pay-option-card">
-                        <input type="radio" name="payOption" value="full" checked>
-                        <div class="pay-option-content">
-                            <div class="pay-option-title">Paid in Full (100%)</div>
-                            <div class="pay-option-desc">Stamps "PAID FULL" watermark. Balance = ZAR 0.00</div>
-                        </div>
-                    </label>
-
-                    <label class="pay-option-card">
-                        <input type="radio" name="payOption" value="half">
-                        <div class="pay-option-content">
-                            <div class="pay-option-title">Paid Half (50%)</div>
-                            <div class="pay-option-desc" id="payHalfDesc">Stamps "PARTIALLY PAID" and auto-creates balance invoice</div>
-                        </div>
-                    </label>
-
-                    <label class="pay-option-card">
-                        <input type="radio" name="payOption" value="custom">
-                        <div class="pay-option-content">
-                            <div class="pay-option-title">Custom Amount Paid</div>
-                            <div class="pay-option-desc">Specify exact amount received and generate new balance invoice</div>
-                        </div>
-                    </label>
-
-                    <label class="pay-option-card" style="border-color: rgba(255, 68, 68, 0.35);">
-                        <input type="radio" name="payOption" value="unpaid">
-                        <div class="pay-option-content">
-                            <div class="pay-option-title" style="color: #ff4444;">↩️ Retract Payment (Reset to UNPAID)</div>
-                            <div class="pay-option-desc">Removes PAID / PARTIAL watermark stamp and resets balance to full amount</div>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="form-group" id="customAmountGroup" style="display: none; margin-bottom: 20px;">
-                    <label class="form-label">Custom Amount Paid (ZAR)</label>
-                    <input type="number" id="customPaidAmount" class="form-input" min="0" step="0.01" placeholder="Enter amount paid">
-                </div>
-
-                <div id="paymentSummaryBox" style="background: rgba(255,94,0,0.1); border: 1px solid rgba(255,94,0,0.25); padding: 14px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                        <span>Amount Paid:</span>
-                        <strong id="summaryPaidVal" style="color: var(--success);">ZAR 0.00</strong>
+                <div class="form-row" style="margin-bottom: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" for="payAmount">Amount (ZAR)</label>
+                        <input type="number" id="payAmount" class="form-input" min="0.01" step="0.01" required>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Balance Remaining:</span>
-                        <strong id="summaryBalanceVal" style="color: var(--accent);">ZAR 0.00</strong>
+                    <div class="form-group">
+                        <label class="form-label" for="payDate">Paid on</label>
+                        <input type="date" id="payDate" class="form-input" required>
                     </div>
                 </div>
-
-                <div style="display: flex; gap: 10px;">
-                    <button type="button" class="btn btn-secondary modal-close" style="flex:1;">Cancel</button>
-                    <button type="submit" class="btn btn-primary" style="flex:2;">💾 Apply Payment & Save Stamp</button>
+                <div class="form-row" style="margin-bottom: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" for="payMethod">Method</label>
+                        <select id="payMethod" class="form-select">
+                            <option value="eft">EFT</option>
+                            <option value="capitec_pay">Capitec Pay</option>
+                            <option value="payshap">PayShap</option>
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="payReference">Reference</label>
+                        <input type="text" id="payReference" class="form-input">
+                    </div>
                 </div>
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" for="payNote">Note</label>
+                    <input type="text" id="payNote" class="form-input">
+                </div>
+                <button class="btn btn-primary" type="submit" style="width:100%;">Save payment</button>
             </form>
         </div>
     </div>
 
-    <!-- Invoices Modal -->
     <div class="modal-overlay" id="invoicesModal">
-        <div class="modal" style="max-width: 680px;">
+        <div class="modal" style="max-width: 860px;">
             <div class="modal-title">
-                <span>📁 Saved Invoices</span>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()">🔄 Restore Seed Data</button>
-                    <button class="modal-close">×</button>
+                <span>Invoices &amp; quotes</span>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="exportCsvBtn">Export CSV</button>
+                    <button class="modal-close" type="button">×</button>
                 </div>
             </div>
-            <div class="form-group" style="margin-bottom: 16px;">
-                <input type="text" id="searchInvoicesInput" class="form-input" placeholder="🔍 Search saved invoices by client or invoice number...">
+            <div class="filter-grid">
+                <input type="text" id="searchInvoicesInput" class="form-input" placeholder="Search reference, client or title">
+                <select id="filterKind" class="form-select">
+                    <option value="">All types</option>
+                    <option value="invoice">Invoices</option>
+                    <option value="quote">Quotes</option>
+                </select>
+                <select id="filterStatus" class="form-select">
+                    <option value="">All statuses</option>
+                    <option value="draft">Draft</option>
+                    <option value="sent">Sent</option>
+                    <option value="partially_paid">Partially paid</option>
+                    <option value="paid">Paid</option>
+                    <option value="void">Void</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="declined">Declined</option>
+                    <option value="converted">Converted</option>
+                </select>
+                <select id="filterClient" class="form-select"><option value="">All clients</option></select>
+                <input type="date" id="filterFrom" class="form-input" aria-label="From date">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px; max-width: 180px;">
+                <input type="date" id="filterTo" class="form-input" aria-label="To date">
             </div>
             <div class="saved-list" id="invoicesList"></div>
         </div>
     </div>
 
-    <!-- Clients Modal -->
     <div class="modal-overlay" id="clientsModal">
         <div class="modal">
             <div class="modal-title">
-                <span>👤 Saved Clients</span>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()">🔄 Restore Seed Data</button>
-                    <button class="modal-close">×</button>
-                </div>
+                <span>Clients</span>
+                <button class="modal-close" type="button">×</button>
             </div>
+            <input type="text" id="searchClientsInput" class="form-input" placeholder="Search clients" style="margin-bottom: 12px;">
             <div class="saved-list" id="clientsList"></div>
-            <h3 style="font-size:14px; margin-bottom:12px; color: var(--accent);">Add New Client</h3>
+            <h3 style="font-size:14px; margin: 14px 0; color: var(--accent);" id="clientFormTitle">Add client</h3>
             <form id="addClientForm">
+                <input type="hidden" id="editClientId">
                 <div class="form-row" style="margin-bottom: 10px;">
-                    <div class="form-group">
-                        <input type="text" id="newClientName" class="form-input" placeholder="Client name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="newClientPhone" class="form-input" placeholder="Phone">
-                    </div>
+                    <div class="form-group"><input type="text" id="newClientName" class="form-input" placeholder="Client name" required></div>
+                    <div class="form-group"><input type="text" id="newClientContact" class="form-input" placeholder="Contact person"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 10px;">
+                    <div class="form-group"><input type="email" id="newClientEmail" class="form-input" placeholder="Email"></div>
+                    <div class="form-group"><input type="text" id="newClientPhone" class="form-input" placeholder="Phone"></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 10px;"><input type="text" id="newClientAddress" class="form-input" placeholder="Address"></div>
+                <div class="form-row" style="margin-bottom: 10px;">
+                    <div class="form-group"><input type="text" id="newClientIndustry" class="form-input" placeholder="Industry"></div>
+                    <div class="form-group"><input type="text" id="newClientVat" class="form-input" placeholder="VAT number"></div>
+                </div>
+                <div class="form-row" style="margin-bottom: 10px;">
+                    <div class="form-group"><input type="number" id="newClientTerms" class="form-input" placeholder="Payment terms (days)" min="0" max="120" value="7"></div>
                     <div class="form-group">
-                        <input type="email" id="newClientEmail" class="form-input" placeholder="Email">
-                    </div>
-                    <div class="form-group" style="display:flex; align-items:flex-end;">
-                        <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">+ Add Client</button>
+                        <select id="newClientStatus" class="form-select">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
                     </div>
                 </div>
+                <textarea id="newClientNotes" class="form-textarea" rows="2" placeholder="Notes" style="margin-bottom: 10px;"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm" id="clientFormSubmit">Add client</button>
             </form>
         </div>
     </div>
 
-    <!-- Services Modal -->
     <div class="modal-overlay" id="servicesModal">
         <div class="modal">
             <div class="modal-title">
-                <span>📦 Saved Services & Prices</span>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()">🔄 Restore Seed Data</button>
-                    <button class="modal-close">×</button>
-                </div>
+                <span>Services</span>
+                <button class="modal-close" type="button">×</button>
             </div>
             <div class="saved-list" id="servicesList"></div>
-            <h3 style="font-size:14px; margin-bottom:12px; color: var(--accent);">Add New Service</h3>
+            <h3 style="font-size:14px; margin: 14px 0; color: var(--accent);">Add service</h3>
             <form id="addServiceForm">
                 <div class="form-row" style="margin-bottom: 10px;">
-                    <div class="form-group">
-                        <input type="text" id="newServiceName" class="form-input" placeholder="Service name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" id="newServicePrice" class="form-input" placeholder="Default price (ZAR)" min="0" step="0.01">
-                    </div>
+                    <div class="form-group"><input type="text" id="newServiceName" class="form-input" placeholder="Service name" required></div>
+                    <div class="form-group"><input type="number" id="newServicePrice" class="form-input" placeholder="Price (ZAR)" min="0" step="0.01"></div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm">+ Add Service</button>
+                <textarea id="newServiceDescription" class="form-textarea" rows="2" placeholder="Description" style="margin-bottom: 10px;"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm">Add service</button>
             </form>
         </div>
     </div>
 
-    <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <div class="modal-title">
-                <span>⚙ Business Settings</span>
-                <button class="modal-close">×</button>
+                <span>Business settings</span>
+                <button class="modal-close" type="button">×</button>
             </div>
-            <div class="form-group" style="margin-bottom:14px;">
-                <label class="form-label">Company Name</label>
-                <input type="text" id="settCompany" class="form-input">
-            </div>
-            <div class="form-group" style="margin-bottom:14px;">
-                <label class="form-label">Address</label>
-                <textarea id="settAddress" class="form-textarea" rows="2"></textarea>
-            </div>
-            <div class="form-row" style="margin-bottom:14px;">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="settEmail" class="form-input">
+            <p class="empty-state" style="text-align:left; padding-top:0;">Loaded from your Supabase business settings. Nothing here is stored in the website code.</p>
+            <form id="settingsForm">
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Trading name</label><input id="settTrading" class="form-input"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Legal name</label><input id="settLegal" class="form-input"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Address</label><textarea id="settAddress" class="form-textarea" rows="2"></textarea></div>
+                <div class="form-row" style="margin-bottom:10px;">
+                    <div class="form-group"><label class="form-label">City</label><input id="settCity" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Country</label><input id="settCountry" class="form-input"></div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Phone</label>
-                    <input type="text" id="settPhone" class="form-input">
+                <div class="form-row" style="margin-bottom:10px;">
+                    <div class="form-group"><label class="form-label">Email</label><input id="settEmail" type="email" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Phone</label><input id="settPhone" class="form-input"></div>
                 </div>
-            </div>
-            <div class="form-group" style="margin-bottom:14px;">
-                <label class="form-label">Bank Details</label>
-                <textarea id="settBank" class="form-textarea" rows="2"></textarea>
-            </div>
-            <div class="form-row" style="margin-bottom:14px;">
-                <div class="form-group">
-                    <label class="form-label">Tax Registration</label>
-                    <input type="text" id="settTaxReg" class="form-input">
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Website</label><input id="settWebsite" class="form-input"></div>
+                <div class="form-row" style="margin-bottom:10px;">
+                    <div class="form-group"><label class="form-label">Company reg.</label><input id="settReg" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Tax number</label><input id="settTax" class="form-input"></div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Default Tax Rate (%)</label>
-                    <input type="number" id="settDefaultTax" class="form-input" min="0" max="100">
+                <div class="form-row" style="margin-bottom:10px;">
+                    <div class="form-group"><label class="form-label">VAT number</label><input id="settVatNo" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">VAT registered</label>
+                        <select id="settVatRegistered" class="form-select"><option value="false">No</option><option value="true">Yes</option></select>
+                    </div>
                 </div>
-            </div>
-            <div style="margin: 16px 0; padding-top: 14px; border-top: 1px solid var(--border);">
-                <label class="form-label" style="margin-bottom: 8px;">Backup & Restore Data</label>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="btn btn-secondary btn-sm" id="exportBackupBtn" style="flex:1;">📥 Export Backup</button>
-                    <button type="button" class="btn btn-secondary btn-sm" id="importBackupBtn" style="flex:1;">📤 Import Backup</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.App.restoreSeedData()" style="flex:1;">🔄 Restore Seed Data</button>
-                    <input type="file" id="importBackupFile" accept=".json" style="display:none;">
+                <div class="form-row" style="margin-bottom:10px;">
+                    <div class="form-group"><label class="form-label">Bank</label><input id="settBank" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Account holder</label><input id="settHolder" class="form-input"></div>
                 </div>
-            </div>
-            <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;">💾 Save Settings</button>
+                <div class="form-row" style="margin-bottom:10px;">
+                    <div class="form-group"><label class="form-label">Account number</label><input id="settAccount" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Branch code</label><input id="settBranch" class="form-input"></div>
+                </div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Account type</label><input id="settAccountType" class="form-input"></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Payment instructions</label><textarea id="settPay" class="form-textarea" rows="2"></textarea></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Payment terms</label><textarea id="settTermsShort" class="form-textarea" rows="2"></textarea></div>
+                <div class="form-group" style="margin-bottom:10px;"><label class="form-label">Terms and conditions</label><textarea id="settTerms" class="form-textarea" rows="4"></textarea></div>
+                <div class="form-group" style="margin-bottom:14px;"><label class="form-label">Default due days</label><input id="settDueDays" type="number" min="0" max="120" class="form-input"></div>
+                <button class="btn btn-primary" type="submit" style="width:100%;">Save settings</button>
+            </form>
         </div>
     </div>
 
-    <script src="invoice-app.js?v=31"></script>
+    <script type="module" src="invoice-app.js?v=32"></script>
 </body>
 </html>
-
