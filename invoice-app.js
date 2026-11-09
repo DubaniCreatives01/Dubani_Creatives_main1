@@ -66,6 +66,7 @@ const App = {
     documents: [],
     payments: [],
     logoBase64: "images/logo1.png",
+    logoSize: { width: 2248, height: 337 },
     state: null,
 
     blankState() {
@@ -170,6 +171,10 @@ const App = {
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
             canvas.getContext("2d").drawImage(img, 0, 0);
+            this.logoSize = {
+                width: img.naturalWidth || this.logoSize.width,
+                height: img.naturalHeight || this.logoSize.height,
+            };
             this.logoBase64 = canvas.toDataURL("image/png");
         } catch {
             this.logoBase64 = "images/logo1.png";
@@ -280,12 +285,18 @@ const App = {
         ].filter(Boolean).join("\n");
     },
 
+    displayReference() {
+        const state = this.state;
+        if (!state) return "";
+        return state.reference || state.nextRef || "";
+    },
+
     render() {
         const state = this.state;
         const locked = state.status !== "draft";
         $("docKind").value = state.kind;
         $("docKind").disabled = Boolean(state.id);
-        $("docReference").value = state.reference || (state.nextRef ? `Draft · next ${state.nextRef}` : "Draft");
+        $("docReference").value = this.displayReference();
         $("docStatus").value = STATUS_LABEL[state.status] || state.status;
         $("docTitle").value = state.title || "";
         $("invoiceDate").value = state.issueDate || "";
@@ -358,7 +369,7 @@ const App = {
         const balance = this.balance();
         const paid = Number(state.amountPaid) || 0;
         const heading = state.kind === "quote" ? "QUOTE" : "INVOICE";
-        const number = state.reference || "DRAFT";
+        const number = this.displayReference();
         let watermark = "";
         if (state.status === "paid") watermark = `<div class="inv-watermark-stamp">PAID FULL</div>`;
         else if (state.status === "partially_paid") {
@@ -914,18 +925,33 @@ const App = {
         const pageW = doc.internal.pageSize.getWidth();
         const margin = 20;
         const right = pageW - margin;
-        let y = 22;
         const state = this.state;
+        const logoTop = 12;
+        const logoHeight = 12;
+        const logoRatio = this.logoSize.height ? this.logoSize.width / this.logoSize.height : (2248 / 337);
+        const logoWidth = Math.round(logoHeight * logoRatio * 10) / 10;
+        let drewLogo = false;
+        if (typeof this.logoBase64 === "string" && this.logoBase64.startsWith("data:image/")) {
+            try {
+                const format = this.logoBase64.includes("image/jpeg") ? "JPEG" : "PNG";
+                doc.addImage(this.logoBase64, format, margin, logoTop, logoWidth, logoHeight);
+                drewLogo = true;
+            } catch {
+                drewLogo = false;
+            }
+        }
         doc.setFont("helvetica", "bold");
         doc.setFontSize(22);
-        doc.text(state.kind === "quote" ? "QUOTE" : "INVOICE", right, y, { align: "right" });
+        doc.text(state.kind === "quote" ? "QUOTE" : "INVOICE", right, 18, { align: "right" });
         doc.setFont("helvetica", "normal");
         doc.setFontSize(11);
         doc.setTextColor(120);
-        doc.text(state.reference || "DRAFT", right, y + 8, { align: "right" });
+        const number = this.displayReference();
+        if (number) doc.text(number, right, 26, { align: "right" });
         doc.setTextColor(30);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(13);
+        let y = drewLogo ? logoTop + logoHeight + 8 : 22;
         const lines = this.companyLines();
         doc.text(lines[0] || "Dubani Creatives", margin, y);
         doc.setFont("helvetica", "normal");
@@ -1009,7 +1035,7 @@ const App = {
 
     fileName() {
         const who = (this.state.client.name || "client").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
-        const ref = this.state.reference || "draft";
+        const ref = this.displayReference() || "draft";
         return `${ref}-${who || "client"}.pdf`;
     },
 
@@ -1052,7 +1078,7 @@ const App = {
             .map((item) => `• ${item.title} — ${money(this.lineTotal(item))}`);
         const bank = this.paymentBlock();
         return [
-            `${state.kind === "quote" ? "Quote" : "Invoice"} ${state.reference || "(draft)"}`,
+            `${state.kind === "quote" ? "Quote" : "Invoice"} ${this.displayReference() || "(draft)"}`,
             `For ${state.client.name || "client"}`,
             state.issueDate ? `Date: ${state.issueDate}` : "",
             state.dueDate ? `Due: ${state.dueDate}` : "",
@@ -1078,7 +1104,7 @@ const App = {
 
     shareEmail() {
         this.readForm();
-        const subject = encodeURIComponent(`${this.state.kind === "quote" ? "Quote" : "Invoice"} ${this.state.reference || "draft"}`);
+        const subject = encodeURIComponent(`${this.state.kind === "quote" ? "Quote" : "Invoice"} ${this.displayReference() || "draft"}`);
         const href = `mailto:${encodeURIComponent(this.state.client.email || "")}?subject=${subject}&body=${encodeURIComponent(this.shareText())}`;
         this.showShare("Email", href);
     },
