@@ -118,7 +118,15 @@
             padding: 60px 24px 80px;
         }
 
-        .apps-intro { margin-bottom: 60px; text-align: center; }
+        .apps-intro { margin-bottom: 28px; text-align: left; max-width: 980px; }
+        .greeting-kicker {
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
 
         .apps-badge {
             display: inline-flex;
@@ -152,8 +160,8 @@
         .apps-intro p {
             font-size: 1rem;
             color: var(--muted);
-            max-width: 460px;
-            margin: 0 auto;
+            max-width: 520px;
+            margin: 0;
             line-height: 1.7;
         }
 
@@ -161,6 +169,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 24px;
+            max-width: 980px;
+            margin: 0 auto 36px;
         }
 
         .app-card {
@@ -281,9 +291,15 @@
             border: 1px solid var(--card-border);
             border-radius: 16px;
         }
-        .stat-card { padding: 16px 18px; text-align: left; }
-        .stat-card span { display: block; color: var(--muted); font-size: 0.75rem; margin-bottom: 6px; }
-        .stat-card strong { font-family: var(--font-heading); font-size: 1.15rem; }
+        .stat-card { padding: 18px 18px 16px; text-align: left; background:
+            radial-gradient(circle at top right, rgba(255,94,0,0.14), transparent 42%),
+            var(--card-bg); }
+        .stat-card span { display: block; color: var(--muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-card strong { font-family: var(--font-heading); font-size: 1.45rem; letter-spacing: -0.4px; }
+        .stat-card.due strong { color: var(--primary); }
+        .stat-card.received strong { color: #25D366; }
+        .stat-card em { display: block; margin-top: 8px; font-style: normal; color: var(--muted); font-size: 0.75rem; }
+        .app-icon svg { width: 26px; height: 26px; stroke: var(--primary); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
         .recent-panel, .import-panel { max-width: 980px; margin: 0 auto 28px; padding: 18px 20px; text-align: left; }
         .recent-panel h2, .import-panel h2 { font-family: var(--font-heading); font-size: 1rem; margin-bottom: 12px; }
         .recent-row {
@@ -360,38 +376,46 @@
 
     <main class="apps-main">
         <div class="apps-intro">
-            <div class="apps-badge">Private Hub</div>
-            <h1>Dashboard</h1>
-            <p>Invoices, company files, clients and studio tools for the signed-in owner.</p>
+            <p class="greeting-kicker">Private hub</p>
+            <h1 id="dash-greeting">Hello</h1>
+            <p>Invoices, the file vault, and the studio tools for this account.</p>
         </div>
 
         <p id="dash-status" hidden></p>
-        <section class="stats-grid" aria-label="Invoice stats">
-            <article class="stat-card"><span>Outstanding balance</span><strong id="stat-outstanding">—</strong></article>
-            <article class="stat-card"><span>Overdue (count · amount)</span><strong id="stat-overdue">—</strong></article>
-            <article class="stat-card"><span>Paid this month</span><strong id="stat-paid">—</strong></article>
-            <article class="stat-card"><span>Clients</span><strong id="stat-clients">—</strong></article>
+        <section class="stats-grid" aria-label="Studio stats">
+            <article class="stat-card due"><span>Outstanding</span><strong id="stat-outstanding">—</strong><em id="stat-overdue">Loading overdue…</em></article>
+            <article class="stat-card received"><span>Received this month</span><strong id="stat-paid">—</strong></article>
+            <article class="stat-card"><span>Vault files</span><strong id="stat-vault">—</strong></article>
+            <article class="stat-card"><span>Expiring soon</span><strong id="stat-expiring">—</strong></article>
         </section>
-        <section class="recent-panel" id="vault-expiry-panel" hidden>
-            <h2>File vault — expiring documents</h2>
-            <div id="vault-expiry"></div>
-        </section>
-        <section class="recent-panel">
-            <h2>Recent invoices</h2>
-            <div id="recent-invoices"><p class="empty-note">Loading invoices…</p></div>
-        </section>
-        <section class="import-panel">
-            <h2>Import old browser data</h2>
-            <p class="empty-note">Reads clients and services saved in this browser and adds any that are missing. Invoices are listed only — their numbers have to be imported with the SQL file.</p>
-            <button type="button" class="import-btn" id="import-legacy-btn">Import old browser data</button>
-            <p id="import-result" hidden></p>
-        </section>
-
         <div class="apps-grid">
 
-            <!-- Handscribe -->
+            <a href="invoice.html" class="app-card">
+                <div class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg></div>
+                <div class="app-info">
+                    <h3 class="app-name">Invoices</h3>
+                    <p class="app-desc">Create invoices, upload ones you already have, and track what each client has paid.</p>
+                </div>
+                <span class="app-tag">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    Open App
+                </span>
+            </a>
+
+            <a href="vault.html" class="app-card" id="vault-tile">
+                <div class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+                <div class="app-info">
+                    <h3 class="app-name">File Vault</h3>
+                    <p class="app-desc">Private company file vault for CIPC, SARS, B-BBEE, contracts, tenders, and client files.</p>
+                </div>
+                <span class="app-tag" id="vault-tile-tag">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <span id="vault-tile-label">Open vault</span>
+                </span>
+            </a>
+
             <a href="handscribe/" class="app-card">
-                <div class="app-icon">✍️</div>
+                <div class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></div>
                 <div class="app-info">
                     <h3 class="app-name">Handscribe</h3>
                     <p class="app-desc">Convert typed text into realistic handwriting. Export as PNG, JPEG or PDF with 18+ pen styles.</p>
@@ -402,33 +426,8 @@
                 </span>
             </a>
 
-            <!-- Invoice Generator -->
-            <a href="invoice.html" class="app-card">
-                <div class="app-icon">📄</div>
-                <div class="app-info">
-                    <h3 class="app-name">Invoice Generator</h3>
-                    <p class="app-desc">Create, preview, and send branded invoices to clients via PDF or WhatsApp.</p>
-                </div>
-                <span class="app-tag">
-                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-                    Open App
-                </span>
-            </a>
-
-            <a href="vault.html" class="app-card" id="vault-tile">
-                <div class="app-icon">📁</div>
-                <div class="app-info">
-                    <h3 class="app-name">Drive</h3>
-                    <p class="app-desc">Private company file vault for CIPC, SARS, B-BBEE, contracts, tenders, and client files.</p>
-                </div>
-                <span class="app-tag" id="vault-tile-tag">
-                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-                    <span id="vault-tile-label">Open vault</span>
-                </span>
-            </a>
-
             <a href="patternforge/" class="app-card">
-                <div class="app-icon">◆</div>
+                <div class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
                 <div class="app-info">
                     <h3 class="app-name">PatternForge</h3>
                     <p class="app-desc">Generate seamless SVG patterns and export them for client work.</p>
@@ -439,7 +438,6 @@
                 </span>
             </a>
 
-            <!-- Coming Soon placeholders -->
             <div class="app-card coming-soon">
                 <div class="app-icon">📈</div>
                 <div class="app-info">
@@ -467,13 +465,26 @@
                 <span class="app-tag">Coming Soon</span>
             </div>
 
-            <!-- Add New -->
             <div class="app-card add-new">
                 <div class="add-new-icon">+</div>
                 <p>More apps coming soon</p>
             </div>
 
         </div>
+        <section class="recent-panel" id="vault-expiry-panel" hidden>
+            <h2>File vault — expiring documents</h2>
+            <div id="vault-expiry"></div>
+        </section>
+        <section class="recent-panel">
+            <h2>Recent invoices</h2>
+            <div id="recent-invoices"><p class="empty-note">Loading invoices…</p></div>
+        </section>
+        <section class="import-panel">
+            <h2>Import old browser data</h2>
+            <p class="empty-note">Reads clients and services saved in this browser and adds any that are missing. Invoices are listed only — their numbers have to be imported with the SQL file.</p>
+            <button type="button" class="import-btn" id="import-legacy-btn">Import old browser data</button>
+            <p id="import-result" hidden></p>
+        </section>
     </main>
 
     <footer class="apps-footer">

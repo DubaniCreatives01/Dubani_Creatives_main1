@@ -83,7 +83,7 @@ export function formatZar(amount) {
     return `ZAR ${withCommas}.${frac}`;
 }
 
-/** Blank is allowed for app invoices and means "use the calculated total". */
+/** Blank is allowed when the caller treats an empty field as zero or "no override". */
 export function parseAmount(value, allowBlank) {
     const text = String(value ?? "").trim().replace(/,/g, "");
     if (!text) {
@@ -123,8 +123,10 @@ export function entryFromApp(row) {
         balance_due: round2(row.balance_due),
         tracked_amount: tracked,
         marked_paid: marked,
-        amount: 0,
-        paid: false,
+        entered_paid: tracked != null ? tracked : round2(row.amount_paid),
+        forced_paid: marked === true,
+        amount: round2(row.total),
+        paid: marked === true,
         name: "",
         mime_type: "",
         storage_path: "",
@@ -133,12 +135,14 @@ export function entryFromApp(row) {
 }
 
 export function entryFromUpload(row) {
-    const amount = round2(row?.amount);
+    const total = round2(row?.amount);
+    const entered = round2(row?.amount_paid);
+    const forced = row?.paid === true;
     return {
         source: "upload",
         id: row.id,
         kind: "upload",
-        status: row?.paid ? "paid" : "unpaid",
+        status: forced ? "paid" : "unpaid",
         reference: row.name || "",
         number: null,
         title: row.name || "",
@@ -148,30 +152,66 @@ export function entryFromUpload(row) {
         created_at: row.created_at || "",
         client_id: row.client_id || "",
         client_name: row.clients?.name || row.client_name || "No client",
-        total: amount,
-        amount_paid: 0,
-        balance_due: row?.paid ? 0 : amount,
+        total,
+        amount_paid: entered,
+        balance_due: round2(Math.max(0, total - (forced ? total : entered))),
         tracked_amount: null,
-        marked_paid: null,
-        amount,
-        paid: Boolean(row?.paid),
+        marked_paid: forced ? true : null,
+        entered_paid: entered,
+        forced_paid: forced,
+        amount: total,
+        paid: forced,
         mime_type: row.mime_type || "",
         storage_path: row.storage_path || "",
         size_bytes: Number(row.size_bytes) || 0,
     };
 }
 
-export function displayedAmount(entry) {
-    if (entry.source === "upload") return round2(entry.amount);
-    if (entry.tracked_amount != null) return round2(entry.tracked_amount);
-    return round2(entry.total);
+/** Invoice total. App invoices use the calculated total. Uploads use their editable total. */
+export function invoiceTotal(entry) {
+    return round2(entry?.total);
 }
 
-/** Paid when the owner flipped the toggle, otherwise when an app invoice is fully paid. */
+/** Amount the client has paid, before a Paid toggle forces the full total. */
+export function enteredPaid(entry) {
+    return round2(entry?.entered_paid);
+}
+
+export function displayedPaid(entry) {
+    if (entry?.forced_paid) return invoiceTotal(entry);
+    return enteredPaid(entry);
+}
+
+/** @deprecated The old name meant "invoice total". It now means amount received. */
+export function displayedAmount(entry) {
+    return displayedPaid(entry);
+}
+
+export function payStatus(entry) {
+    if (!entry || entry.kind === "quote") return "";
+    if (entry.forced_paid) return "paid";
+    const paid = displayedPaid(entry);
+    const total = invoiceTotal(entry);
+    if (paid <= 0) return "unpaid";
+    if (paid < total) return "partial";
+    return "paid";
+}
+
 export function isSettled(entry) {
-    if (entry.source === "upload") return Boolean(entry.paid);
-    if (entry.marked_paid === true || entry.marked_paid === false) return entry.marked_paid;
-    return entry.status === "paid";
+    return payStatus(entry) === "paid";
+}
+
+/** What the Paid / Unpaid button should do. It never zeroes the typed amount. */
+export function togglePlan(entry) {
+    if (entry?.forced_paid) return { action: "clear", confirm: false };
+    if (payStatus(entry) === "paid") return { action: "already", confirm: false };
+    return { action: "force", confirm: displayedPaid(entry) < invoiceTotal(entry) };
+}
+
+export function monthReceived(paymentAmounts, eventDeltas) {
+    const payments = (paymentAmounts || []).reduce((sum, value) => sum + round2(value), 0);
+    const deltas = (eventDeltas || []).reduce((sum, value) => sum + round2(value), 0);
+    return round2(payments + deltas);
 }
 
 export function countsInTotals(entry) {
@@ -181,13 +221,8 @@ export function countsInTotals(entry) {
 
 export function splitAmount(entry) {
     if (!countsInTotals(entry)) return { invoiced: 0, paid: 0, outstanding: 0 };
-    const invoiced = displayedAmount(entry);
-    if (isSettled(entry)) return { invoiced, paid: invoiced, outstanding: 0 };
-    let recorded = 0;
-    if (entry.source === "app" && entry.marked_paid !== false) {
-        recorded = Math.min(invoiced, round2(entry.amount_paid));
-    }
-    const paid = round2(recorded);
+    const invoiced = invoiceTotal(entry);
+    const paid = displayedPaid(entry);
     return { invoiced, paid, outstanding: round2(Math.max(0, invoiced - paid)) };
 }
 
@@ -241,9 +276,14 @@ export function clientSummaries(entries, clients) {
 
 export function isOverdueEntry(entry, today) {
     if (!entry || entry.source !== "app" || entry.kind !== "invoice") return false;
-    if (isSettled(entry)) return false;
-    if (entry.status === "void" || entry.status === "draft") return false;
+    if (isSettled(entry) || !countsInTotals(entry)) return false;
     return Boolean(entry.due_date) && String(entry.due_date) < String(today || "");
+}
+
+export function missingPaidEvents(error) {
+    const text = `${error?.message || ""} ${error?.details || ""}`;
+    if (error?.code === "PGRST205" || error?.code === "42P01") return true;
+    return /invoice_paid_events/.test(text) && /schema cache|does not exist/i.test(text);
 }
 
 export function missingLedgerColumn(error) {

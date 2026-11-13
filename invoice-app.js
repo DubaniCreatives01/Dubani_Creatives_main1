@@ -12,13 +12,17 @@ import {
     parseAmount,
     entryFromApp,
     entryFromUpload,
-    displayedAmount,
-    isSettled,
+    invoiceTotal,
+    displayedPaid,
+    payStatus,
+    togglePlan,
+    countsInTotals,
     summarise,
     clientSummaries,
     isOverdueEntry,
     missingLedgerColumn,
     missingUploadsTable,
+    missingPaidEvents,
 } from "./js/invoice-ledger.mjs";
 
 const $ = (id) => document.getElementById(id);
@@ -85,6 +89,9 @@ const App = {
     ledger: [],
     ledgerReady: true,
     uploadsReady: true,
+    paidColumnReady: true,
+    payFilter: "",
+    paidEvents: [],
     uploadQueue: [],
     uploading: false,
     payments: [],
@@ -712,10 +719,15 @@ const App = {
             return;
         }
         this.documents = invoiceRes.data || [];
-        const uploadRes = await supabase.from("invoice_uploads")
-            .select("id, client_id, name, storage_path, mime_type, size_bytes, amount, paid, issue_date, created_at")
-            .order("created_at", { ascending: false });
+        const uploadFull = "id, client_id, name, storage_path, mime_type, size_bytes, amount, amount_paid, paid, issue_date, created_at";
+        const uploadBase = "id, client_id, name, storage_path, mime_type, size_bytes, amount, paid, issue_date, created_at";
+        let uploadRes = await supabase.from("invoice_uploads").select(uploadFull).order("created_at", { ascending: false });
         this.uploadsReady = true;
+        this.paidColumnReady = true;
+        if (uploadRes.error && /amount_paid/.test(`${uploadRes.error.message || ""} ${uploadRes.error.details || ""}`)) {
+            this.paidColumnReady = false;
+            uploadRes = await supabase.from("invoice_uploads").select(uploadBase).order("created_at", { ascending: false });
+        }
         if (uploadRes.error && missingUploadsTable(uploadRes.error)) {
             this.uploadsReady = false;
             this.uploads = [];
@@ -725,6 +737,11 @@ const App = {
         } else {
             this.uploads = uploadRes.data || [];
         }
+        const eventRes = await supabase.from("invoice_paid_events")
+            .select("id, invoice_id, upload_id, amount, delta, kind, created_at")
+            .order("created_at", { ascending: false })
+            .limit(300);
+        this.paidEvents = eventRes.error && missingPaidEvents(eventRes.error) ? [] : (eventRes.data || []);
         const clientName = (id) => this.clients.find((client) => client.id === id)?.name;
         this.ledger = this.documents.map((row) => entryFromApp(row))
             .concat(this.uploads.map((row) => entryFromUpload({ ...row, client_name: clientName(row.client_id) })))
@@ -752,10 +769,11 @@ const App = {
             if (kind === "invoice" && !(row.kind === "invoice" || row.source === "upload")) return false;
             if (kind === "upload" && row.source !== "upload") return false;
             if (kind === "quote" && row.kind !== "quote") return false;
-            if (status === "unpaid") {
-                if (row.kind === "quote" || isSettled(row) || row.status === "draft" || row.status === "void") return false;
-            } else if (status === "paid") {
-                if (!isSettled(row)) return false;
+            if (this.payFilter) {
+                if (!countsInTotals(row) || payStatus(row) !== this.payFilter) return false;
+            }
+            if (status === "unpaid" || status === "partial" || status === "paid") {
+                if (!countsInTotals(row) || payStatus(row) !== status) return false;
             } else if (status && row.status !== status) {
                 return false;
             }
@@ -775,12 +793,13 @@ const App = {
 
     renderDocumentList() {
         const notes = [];
-        if (!this.ledgerReady) notes.push("Editing an amount or paid status needs the new invoice columns.");
+        if (!this.ledgerReady) notes.push("Editing amount paid needs the invoice ledger columns.");
         if (!this.uploadsReady) notes.push("Uploading files needs the private invoice-uploads bucket.");
+        if (this.uploadsReady && !this.paidColumnReady) notes.push("Amount paid on uploaded invoices needs the latest migration.");
         const setup = $("ledgerSetup");
         setup.hidden = notes.length === 0;
         setup.textContent = notes.length
-            ? `${notes.join(" ")} Apply supabase/migrations/20261113143000_invoice_uploads.sql in the Supabase SQL editor, then reload.`
+            ? `${notes.join(" ")} Apply supabase/migrations/20261113131500_invoice_amount_paid.sql in the Supabase SQL editor, then reload.`
             : "";
 
         const clientId = $("filterClient").value;
@@ -789,7 +808,7 @@ const App = {
         const clientCount = new Set(scope.filter((row) => row.client_id).map((row) => row.client_id)).size;
         $("ledgerStats").innerHTML = [
             ["Invoiced", formatZar(totals.invoiced), ""],
-            ["Paid", formatZar(totals.paid), "paid"],
+            ["Received", formatZar(totals.paid), "paid"],
             ["Outstanding", formatZar(totals.outstanding), "outstanding"],
             ["Clients", String(clientCount), ""],
         ].map(([label, value, kind]) => `<article class="ledger-stat ${kind}"><span>${label}</span><strong>${esc(value)}</strong></article>`).join("");
@@ -800,9 +819,12 @@ const App = {
                 <small>${formatZar(summarise(this.ledger).outstanding)} outstanding</small>
             </button>`].concat(cards.map((card) => `<button type="button" class="client-card ${card.client_id === clientId ? "active" : ""}" data-ledger-client="${esc(card.client_id)}">
                 <strong>${esc(card.client_name)}</strong>
-                <small>${card.count} · ${formatZar(card.outstanding)} outstanding</small>
+                <small>${formatZar(card.paid)} received · ${formatZar(card.outstanding)} due</small>
             </button>`)).join("");
 
+        document.querySelectorAll("#payFilters [data-pay]").forEach((button) => {
+            button.classList.toggle("active", button.dataset.pay === this.payFilter);
+        });
         const selected = this.clients.find((client) => client.id === $("uploadClient").value);
         $("dropzoneTitle").textContent = selected ? `Upload invoices for ${selected.name}` : "Upload existing invoices";
         $("dropzoneHint").textContent = selected
@@ -820,22 +842,32 @@ const App = {
     ledgerCard(row) {
         const label = this.ledgerLabel(row);
         const late = isOverdue(row);
-        const settled = isSettled(row);
+        const status = payStatus(row);
+        const moneyRow = row.kind === "invoice" || row.source === "upload";
         const locked = row.status === "void" || row.status === "converted";
-        const editable = !locked && (row.source === "upload" ? this.uploadsReady : (row.kind === "invoice" && this.ledgerReady));
-        const amount = displayedAmount(row).toFixed(2);
+        const editable = !locked && moneyRow && (row.source === "upload" ? (this.uploadsReady && this.paidColumnReady) : this.ledgerReady);
+        const total = invoiceTotal(row);
+        const paid = displayedPaid(row);
+        const balance = round2(Math.max(0, total - paid));
+        const payLabel = status === "paid" ? "Paid" : status === "partial" ? "Partial" : "Unpaid";
         const badges = [
             `<span class="status-tag ${row.source === "upload" ? "upload" : "source"}">${row.source === "upload" ? "Uploaded" : esc(row.kind)}</span>`,
             row.source === "app" ? `<span class="status-tag">${esc(STATUS_LABEL[row.status] || row.status)}</span>` : "",
-            settled ? `<span class="status-tag paid">Paid</span>` : (row.kind === "invoice" || row.source === "upload" ? `<span class="status-tag unpaid">Unpaid</span>` : ""),
-            row.status === "partially_paid" && !settled ? `<span class="status-tag partial">Partial</span>` : "",
+            moneyRow && status ? `<span class="status-tag ${esc(status)}">${payLabel}</span>` : "",
             late ? `<span class="badge-overdue">Overdue</span>` : "",
         ].filter(Boolean).join("");
-        const controls = editable ? `
-            <label class="ledger-amount">Amount (ZAR)
-                <input class="form-input" type="text" inputmode="decimal" data-amount-for="${esc(row.id)}" data-source="${esc(row.source)}" value="${esc(amount)}" title="${row.source === "app" ? "Leave blank to use the document total." : "Amount for this uploaded invoice."}">
+        const totalField = row.source === "upload"
+            ? `<label class="ledger-amount">Invoice total
+                <input class="form-input" type="text" inputmode="decimal" data-total-for="${esc(row.id)}" value="${esc(total.toFixed(2))}" ${editable ? "" : "disabled"}>
+               </label>`
+            : `<div class="ledger-amount">Invoice total<strong>${esc(formatZar(total))}</strong></div>`;
+        const controls = moneyRow ? `
+            ${totalField}
+            <label class="ledger-amount">Amount paid
+                <input class="form-input" type="text" inputmode="decimal" data-amount-for="${esc(row.id)}" data-source="${esc(row.source)}" value="${esc(paid.toFixed(2))}" ${editable ? "" : "disabled"} title="What the client has paid so far. You can change this any time.">
             </label>
-            <button type="button" class="pay-toggle ${settled ? "is-paid" : "is-unpaid"}" data-toggle-paid="${esc(row.id)}" data-source="${esc(row.source)}" aria-pressed="${settled ? "true" : "false"}">${settled ? "Paid" : "Unpaid"}</button>
+            <div class="ledger-balance ${status === "paid" ? "settled" : ""}"><span>Outstanding</span><strong>${esc(formatZar(balance))}</strong></div>
+            ${editable ? `<button type="button" class="pay-toggle ${status === "paid" ? "is-paid" : "is-unpaid"}" data-toggle-paid="${esc(row.id)}" data-source="${esc(row.source)}" aria-pressed="${status === "paid" ? "true" : "false"}">${status === "paid" ? "Paid" : "Unpaid"}</button>` : ""}
         ` : "";
         const actions = row.source === "upload"
             ? `${canPreview(row.mime_type) ? `<button type="button" class="btn btn-secondary btn-sm" data-preview-upload="${esc(row.id)}">Preview</button>` : ""}
@@ -844,7 +876,7 @@ const App = {
             : `<button type="button" class="btn btn-secondary btn-sm" data-open="${esc(row.id)}">Open</button>`;
         const meta = row.source === "upload"
             ? `${formatBytes(row.size_bytes)} · ${esc(row.issue_date || "no date")}`
-            : `${esc(row.issue_date || "no date")} · document ${money(row.total)} · due ${money(row.balance_due)}`;
+            : esc(row.issue_date || "no date");
         return `<article class="ledger-card">
             <div class="ledger-card-top">
                 <div>
@@ -853,11 +885,24 @@ const App = {
                 </div>
                 <div class="ledger-badges">${badges}</div>
             </div>
-            <div class="ledger-card-controls">
-                ${controls}
-                <div class="saved-item-actions">${actions}</div>
-            </div>
+            <div class="ledger-figures">${controls}</div>
+            <div class="ledger-card-controls"><div class="saved-item-actions">${actions}</div></div>
+            ${this.historyHtml(row)}
         </article>`;
+    },
+
+    historyHtml(row) {
+        const events = (this.paidEvents || []).filter((event) => (
+            row.source === "upload" ? event.upload_id === row.id : event.invoice_id === row.id
+        )).slice(0, 3);
+        if (!events.length) return "";
+        const lines = events.map((event) => {
+            const when = String(event.created_at || "").slice(0, 10);
+            if (event.kind === "marked_paid") return `${when} · marked fully paid`;
+            if (event.kind === "marked_unpaid") return `${when} · paid flag cleared · ${formatZar(event.amount)} still entered`;
+            return `${when} · amount paid ${formatZar(event.amount)}`;
+        });
+        return `<p class="paid-history">${lines.map((line) => esc(line)).join(" · ")}</p>`;
     },
 
     exportCsv() {
@@ -866,22 +911,25 @@ const App = {
             this.showBanner("There are no rows to export for the current filters.", "error");
             return;
         }
-        const header = ["type", "reference", "number", "status", "client", "issue_date", "due_date", "total", "amount_paid", "balance_due", "overdue", "displayed_amount", "settled"];
-        const body = rows.map((row) => [
-            row.source === "upload" ? "upload" : row.kind,
-            row.reference || "",
-            row.number || "",
-            row.status,
-            row.client_name || "",
-            row.issue_date || "",
-            row.due_date || "",
-            row.source === "upload" ? row.amount : row.total,
-            row.amount_paid,
-            row.balance_due,
-            isOverdue(row) ? "yes" : "no",
-            displayedAmount(row),
-            row.kind === "quote" ? "" : (isSettled(row) ? "paid" : "unpaid"),
-        ]);
+        const header = ["type", "reference", "number", "document_status", "pay_status", "client", "issue_date", "due_date", "invoice_total", "amount_paid", "outstanding", "overdue"];
+        const body = rows.map((row) => {
+            const total = invoiceTotal(row);
+            const paid = displayedPaid(row);
+            return [
+                row.source === "upload" ? "upload" : row.kind,
+                row.reference || "",
+                row.number || "",
+                row.status,
+                payStatus(row),
+                row.client_name || "",
+                row.issue_date || "",
+                row.due_date || "",
+                total,
+                paid,
+                round2(Math.max(0, total - paid)),
+                isOverdue(row) ? "yes" : "no",
+            ];
+        });
         const csv = [header, ...body].map((line) => line.map((cell) => {
             const text = String(cell ?? "");
             return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
@@ -1373,9 +1421,16 @@ const App = {
         });
         $("invoicesList").addEventListener("click", (event) => this.onLedgerClick(event));
         $("invoicesList").addEventListener("change", (event) => {
-            const input = event.target.closest("[data-amount-for]");
-            if (!input) return;
-            this.saveLedgerAmount(input.dataset.amountFor, input.dataset.source, input.value);
+            const paid = event.target.closest("[data-amount-for]");
+            if (paid) this.saveAmountPaid(paid.dataset.amountFor, paid.dataset.source, paid.value);
+            const total = event.target.closest("[data-total-for]");
+            if (total) this.saveUploadTotal(total.dataset.totalFor, total.value);
+        });
+        $("payFilters").addEventListener("click", (event) => {
+            const button = event.target.closest("[data-pay]");
+            if (!button) return;
+            this.payFilter = button.dataset.pay;
+            this.renderDocumentList();
         });
         $("browseInvoicesBtn").addEventListener("click", () => $("invoiceFileInput").click());
         $("invoiceFileInput").addEventListener("change", () => {
@@ -1456,41 +1511,87 @@ const App = {
         return this.ledger.find((row) => row.id === id && row.source === source);
     },
 
-    async saveLedgerAmount(id, source, raw) {
+    async saveAmountPaid(id, source, raw) {
         const entry = this.findLedgerEntry(id, source);
         if (!entry) return;
-        const parsed = parseAmount(raw, source === "app");
+        const parsed = parseAmount(raw, true);
         if (!parsed.ok) {
             this.showBanner(parsed.error, "error");
             this.renderDocumentList();
             return;
         }
-        const query = source === "upload"
-            ? supabase.from("invoice_uploads").update({ amount: parsed.amount }).eq("id", id)
-            : supabase.from("invoices").update({ tracked_amount: parsed.amount }).eq("id", id);
-        const { error } = await query;
+        const amount = parsed.amount == null ? 0 : parsed.amount;
+        const before = displayedPaid(entry);
+        if (amount === before && !entry.forced_paid) return;
+        const patch = source === "upload"
+            ? { amount_paid: amount, paid: false }
+            : { tracked_amount: amount, marked_paid: false };
+        const { error } = await supabase.from(source === "upload" ? "invoice_uploads" : "invoices").update(patch).eq("id", id);
         if (error) {
             this.showBanner(errText(error), "error");
             return;
         }
-        this.showBanner(parsed.amount == null ? "Amount cleared. The document total is used." : "Amount saved.", "ok");
+        await this.logPaidEvent(entry, amount, round2(amount - before), "edit");
+        this.showBanner("Amount paid saved.", "ok");
+        await this.loadDocuments();
+    },
+
+    async saveUploadTotal(id, raw) {
+        const entry = this.findLedgerEntry(id, "upload");
+        if (!entry) return;
+        const parsed = parseAmount(raw, false);
+        if (!parsed.ok) {
+            this.showBanner(parsed.error || "Enter the invoice total.", "error");
+            this.renderDocumentList();
+            return;
+        }
+        const { error } = await supabase.from("invoice_uploads").update({ amount: parsed.amount }).eq("id", id);
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.showBanner("Invoice total saved.", "ok");
         await this.loadDocuments();
     },
 
     async toggleLedgerPaid(id, source) {
         const entry = this.findLedgerEntry(id, source);
         if (!entry) return;
-        const next = !isSettled(entry);
-        const query = source === "upload"
-            ? supabase.from("invoice_uploads").update({ paid: next }).eq("id", id)
-            : supabase.from("invoices").update({ marked_paid: next }).eq("id", id);
-        const { error } = await query;
+        const plan = togglePlan(entry);
+        if (plan.action === "already") {
+            this.showBanner("Amount paid already covers this invoice. Change the amount if a balance is still due.", "ok");
+            return;
+        }
+        if (plan.action === "force" && plan.confirm) {
+            const ok = window.confirm(`Mark the full ${formatZar(invoiceTotal(entry))} as paid? The ${formatZar(entry.entered_paid)} already entered stays saved if you switch this back to unpaid.`);
+            if (!ok) return;
+        }
+        const forced = plan.action === "force";
+        const patch = source === "upload"
+            ? { paid: forced }
+            : { marked_paid: forced };
+        const { error } = await supabase.from(source === "upload" ? "invoice_uploads" : "invoices").update(patch).eq("id", id);
         if (error) {
             this.showBanner(errText(error), "error");
             return;
         }
-        this.showBanner(next ? "Marked paid." : "Marked unpaid.", "ok");
+        const shown = forced ? invoiceTotal(entry) : entry.entered_paid;
+        const before = displayedPaid(entry);
+        await this.logPaidEvent(entry, shown, round2(shown - before), forced ? "marked_paid" : "marked_unpaid");
+        this.showBanner(forced ? "Marked paid." : `Marked unpaid. Amount paid is still ${formatZar(entry.entered_paid)}.`, "ok");
         await this.loadDocuments();
+    },
+
+    async logPaidEvent(entry, amount, delta, kind) {
+        const row = {
+            amount,
+            delta,
+            kind,
+            invoice_id: entry.source === "app" ? entry.id : null,
+            upload_id: entry.source === "upload" ? entry.id : null,
+        };
+        const { error } = await supabase.from("invoice_paid_events").insert(row);
+        if (error && !missingPaidEvents(error)) this.showBanner(errText(error), "error");
     },
 
     async onLedgerClick(event) {

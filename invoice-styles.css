@@ -1024,9 +1024,77 @@ body {
     align-items: center;
 }
 
-.ledger-card-controls {
+.pay-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.pay-filters button {
+    border: 1px solid var(--border);
+    background: #141414;
+    color: var(--text-secondary);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pay-filters button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.ledger-figures {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(140px, 1fr) minmax(140px, 0.8fr) auto;
+    gap: 12px;
+    align-items: end;
     margin-top: 14px;
-    justify-content: flex-start;
+}
+
+.ledger-amount strong {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: 18px;
+}
+
+.ledger-balance span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.ledger-balance strong {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--font-heading);
+    font-size: 20px;
+    color: var(--accent);
+}
+
+.ledger-balance.settled strong { color: #25D366; }
+
+.paid-history {
+    margin-top: 10px;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.status-tag.partial {
+    background: rgba(255, 153, 0, 0.15);
+    color: #ff9900;
+    border: 1px solid rgba(255, 153, 0, 0.3);
+}
+
+.ledger-card-controls {
+    margin-top: 12px;
+    justify-content: flex-end;
 }
 
 .ledger-card-controls .saved-item-actions { margin-left: auto; }
@@ -1095,6 +1163,7 @@ body {
     .ledger-card-top,
     .ledger-card-controls,
     .dropzone { flex-direction: column; align-items: stretch; }
+    .ledger-figures { grid-template-columns: 1fr 1fr; }
     .ledger-stat strong { font-size: 20px; }
 }
 
