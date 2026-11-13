@@ -297,6 +297,10 @@
             font-size: 0.88rem;
         }
         .overdue { color: #ff5e00; font-style: normal; font-weight: 700; }
+        .vault-alert.expired { color: #ff8a80; }
+        .vault-alert.soon { color: #ffb27a; }
+        .vault-alert.upcoming { color: #f0d2b0; }
+        #vault-tile-tag.warn { color: #ffb27a; }
         .empty-note, #dash-status, #import-result { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
         #dash-status { color: #ff8a80; margin-bottom: 18px; }
         #import-result { white-space: pre-wrap; margin-top: 12px; }
@@ -358,7 +362,7 @@
         <div class="apps-intro">
             <div class="apps-badge">Private Hub</div>
             <h1>Dashboard</h1>
-            <p>Invoices, clients and studio tools for the signed-in owner.</p>
+            <p>Invoices, company files, clients and studio tools for the signed-in owner.</p>
         </div>
 
         <p id="dash-status" hidden></p>
@@ -367,6 +371,10 @@
             <article class="stat-card"><span>Overdue (count · amount)</span><strong id="stat-overdue">—</strong></article>
             <article class="stat-card"><span>Paid this month</span><strong id="stat-paid">—</strong></article>
             <article class="stat-card"><span>Clients</span><strong id="stat-clients">—</strong></article>
+        </section>
+        <section class="recent-panel" id="vault-expiry-panel" hidden>
+            <h2>File vault — expiring documents</h2>
+            <div id="vault-expiry"></div>
         </section>
         <section class="recent-panel">
             <h2>Recent invoices</h2>
@@ -404,6 +412,18 @@
                 <span class="app-tag">
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                     Open App
+                </span>
+            </a>
+
+            <a href="vault.html" class="app-card" id="vault-tile">
+                <div class="app-icon">📁</div>
+                <div class="app-info">
+                    <h3 class="app-name">Drive</h3>
+                    <p class="app-desc">Private company file vault for CIPC, SARS, B-BBEE, contracts, tenders, and client files.</p>
+                </div>
+                <span class="app-tag" id="vault-tile-tag">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <span id="vault-tile-label">Open vault</span>
                 </span>
             </a>
 

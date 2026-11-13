@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Vault | Dubani Creatives</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="vault.css">
+    <style>html:not(.dc-ready) body { visibility: hidden; }</style>
+</head>
+<body>
+    <header class="app-topbar">
+        <div class="topbar-left">
+            <img src="images/logo1.png" alt="Dubani Creatives">
+            <h1 class="topbar-title"><span>File</span> Vault</h1>
+        </div>
+        <div class="topbar-actions">
+            <label class="sr-only" for="search">Search files by name</label>
+            <input class="search-input" id="search" type="search" placeholder="Search by name" autocomplete="off">
+            <button class="btn btn-sm" id="view-list" type="button">List</button>
+            <button class="btn btn-sm" id="view-grid" type="button">Grid</button>
+            <a class="btn btn-sm" href="my-apps.html">Dashboard</a>
+            <button class="btn btn-sm" id="logout-btn" type="button">Log out</button>
+        </div>
+    </header>
+
+    <div class="vault-shell">
+        <aside class="folder-pane">
+            <p class="pane-label">Folders</p>
+            <div class="folder-list" id="folder-list"></div>
+            <div class="folder-tools">
+                <button class="btn btn-sm" id="rename-folder-btn" type="button">Rename folder</button>
+            </div>
+            <form class="new-folder" id="new-folder-form">
+                <label class="sr-only" for="new-folder-name">New folder name</label>
+                <input class="form-input" id="new-folder-name" maxlength="80" placeholder="New folder" required>
+                <button class="btn btn-sm" type="submit">Add</button>
+            </form>
+        </aside>
+
+        <main class="file-pane">
+            <div id="banner" class="app-banner loading">Loading the vault…</div>
+            <section id="expiry-banner" class="expiry-banner hidden" aria-live="polite"></section>
+
+            <section class="dropzone" id="dropzone">
+                <div>
+                    <h2>Upload company files</h2>
+                    <p>Drop files here or browse. PDF, images, Word, Excel, PowerPoint, and ZIP. 50 MB each.</p>
+                </div>
+                <div class="drop-actions">
+                    <label class="sr-only" for="upload-folder">Upload into folder</label>
+                    <select class="form-select" id="upload-folder"></select>
+                    <button class="btn btn-primary" id="browse-btn" type="button">Choose files</button>
+                    <input class="sr-only" id="file-input" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,application/pdf,image/png,image/jpeg,image/gif,image/webp,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/zip">
+                </div>
+            </section>
+            <ul class="upload-queue" id="upload-queue"></ul>
+
+            <div class="toolbar">
+                <p id="file-count">No files yet</p>
+            </div>
+            <div id="file-browser"></div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+            <div class="modal-title">
+                <h2 id="edit-title">File details</h2>
+                <button class="modal-close" type="button" data-close="edit-modal" aria-label="Close">&times;</button>
+            </div>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label class="form-label" for="edit-name">Name</label>
+                    <input class="form-input" id="edit-name" maxlength="200" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-folder">Folder</label>
+                    <select class="form-select" id="edit-folder"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-expiry">Expiry date (optional)</label>
+                    <input class="form-input" id="edit-expiry" type="date">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-sm" type="button" data-close="edit-modal">Cancel</button>
+                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+            <div class="modal-title">
+                <h2 id="delete-title">Delete file</h2>
+                <button class="modal-close" type="button" data-close="delete-modal" aria-label="Close">&times;</button>
+            </div>
+            <p>Delete <strong id="delete-name"></strong>? The file is removed from the vault. This cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn btn-sm" type="button" data-close="delete-modal">Cancel</button>
+                <button class="btn btn-danger btn-sm" id="confirm-delete" type="button">Delete file</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="rename-folder-modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rename-folder-title">
+            <div class="modal-title">
+                <h2 id="rename-folder-title">Rename folder</h2>
+                <button class="modal-close" type="button" data-close="rename-folder-modal" aria-label="Close">&times;</button>
+            </div>
+            <form id="rename-folder-form">
+                <div class="form-group">
+                    <label class="form-label" for="rename-folder-name">Folder name</label>
+                    <input class="form-input" id="rename-folder-name" maxlength="80" required>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-sm" type="button" data-close="rename-folder-modal">Cancel</button>
+                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="preview-modal">
+        <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+            <div class="modal-title">
+                <h2 id="preview-title">Preview</h2>
+                <button class="modal-close" type="button" data-close="preview-modal" aria-label="Close">&times;</button>
+            </div>
+            <iframe id="preview-frame" title="File preview" hidden></iframe>
+            <img id="preview-image" alt="" hidden>
+        </div>
+    </div>
+
+    <script type="module" src="vault-app.js"></script>
+</body>
+</html>
