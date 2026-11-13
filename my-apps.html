@@ -281,7 +281,7 @@
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 14px;
             margin: 0 auto 36px;
             max-width: 980px;
@@ -386,7 +386,6 @@
             <article class="stat-card due"><span>Outstanding</span><strong id="stat-outstanding">—</strong><em id="stat-overdue">Loading overdue…</em></article>
             <article class="stat-card received"><span>Received this month</span><strong id="stat-paid">—</strong></article>
             <article class="stat-card"><span>Vault files</span><strong id="stat-vault">—</strong></article>
-            <article class="stat-card"><span>Expiring soon</span><strong id="stat-expiring">—</strong></article>
         </section>
         <div class="apps-grid">
 
@@ -471,9 +470,9 @@
             </div>
 
         </div>
-        <section class="recent-panel" id="vault-expiry-panel" hidden>
-            <h2>File vault — expiring documents</h2>
-            <div id="vault-expiry"></div>
+        <section class="recent-panel" id="vault-recent-panel">
+            <h2>Recent uploads</h2>
+            <div id="vault-recent"><p class="empty-note">Loading vault files…</p></div>
         </section>
         <section class="recent-panel">
             <h2>Recent invoices</h2>
