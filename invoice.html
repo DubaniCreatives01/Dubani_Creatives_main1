@@ -6,7 +6,7 @@
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" href="invoice-styles.css?v=32">
+    <link rel="stylesheet" href="invoice-styles.css?v=33">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -22,7 +22,7 @@
         </div>
         <div class="topbar-actions">
             <a class="btn btn-secondary btn-sm" href="my-apps.html">Dashboard</a>
-            <button class="btn btn-secondary btn-sm" id="manageInvoicesBtn" type="button">Documents</button>
+            <button class="btn btn-secondary btn-sm" id="manageInvoicesBtn" type="button">Dashboard</button>
             <button class="btn btn-secondary btn-sm" id="manageClientsBtn" type="button">Clients</button>
             <button class="btn btn-secondary btn-sm" id="manageServicesBtn" type="button">Services</button>
             <button class="btn btn-secondary btn-sm" id="settingsBtn" type="button">Settings</button>
@@ -229,23 +229,41 @@
     </div>
 
     <div class="modal-overlay" id="invoicesModal">
-        <div class="modal" style="max-width: 860px;">
+        <div class="modal ledger-modal">
             <div class="modal-title">
-                <span>Invoices &amp; quotes</span>
+                <span>Invoice dashboard</span>
                 <div style="display:flex; gap:8px; align-items:center;">
                     <button type="button" class="btn btn-secondary btn-sm" id="exportCsvBtn">Export CSV</button>
                     <button class="modal-close" type="button">×</button>
                 </div>
             </div>
+            <p id="ledgerSetup" class="app-banner loading" hidden></p>
+            <div class="ledger-stats" id="ledgerStats"></div>
+            <p class="ledger-kicker">Per client</p>
+            <div class="ledger-clients" id="ledgerClients"></div>
+            <section class="dropzone" id="invoiceDropzone">
+                <div>
+                    <h2 id="dropzoneTitle">Upload existing invoices</h2>
+                    <p id="dropzoneHint">Drop PDF or image files here. They are stored privately under the client you pick, next to invoices made in the app.</p>
+                </div>
+                <div class="drop-actions">
+                    <select id="uploadClient" class="form-select" aria-label="Client for uploaded invoices"></select>
+                    <button class="btn btn-primary btn-sm" id="browseInvoicesBtn" type="button">Choose files</button>
+                    <input id="invoiceFileInput" class="visually-hidden" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,application/pdf,image/png,image/jpeg,image/gif,image/webp">
+                </div>
+            </section>
+            <ul class="upload-queue" id="invoiceUploadQueue"></ul>
             <div class="filter-grid">
                 <input type="text" id="searchInvoicesInput" class="form-input" placeholder="Search reference, client or title">
                 <select id="filterKind" class="form-select">
                     <option value="">All types</option>
                     <option value="invoice">Invoices</option>
+                    <option value="upload">Uploaded files</option>
                     <option value="quote">Quotes</option>
                 </select>
                 <select id="filterStatus" class="form-select">
                     <option value="">All statuses</option>
+                    <option value="unpaid">Unpaid</option>
                     <option value="draft">Draft</option>
                     <option value="sent">Sent</option>
                     <option value="partially_paid">Partially paid</option>
@@ -261,7 +279,18 @@
             <div class="form-group" style="margin-bottom: 12px; max-width: 180px;">
                 <input type="date" id="filterTo" class="form-input" aria-label="To date">
             </div>
-            <div class="saved-list" id="invoicesList"></div>
+            <div class="ledger-list" id="invoicesList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="uploadPreviewModal">
+        <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="uploadPreviewTitle">
+            <div class="modal-title">
+                <span id="uploadPreviewTitle">Preview</span>
+                <button class="modal-close" type="button">×</button>
+            </div>
+            <iframe id="uploadPreviewFrame" title="Invoice preview" hidden></iframe>
+            <img id="uploadPreviewImage" alt="" hidden>
         </div>
     </div>
 
@@ -371,6 +400,6 @@
         </div>
     </div>
 
-    <script type="module" src="invoice-app.js?v=33"></script>
+    <script type="module" src="invoice-app.js?v=34"></script>
 </body>
 </html>

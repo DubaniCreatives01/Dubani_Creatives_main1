@@ -1,6 +1,17 @@
 import { supabase } from "./supabase-client.js";
 import { requireOwner } from "./auth-guard.js";
 import { expiryAlert, saToday as vaultToday } from "./vault-logic.mjs";
+import {
+    entryFromApp,
+    entryFromUpload,
+    summarise,
+    splitAmount,
+    isSettled,
+    displayedAmount,
+    isOverdueEntry,
+    missingLedgerColumn,
+    missingUploadsTable,
+} from "./invoice-ledger.mjs";
 
 const money = new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR" });
 
@@ -113,16 +124,22 @@ async function loadStats() {
     const today = saToday();
     const monthStart = today.slice(0, 8) + "01";
 
-    const [invoiceRes, paymentRes, clientRes] = await Promise.all([
-        supabase
-            .from("invoices")
-            .select("id, kind, status, reference, number, due_date, total, balance_due, issue_date, created_at, clients(name)")
-            .order("created_at", { ascending: false }),
+    const fullInvoiceSelect = "id, kind, status, reference, number, due_date, total, amount_paid, balance_due, issue_date, created_at, tracked_amount, marked_paid, clients(name)";
+    const baseInvoiceSelect = "id, kind, status, reference, number, due_date, total, balance_due, issue_date, created_at, clients(name)";
+    let invoiceRes = await supabase.from("invoices").select(fullInvoiceSelect).order("created_at", { ascending: false });
+    let ledgerColumns = true;
+    if (invoiceRes.error && missingLedgerColumn(invoiceRes.error)) {
+        ledgerColumns = false;
+        invoiceRes = await supabase.from("invoices").select(baseInvoiceSelect).order("created_at", { ascending: false });
+    }
+    const [paymentRes, clientRes, uploadRes] = await Promise.all([
         supabase.from("payments").select("amount, paid_on").gte("paid_on", monthStart).lte("paid_on", today),
-        supabase.from("clients").select("id", { count: "exact", head: true }).eq("archived", false),
+        supabase.from("clients").select("id, name, archived"),
+        supabase.from("invoice_uploads").select("id, client_id, name, amount, paid, created_at").order("created_at", { ascending: false }),
     ]);
 
-    const failed = [invoiceRes.error, paymentRes.error, clientRes.error].filter(Boolean);
+    const uploadMissing = uploadRes.error && missingUploadsTable(uploadRes.error);
+    const failed = [invoiceRes.error, paymentRes.error, clientRes.error, uploadMissing ? null : uploadRes.error].filter(Boolean);
     if (failed.length) {
         statusEl.hidden = false;
         statusEl.textContent = failed.map(errText).join(" ");
@@ -130,32 +147,63 @@ async function loadStats() {
     }
 
     const invoices = invoiceRes.data || [];
-    const open = invoices.filter((row) => row.kind === "invoice" && (row.status === "sent" || row.status === "partially_paid"));
-    const outstanding = open.reduce((sum, row) => sum + Number(row.balance_due || 0), 0);
-    const overdue = open.filter((row) => row.due_date && row.due_date < today);
-    const overdueAmount = overdue.reduce((sum, row) => sum + Number(row.balance_due || 0), 0);
+    const clientRows = clientRes.data || [];
+    const clientNames = new Map(clientRows.map((client) => [client.id, client.name]));
+    const uploads = (uploadMissing ? [] : (uploadRes.data || [])).map((row) => ({
+        ...row,
+        client_name: clientNames.get(row.client_id) || "No client",
+    }));
+    let outstanding = 0;
+    let overdue = [];
+    let overdueAmount = 0;
+    if (ledgerColumns) {
+        const entries = invoices.map((row) => entryFromApp(row)).concat(uploads.map((row) => entryFromUpload(row)));
+        outstanding = summarise(entries).outstanding;
+        overdue = entries.filter((row) => isOverdueEntry(row, today));
+        overdueAmount = overdue.reduce((sum, row) => sum + splitAmount(row).outstanding, 0);
+    } else {
+        const open = invoices.filter((row) => row.kind === "invoice" && (row.status === "sent" || row.status === "partially_paid"));
+        outstanding = open.reduce((sum, row) => sum + Number(row.balance_due || 0), 0);
+        overdue = open.filter((row) => row.due_date && row.due_date < today);
+        overdueAmount = overdue.reduce((sum, row) => sum + Number(row.balance_due || 0), 0);
+    }
     const paidMonth = (paymentRes.data || []).reduce((sum, row) => sum + Number(row.amount || 0), 0);
 
     document.getElementById("stat-outstanding").textContent = money.format(outstanding);
     document.getElementById("stat-overdue").textContent = `${overdue.length} · ${money.format(overdueAmount)}`;
     document.getElementById("stat-paid").textContent = money.format(paidMonth);
-    document.getElementById("stat-clients").textContent = String(clientRes.count || 0);
+    document.getElementById("stat-clients").textContent = String(clientRows.filter((client) => !client.archived).length);
 
-    const recent = invoices.filter((row) => row.kind === "invoice").slice(0, 5);
+    const recentInvoices = invoices.filter((row) => row.kind === "invoice").map((row) => ({
+        href: `invoice.html?id=${encodeURIComponent(row.id)}`,
+        label: row.reference || (row.number ? `#${row.number}` : "Draft"),
+        client: row.clients?.name || "No client",
+        status: ledgerColumns && isSettled(entryFromApp(row)) ? "paid" : row.status,
+        late: ledgerColumns ? isOverdueEntry(entryFromApp(row), today) : ((row.status === "sent" || row.status === "partially_paid") && row.due_date && row.due_date < today),
+        amount: ledgerColumns ? displayedAmount(entryFromApp(row)) : Number(row.total || 0),
+        created_at: row.created_at || "",
+    }));
+    const recentUploads = uploads.map((row) => ({
+        href: `invoice.html?client=${encodeURIComponent(row.client_id)}`,
+        label: row.name,
+        client: row.client_name || "No client",
+        status: row.paid ? "paid" : "uploaded",
+        late: false,
+        amount: Number(row.amount || 0),
+        created_at: row.created_at || "",
+    }));
+    const recent = recentInvoices.concat(recentUploads)
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))
+        .slice(0, 5);
     const host = document.getElementById("recent-invoices");
     if (!recent.length) {
         host.innerHTML = `<p class="empty-note">No invoices yet. Open the Invoice Generator to create a draft.</p>`;
         return;
     }
-    host.innerHTML = recent.map((row) => {
-        const label = row.reference || (row.number ? `#${row.number}` : "Draft");
-        const client = row.clients?.name || "No client";
-        const late = (row.status === "sent" || row.status === "partially_paid") && row.due_date && row.due_date < today;
-        return `<a class="recent-row" href="invoice.html?id=${encodeURIComponent(row.id)}">
-            <span><strong>${escapeHtml(label)}</strong> · ${escapeHtml(client)}</span>
-            <span>${escapeHtml(row.status)}${late ? ' <em class="overdue">overdue</em>' : ""} · ${money.format(Number(row.total || 0))}</span>
-        </a>`;
-    }).join("");
+    host.innerHTML = recent.map((row) => `<a class="recent-row" href="${row.href}">
+            <span><strong>${escapeHtml(row.label)}</strong> · ${escapeHtml(row.client)}</span>
+            <span>${escapeHtml(row.status)}${row.late ? ' <em class="overdue">overdue</em>' : ""} · ${money.format(row.amount)}</span>
+        </a>`).join("");
 }
 
 async function importBrowserData() {
