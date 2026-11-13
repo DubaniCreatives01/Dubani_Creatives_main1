@@ -7,12 +7,16 @@ import {
     parseAmount,
     entryFromApp,
     entryFromUpload,
-    displayedAmount,
-    isSettled,
+    invoiceTotal,
+    enteredPaid,
+    displayedPaid,
+    payStatus,
+    togglePlan,
     splitAmount,
     summarise,
     clientSummaries,
     isOverdueEntry,
+    monthReceived,
     formatZar,
 } from "./invoice-ledger.mjs";
 
@@ -42,44 +46,94 @@ test("amounts allow a blank override only for app invoices", () => {
     assert.match(parseAmount("1.234", false).error, /2 decimal/);
 });
 
-test("app invoices keep the calculated total until an amount is saved", () => {
+test("amount paid is separate from the invoice total", () => {
     const issued = entryFromApp({
         id: "1",
         kind: "invoice",
         status: "sent",
         total: 2100,
         amount_paid: 0,
-        balance_due: 2100,
         client_id: "c1",
         clients: { name: "Gugulethu" },
     });
-    assert.equal(displayedAmount(issued), 2100);
-    assert.equal(isSettled(issued), false);
+    assert.equal(invoiceTotal(issued), 2100);
+    assert.equal(enteredPaid(issued), 0);
+    assert.equal(payStatus(issued), "unpaid");
     assert.deepEqual(splitAmount(issued), { invoiced: 2100, paid: 0, outstanding: 2100 });
 
-    const overridden = entryFromApp({ ...issued, tracked_amount: 1800, clients: { name: "Gugulethu" }, kind: "invoice", status: "sent" });
-    assert.equal(displayedAmount(overridden), 1800);
-});
-
-test("paid toggle overrides status without forgetting partial payments", () => {
     const partial = entryFromApp({
-        id: "2",
+        id: "1",
         kind: "invoice",
-        status: "partially_paid",
-        total: 1000,
-        amount_paid: 400,
+        status: "sent",
+        total: 2100,
+        amount_paid: 0,
+        tracked_amount: 500,
         client_id: "c1",
     });
-    assert.equal(isSettled(partial), false);
-    assert.deepEqual(splitAmount(partial), { invoiced: 1000, paid: 400, outstanding: 600 });
+    assert.equal(invoiceTotal(partial), 2100);
+    assert.equal(displayedPaid(partial), 500);
+    assert.equal(payStatus(partial), "partial");
+    assert.equal(splitAmount(partial).outstanding, 1600);
 
-    const forcedPaid = entryFromApp({ ...partial, marked_paid: true, kind: "invoice", status: "sent", total: 1000, amount_paid: 0 });
-    assert.equal(isSettled(forcedPaid), true);
-    assert.equal(splitAmount(forcedPaid).outstanding, 0);
+    const edited = entryFromApp({
+        id: "1",
+        kind: "invoice",
+        status: "sent",
+        total: 2100,
+        tracked_amount: 1450,
+        client_id: "c1",
+    });
+    assert.equal(displayedPaid(edited), 1450);
+    assert.equal(splitAmount(edited).outstanding, 650);
+});
 
-    const forcedUnpaid = entryFromApp({ ...partial, marked_paid: false, kind: "invoice", status: "paid", total: 1000, amount_paid: 1000 });
-    assert.equal(isSettled(forcedUnpaid), false);
-    assert.equal(splitAmount(forcedUnpaid).outstanding, 1000);
+test("paid toggle fills the total and clearing it keeps the typed amount", () => {
+    const typed = entryFromApp({
+        id: "2",
+        kind: "invoice",
+        status: "sent",
+        total: 2100,
+        tracked_amount: 500,
+        marked_paid: false,
+        client_id: "c1",
+    });
+    assert.deepEqual(togglePlan(typed), { action: "force", confirm: true });
+    const forced = entryFromApp({
+        id: "2",
+        kind: "invoice",
+        status: "sent",
+        total: 2100,
+        tracked_amount: 500,
+        marked_paid: true,
+        client_id: "c1",
+    });
+    assert.equal(enteredPaid(forced), 500);
+    assert.equal(displayedPaid(forced), 2100);
+    assert.equal(payStatus(forced), "paid");
+    assert.equal(splitAmount(forced).outstanding, 0);
+    assert.deepEqual(togglePlan(forced), { action: "clear", confirm: false });
+    const cleared = entryFromApp({
+        id: "2",
+        kind: "invoice",
+        status: "sent",
+        total: 2100,
+        tracked_amount: 500,
+        marked_paid: false,
+        client_id: "c1",
+    });
+    assert.equal(displayedPaid(cleared), 500);
+    assert.equal(payStatus(cleared), "partial");
+
+    const covered = entryFromApp({
+        id: "3",
+        kind: "invoice",
+        status: "sent",
+        total: 1000,
+        tracked_amount: 1000,
+        client_id: "c1",
+    });
+    assert.equal(payStatus(covered), "paid");
+    assert.deepEqual(togglePlan(covered), { action: "already", confirm: false });
 });
 
 test("drafts, quotes, and void invoices stay out of the totals", () => {
@@ -87,36 +141,42 @@ test("drafts, quotes, and void invoices stay out of the totals", () => {
         entryFromApp({ id: "d", kind: "invoice", status: "draft", total: 500, client_id: "c1" }),
         entryFromApp({ id: "q", kind: "quote", status: "sent", total: 900, client_id: "c1" }),
         entryFromApp({ id: "v", kind: "invoice", status: "void", total: 700, client_id: "c1" }),
-        entryFromApp({ id: "i", kind: "invoice", status: "paid", total: 300, amount_paid: 300, client_id: "c1" }),
+        entryFromApp({ id: "i", kind: "invoice", status: "sent", total: 300, amount_paid: 300, client_id: "c1" }),
     ];
     assert.deepEqual(summarise(rows), { invoiced: 300, paid: 300, outstanding: 0 });
 });
 
-test("uploads sit beside app invoices for the same client", () => {
+test("uploads keep an editable total and a separate amount paid", () => {
     const upload = entryFromUpload({
         id: "u1",
         client_id: "c1",
         name: "old-invoice.pdf",
-        amount: 450,
+        amount: 1800,
+        amount_paid: 500,
         paid: false,
         clients: { name: "Luzana" },
     });
-    const paidUpload = entryFromUpload({ id: "u2", client_id: "c2", name: "paid.jpg", amount: 80, paid: true });
-    assert.equal(isSettled(upload), false);
-    assert.equal(splitAmount(paidUpload).paid, 80);
+    assert.equal(invoiceTotal(upload), 1800);
+    assert.equal(displayedPaid(upload), 500);
+    assert.equal(payStatus(upload), "partial");
+    const forced = entryFromUpload({ id: "u2", client_id: "c2", name: "paid.jpg", amount: 80, amount_paid: 0, paid: true });
+    assert.equal(enteredPaid(forced), 0);
+    assert.equal(displayedPaid(forced), 80);
+    assert.equal(payStatus(forced), "paid");
     const totals = summarise([
-        entryFromApp({ id: "i", kind: "invoice", status: "sent", total: 100, client_id: "c1", clients: { name: "Luzana" } }),
+        entryFromApp({ id: "i", kind: "invoice", status: "sent", total: 100, tracked_amount: 40, client_id: "c1" }),
         upload,
-        paidUpload,
+        forced,
     ]);
-    assert.deepEqual(totals, { invoiced: 630, paid: 80, outstanding: 550 });
-    const byClient = clientSummaries([upload, paidUpload], [
+    assert.deepEqual(totals, { invoiced: 1980, paid: 620, outstanding: 1360 });
+    const byClient = clientSummaries([upload, forced], [
         { id: "c1", name: "Luzana", archived: false },
         { id: "c2", name: "FCI", archived: false },
         { id: "c3", name: "Old", archived: true },
     ]);
     assert.deepEqual(byClient.map((row) => row.client_name), ["FCI", "Luzana"]);
-    assert.equal(byClient.find((row) => row.client_id === "c1").outstanding, 450);
+    assert.equal(byClient.find((row) => row.client_id === "c1").outstanding, 1300);
+    assert.equal(monthReceived([400], [100, -50]), 450);
 });
 
 test("overdue ignores invoices the owner marked paid", () => {

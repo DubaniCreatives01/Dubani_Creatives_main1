@@ -6,7 +6,7 @@
     <title>Invoice Generator — Dubani Creatives</title>
     <meta name="description" content="Generate professional invoices for Dubani Creatives clients.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" href="invoice-styles.css?v=33">
+    <link rel="stylesheet" href="invoice-styles.css?v=34">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -253,6 +253,12 @@
                 </div>
             </section>
             <ul class="upload-queue" id="invoiceUploadQueue"></ul>
+            <div class="pay-filters" id="payFilters">
+                <button type="button" class="active" data-pay="">All</button>
+                <button type="button" data-pay="unpaid">Unpaid</button>
+                <button type="button" data-pay="partial">Partial</button>
+                <button type="button" data-pay="paid">Paid</button>
+            </div>
             <div class="filter-grid">
                 <input type="text" id="searchInvoicesInput" class="form-input" placeholder="Search reference, client or title">
                 <select id="filterKind" class="form-select">
@@ -263,11 +269,12 @@
                 </select>
                 <select id="filterStatus" class="form-select">
                     <option value="">All statuses</option>
-                    <option value="unpaid">Unpaid</option>
+                    <option value="unpaid">Unpaid balance</option>
+                    <option value="partial">Partial balance</option>
                     <option value="draft">Draft</option>
                     <option value="sent">Sent</option>
                     <option value="partially_paid">Partially paid</option>
-                    <option value="paid">Paid</option>
+                    <option value="paid">Paid in full</option>
                     <option value="void">Void</option>
                     <option value="accepted">Accepted</option>
                     <option value="declined">Declined</option>
@@ -400,6 +407,6 @@
         </div>
     </div>
 
-    <script type="module" src="invoice-app.js?v=34"></script>
+    <script type="module" src="invoice-app.js?v=35"></script>
 </body>
 </html>
