@@ -1,5 +1,25 @@
-import { supabase } from "./js/supabase-client.js";
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "./js/supabase-client.js";
 import { requireOwner } from "./js/auth-guard.js";
+import {
+    BUCKET,
+    SIGNED_URL_SECONDS,
+    inspectUpload,
+    storagePath,
+    canPreview,
+    isPdf,
+    formatBytes,
+    formatZar,
+    parseAmount,
+    entryFromApp,
+    entryFromUpload,
+    displayedAmount,
+    isSettled,
+    summarise,
+    clientSummaries,
+    isOverdueEntry,
+    missingLedgerColumn,
+    missingUploadsTable,
+} from "./js/invoice-ledger.mjs";
 
 const $ = (id) => document.getElementById(id);
 
@@ -41,10 +61,7 @@ function money(amount) {
 }
 
 function isOverdue(row) {
-    return row.kind === "invoice"
-        && (row.status === "sent" || row.status === "partially_paid")
-        && row.due_date
-        && row.due_date < saToday();
+    return isOverdueEntry(row, saToday());
 }
 
 const STATUS_LABEL = {
@@ -64,6 +81,12 @@ const App = {
     clients: [],
     services: [],
     documents: [],
+    uploads: [],
+    ledger: [],
+    ledgerReady: true,
+    uploadsReady: true,
+    uploadQueue: [],
+    uploading: false,
     payments: [],
     logoBase64: "images/logo1.png",
     logoSize: { width: 2248, height: 337 },
@@ -129,13 +152,16 @@ const App = {
         const loaded = await this.loadReferenceData();
         if (!loaded) return;
         await this.preloadLogo();
-        const requested = new URLSearchParams(location.search).get("id");
+        const params = new URLSearchParams(location.search);
+        const requested = params.get("id");
+        const clientFocus = params.get("client");
         if (requested) {
             const opened = await this.openDocument(requested);
             if (!opened) await this.newDocument();
         } else {
             await this.newDocument();
         }
+        if (clientFocus && !requested) await this.openLedger(clientFocus);
         this.setLinkStatus(true);
         if (!$("appBanner").classList.contains("error")) this.clearBanner();
     },
@@ -186,9 +212,13 @@ const App = {
             .concat(this.clients.filter((client) => !client.archived).map((client) =>
                 `<option value="${esc(client.id)}">${esc(client.name)}</option>`));
         $("clientSelect").innerHTML = options.join("");
-        $("filterClient").innerHTML = ['<option value="">All clients</option>']
-            .concat(this.clients.map((client) => `<option value="${esc(client.id)}">${esc(client.name)}</option>`))
-            .join("");
+        const clientOptions = this.clients.map((client) => `<option value="${esc(client.id)}">${esc(client.name)}</option>`).join("");
+        const selectedFilter = $("filterClient").value;
+        const selectedUpload = $("uploadClient").value;
+        $("filterClient").innerHTML = `<option value="">All clients</option>${clientOptions}`;
+        $("uploadClient").innerHTML = `<option value="">Choose a client</option>${this.clients.filter((client) => !client.archived).map((client) => `<option value="${esc(client.id)}">${esc(client.name)}</option>`).join("")}`;
+        if (selectedFilter) $("filterClient").value = selectedFilter;
+        if (selectedUpload) $("uploadClient").value = selectedUpload;
         $("clientNames").innerHTML = this.clients
             .filter((client) => !client.archived)
             .map((client) => `<option value="${esc(client.name)}"></option>`)
@@ -669,15 +699,46 @@ const App = {
     },
 
     async loadDocuments() {
-        const { data, error } = await supabase.from("invoices")
-            .select("id, kind, number, reference, status, title, issue_date, due_date, total, amount_paid, balance_due, client_id, clients(name)")
-            .order("created_at", { ascending: false });
-        if (error) {
-            $("invoicesList").innerHTML = `<p class="empty-state">${esc(errText(error))}</p>`;
+        const full = "id, kind, number, reference, status, title, issue_date, due_date, total, amount_paid, balance_due, client_id, created_at, tracked_amount, marked_paid, clients(name)";
+        const base = "id, kind, number, reference, status, title, issue_date, due_date, total, amount_paid, balance_due, client_id, created_at, clients(name)";
+        let invoiceRes = await supabase.from("invoices").select(full).order("created_at", { ascending: false });
+        this.ledgerReady = true;
+        if (invoiceRes.error && missingLedgerColumn(invoiceRes.error)) {
+            this.ledgerReady = false;
+            invoiceRes = await supabase.from("invoices").select(base).order("created_at", { ascending: false });
+        }
+        if (invoiceRes.error) {
+            $("invoicesList").innerHTML = `<p class="empty-state">${esc(errText(invoiceRes.error))}</p>`;
             return;
         }
-        this.documents = data || [];
+        this.documents = invoiceRes.data || [];
+        const uploadRes = await supabase.from("invoice_uploads")
+            .select("id, client_id, name, storage_path, mime_type, size_bytes, amount, paid, issue_date, created_at")
+            .order("created_at", { ascending: false });
+        this.uploadsReady = true;
+        if (uploadRes.error && missingUploadsTable(uploadRes.error)) {
+            this.uploadsReady = false;
+            this.uploads = [];
+        } else if (uploadRes.error) {
+            $("invoicesList").innerHTML = `<p class="empty-state">${esc(errText(uploadRes.error))}</p>`;
+            return;
+        } else {
+            this.uploads = uploadRes.data || [];
+        }
+        const clientName = (id) => this.clients.find((client) => client.id === id)?.name;
+        this.ledger = this.documents.map((row) => entryFromApp(row))
+            .concat(this.uploads.map((row) => entryFromUpload({ ...row, client_name: clientName(row.client_id) })))
+            .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
         this.renderDocumentList();
+    },
+
+    async openLedger(clientId) {
+        if (clientId) {
+            $("filterClient").value = clientId;
+            $("uploadClient").value = clientId;
+        }
+        this.showModal("invoicesModal");
+        await this.loadDocuments();
     },
 
     filteredDocuments() {
@@ -687,37 +748,116 @@ const App = {
         const clientId = $("filterClient").value;
         const from = $("filterFrom").value;
         const to = $("filterTo").value;
-        return this.documents.filter((row) => {
-            if (kind && row.kind !== kind) return false;
-            if (status && row.status !== status) return false;
+        return this.ledger.filter((row) => {
+            if (kind === "invoice" && !(row.kind === "invoice" || row.source === "upload")) return false;
+            if (kind === "upload" && row.source !== "upload") return false;
+            if (kind === "quote" && row.kind !== "quote") return false;
+            if (status === "unpaid") {
+                if (row.kind === "quote" || isSettled(row) || row.status === "draft" || row.status === "void") return false;
+            } else if (status === "paid") {
+                if (!isSettled(row)) return false;
+            } else if (status && row.status !== status) {
+                return false;
+            }
             if (clientId && row.client_id !== clientId) return false;
             if (from && (!row.issue_date || row.issue_date < from)) return false;
             if (to && (!row.issue_date || row.issue_date > to)) return false;
             if (!query) return true;
-            const hay = `${row.reference || ""} ${row.number || ""} ${row.title || ""} ${row.clients?.name || ""}`.toLowerCase();
+            const hay = `${row.reference || ""} ${row.number || ""} ${row.title || ""} ${row.name || ""} ${row.client_name || ""}`.toLowerCase();
             return hay.includes(query);
         });
     },
 
+    ledgerLabel(row) {
+        if (row.source === "upload") return row.name || "Uploaded invoice";
+        return row.reference || (row.number ? `#${row.number}` : "Draft");
+    },
+
     renderDocumentList() {
+        const notes = [];
+        if (!this.ledgerReady) notes.push("Editing an amount or paid status needs the new invoice columns.");
+        if (!this.uploadsReady) notes.push("Uploading files needs the private invoice-uploads bucket.");
+        const setup = $("ledgerSetup");
+        setup.hidden = notes.length === 0;
+        setup.textContent = notes.length
+            ? `${notes.join(" ")} Apply supabase/migrations/20261113143000_invoice_uploads.sql in the Supabase SQL editor, then reload.`
+            : "";
+
+        const clientId = $("filterClient").value;
+        const scope = clientId ? this.ledger.filter((row) => row.client_id === clientId) : this.ledger;
+        const totals = summarise(scope);
+        const clientCount = new Set(scope.filter((row) => row.client_id).map((row) => row.client_id)).size;
+        $("ledgerStats").innerHTML = [
+            ["Invoiced", formatZar(totals.invoiced), ""],
+            ["Paid", formatZar(totals.paid), "paid"],
+            ["Outstanding", formatZar(totals.outstanding), "outstanding"],
+            ["Clients", String(clientCount), ""],
+        ].map(([label, value, kind]) => `<article class="ledger-stat ${kind}"><span>${label}</span><strong>${esc(value)}</strong></article>`).join("");
+
+        const cards = clientSummaries(this.ledger, this.clients);
+        $("ledgerClients").innerHTML = [`<button type="button" class="client-card ${clientId ? "" : "active"}" data-ledger-client="">
+                <strong>All clients</strong>
+                <small>${formatZar(summarise(this.ledger).outstanding)} outstanding</small>
+            </button>`].concat(cards.map((card) => `<button type="button" class="client-card ${card.client_id === clientId ? "active" : ""}" data-ledger-client="${esc(card.client_id)}">
+                <strong>${esc(card.client_name)}</strong>
+                <small>${card.count} · ${formatZar(card.outstanding)} outstanding</small>
+            </button>`)).join("");
+
+        const selected = this.clients.find((client) => client.id === $("uploadClient").value);
+        $("dropzoneTitle").textContent = selected ? `Upload invoices for ${selected.name}` : "Upload existing invoices";
+        $("dropzoneHint").textContent = selected
+            ? "Drop PDF or image files here, or choose several at once. Preview links expire after 2 minutes."
+            : "Choose a client, then drop PDF or image files. They stay in a private bucket under that client.";
+
         const rows = this.filteredDocuments();
         if (!rows.length) {
-            $("invoicesList").innerHTML = `<p class="empty-state">${this.documents.length ? "Nothing matches those filters." : "No invoices or quotes yet."}</p>`;
+            $("invoicesList").innerHTML = `<p class="empty-state">${this.ledger.length ? "Nothing matches those filters." : "No invoices or quotes yet."}</p>`;
             return;
         }
-        $("invoicesList").innerHTML = rows.map((row) => {
-            const label = row.reference || (row.number ? `#${row.number}` : "Draft");
-            const late = isOverdue(row);
-            return `<div class="saved-item">
-                <div class="saved-item-info">
-                    <h4>${esc(label)} · ${esc(row.clients?.name || "No client")}${late ? '<span class="badge-overdue">Overdue</span>' : ""}</h4>
-                    <p>${esc(row.kind)} · ${esc(STATUS_LABEL[row.status] || row.status)} · ${esc(row.issue_date || "no date")} · ${money(row.total)} · due ${money(row.balance_due)}</p>
+        $("invoicesList").innerHTML = rows.map((row) => this.ledgerCard(row)).join("");
+    },
+
+    ledgerCard(row) {
+        const label = this.ledgerLabel(row);
+        const late = isOverdue(row);
+        const settled = isSettled(row);
+        const locked = row.status === "void" || row.status === "converted";
+        const editable = !locked && (row.source === "upload" ? this.uploadsReady : (row.kind === "invoice" && this.ledgerReady));
+        const amount = displayedAmount(row).toFixed(2);
+        const badges = [
+            `<span class="status-tag ${row.source === "upload" ? "upload" : "source"}">${row.source === "upload" ? "Uploaded" : esc(row.kind)}</span>`,
+            row.source === "app" ? `<span class="status-tag">${esc(STATUS_LABEL[row.status] || row.status)}</span>` : "",
+            settled ? `<span class="status-tag paid">Paid</span>` : (row.kind === "invoice" || row.source === "upload" ? `<span class="status-tag unpaid">Unpaid</span>` : ""),
+            row.status === "partially_paid" && !settled ? `<span class="status-tag partial">Partial</span>` : "",
+            late ? `<span class="badge-overdue">Overdue</span>` : "",
+        ].filter(Boolean).join("");
+        const controls = editable ? `
+            <label class="ledger-amount">Amount (ZAR)
+                <input class="form-input" type="text" inputmode="decimal" data-amount-for="${esc(row.id)}" data-source="${esc(row.source)}" value="${esc(amount)}" title="${row.source === "app" ? "Leave blank to use the document total." : "Amount for this uploaded invoice."}">
+            </label>
+            <button type="button" class="pay-toggle ${settled ? "is-paid" : "is-unpaid"}" data-toggle-paid="${esc(row.id)}" data-source="${esc(row.source)}" aria-pressed="${settled ? "true" : "false"}">${settled ? "Paid" : "Unpaid"}</button>
+        ` : "";
+        const actions = row.source === "upload"
+            ? `${canPreview(row.mime_type) ? `<button type="button" class="btn btn-secondary btn-sm" data-preview-upload="${esc(row.id)}">Preview</button>` : ""}
+               <button type="button" class="btn btn-secondary btn-sm" data-download-upload="${esc(row.id)}">Download</button>
+               <button type="button" class="btn btn-danger btn-sm" data-delete-upload="${esc(row.id)}">Delete</button>`
+            : `<button type="button" class="btn btn-secondary btn-sm" data-open="${esc(row.id)}">Open</button>`;
+        const meta = row.source === "upload"
+            ? `${formatBytes(row.size_bytes)} · ${esc(row.issue_date || "no date")}`
+            : `${esc(row.issue_date || "no date")} · document ${money(row.total)} · due ${money(row.balance_due)}`;
+        return `<article class="ledger-card">
+            <div class="ledger-card-top">
+                <div>
+                    <h4>${esc(label)} · ${esc(row.client_name)}</h4>
+                    <p>${meta}</p>
                 </div>
-                <div class="saved-item-actions">
-                    <button type="button" class="btn btn-secondary btn-sm" data-open="${esc(row.id)}">Open</button>
-                </div>
-            </div>`;
-        }).join("");
+                <div class="ledger-badges">${badges}</div>
+            </div>
+            <div class="ledger-card-controls">
+                ${controls}
+                <div class="saved-item-actions">${actions}</div>
+            </div>
+        </article>`;
     },
 
     exportCsv() {
@@ -726,19 +866,21 @@ const App = {
             this.showBanner("There are no rows to export for the current filters.", "error");
             return;
         }
-        const header = ["type", "reference", "number", "status", "client", "issue_date", "due_date", "total", "amount_paid", "balance_due", "overdue"];
+        const header = ["type", "reference", "number", "status", "client", "issue_date", "due_date", "total", "amount_paid", "balance_due", "overdue", "displayed_amount", "settled"];
         const body = rows.map((row) => [
-            row.kind,
+            row.source === "upload" ? "upload" : row.kind,
             row.reference || "",
             row.number || "",
             row.status,
-            row.clients?.name || "",
+            row.client_name || "",
             row.issue_date || "",
             row.due_date || "",
-            row.total,
+            row.source === "upload" ? row.amount : row.total,
             row.amount_paid,
             row.balance_due,
             isOverdue(row) ? "yes" : "no",
+            displayedAmount(row),
+            row.kind === "quote" ? "" : (isSettled(row) ? "paid" : "unpaid"),
         ]);
         const csv = [header, ...body].map((line) => line.map((cell) => {
             const text = String(cell ?? "");
@@ -771,6 +913,7 @@ const App = {
                     <p>${esc(client.email || "")} ${esc(client.phone || "")}</p>
                 </div>
                 <div class="saved-item-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" data-client-invoices="${esc(client.id)}">Invoices</button>
                     <button type="button" class="btn btn-secondary btn-sm" data-edit-client="${esc(client.id)}">Edit</button>
                     <button type="button" class="btn btn-secondary btn-sm" data-archive-client="${esc(client.id)}">${client.archived ? "Restore" : "Archive"}</button>
                 </div>
@@ -1209,18 +1352,48 @@ const App = {
             const button = event.target.closest("[data-delete-payment]");
             if (button) this.deletePayment(button.dataset.deletePayment);
         });
-        $("manageInvoicesBtn").addEventListener("click", async () => {
-            this.showModal("invoicesModal");
-            await this.loadDocuments();
-        });
+        $("manageInvoicesBtn").addEventListener("click", () => this.openLedger($("filterClient").value));
         ["searchInvoicesInput", "filterKind", "filterStatus", "filterClient", "filterFrom", "filterTo"].forEach((id) => {
-            $(id).addEventListener("input", () => this.renderDocumentList());
+            $(id).addEventListener("input", () => {
+                if (id === "filterClient" && $("filterClient").value) $("uploadClient").value = $("filterClient").value;
+                this.renderDocumentList();
+            });
         });
-        $("invoicesList").addEventListener("click", async (event) => {
-            const button = event.target.closest("[data-open]");
-            if (!button) return;
-            this.hideModal("invoicesModal");
-            await this.openDocument(button.dataset.open);
+        $("uploadClient").addEventListener("change", () => {
+            $("filterClient").value = $("uploadClient").value;
+            this.renderDocumentList();
+        });
+        $("ledgerClients").addEventListener("click", (event) => {
+            const card = event.target.closest("[data-ledger-client]");
+            if (!card) return;
+            const id = card.dataset.ledgerClient;
+            $("filterClient").value = id;
+            if (id) $("uploadClient").value = id;
+            this.renderDocumentList();
+        });
+        $("invoicesList").addEventListener("click", (event) => this.onLedgerClick(event));
+        $("invoicesList").addEventListener("change", (event) => {
+            const input = event.target.closest("[data-amount-for]");
+            if (!input) return;
+            this.saveLedgerAmount(input.dataset.amountFor, input.dataset.source, input.value);
+        });
+        $("browseInvoicesBtn").addEventListener("click", () => $("invoiceFileInput").click());
+        $("invoiceFileInput").addEventListener("change", () => {
+            this.enqueueUploads($("invoiceFileInput").files);
+            $("invoiceFileInput").value = "";
+        });
+        const zone = $("invoiceDropzone");
+        ["dragenter", "dragover"].forEach((name) => {
+            zone.addEventListener(name, (event) => {
+                event.preventDefault();
+                zone.classList.add("dragover");
+            });
+        });
+        zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+        zone.addEventListener("drop", (event) => {
+            event.preventDefault();
+            zone.classList.remove("dragover");
+            this.enqueueUploads(event.dataTransfer?.files);
         });
         $("exportCsvBtn").addEventListener("click", () => this.exportCsv());
         $("manageClientsBtn").addEventListener("click", () => {
@@ -1261,6 +1434,290 @@ const App = {
                 if (event.target === overlay) overlay.classList.remove("active");
             });
         });
+        $("uploadPreviewModal").addEventListener("click", (event) => {
+            if (event.target === $("uploadPreviewModal") || event.target.closest(".modal-close")) {
+                $("uploadPreviewFrame").hidden = true;
+                $("uploadPreviewFrame").src = "about:blank";
+                $("uploadPreviewImage").hidden = true;
+                $("uploadPreviewImage").removeAttribute("src");
+            }
+        });
+        window.addEventListener("dragover", (event) => {
+            if ($("invoicesModal").classList.contains("active")) event.preventDefault();
+        });
+        window.addEventListener("drop", (event) => {
+            if (!$("invoicesModal").classList.contains("active")) return;
+            if (event.target.closest("#invoiceDropzone")) return;
+            event.preventDefault();
+        });
+    },
+
+    findLedgerEntry(id, source) {
+        return this.ledger.find((row) => row.id === id && row.source === source);
+    },
+
+    async saveLedgerAmount(id, source, raw) {
+        const entry = this.findLedgerEntry(id, source);
+        if (!entry) return;
+        const parsed = parseAmount(raw, source === "app");
+        if (!parsed.ok) {
+            this.showBanner(parsed.error, "error");
+            this.renderDocumentList();
+            return;
+        }
+        const query = source === "upload"
+            ? supabase.from("invoice_uploads").update({ amount: parsed.amount }).eq("id", id)
+            : supabase.from("invoices").update({ tracked_amount: parsed.amount }).eq("id", id);
+        const { error } = await query;
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.showBanner(parsed.amount == null ? "Amount cleared. The document total is used." : "Amount saved.", "ok");
+        await this.loadDocuments();
+    },
+
+    async toggleLedgerPaid(id, source) {
+        const entry = this.findLedgerEntry(id, source);
+        if (!entry) return;
+        const next = !isSettled(entry);
+        const query = source === "upload"
+            ? supabase.from("invoice_uploads").update({ paid: next }).eq("id", id)
+            : supabase.from("invoices").update({ marked_paid: next }).eq("id", id);
+        const { error } = await query;
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        this.showBanner(next ? "Marked paid." : "Marked unpaid.", "ok");
+        await this.loadDocuments();
+    },
+
+    async onLedgerClick(event) {
+        const open = event.target.closest("[data-open]");
+        if (open) {
+            this.hideModal("invoicesModal");
+            await this.openDocument(open.dataset.open);
+            return;
+        }
+        const toggle = event.target.closest("[data-toggle-paid]");
+        if (toggle) {
+            await this.toggleLedgerPaid(toggle.dataset.togglePaid, toggle.dataset.source);
+            return;
+        }
+        const preview = event.target.closest("[data-preview-upload]");
+        if (preview) {
+            await this.previewUpload(preview.dataset.previewUpload);
+            return;
+        }
+        const download = event.target.closest("[data-download-upload]");
+        if (download) {
+            await this.downloadUpload(download.dataset.downloadUpload);
+            return;
+        }
+        const remove = event.target.closest("[data-delete-upload]");
+        if (remove) await this.deleteUpload(remove.dataset.deleteUpload);
+    },
+
+    async signedUploadUrl(path) {
+        const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, SIGNED_URL_SECONDS);
+        if (error) throw error;
+        return data.signedUrl;
+    },
+
+    async previewUpload(id) {
+        const entry = this.findLedgerEntry(id, "upload");
+        if (!entry) return;
+        try {
+            const url = await this.signedUploadUrl(entry.storage_path);
+            $("uploadPreviewTitle").textContent = entry.name;
+            const frame = $("uploadPreviewFrame");
+            const image = $("uploadPreviewImage");
+            if (isPdf(entry.mime_type)) {
+                image.hidden = true;
+                image.removeAttribute("src");
+                frame.hidden = false;
+                frame.src = url;
+            } else {
+                frame.hidden = true;
+                frame.src = "about:blank";
+                image.hidden = false;
+                image.alt = entry.name;
+                image.src = url;
+            }
+            this.showModal("uploadPreviewModal");
+        } catch (error) {
+            this.showBanner(errText(error), "error");
+        }
+    },
+
+    async downloadUpload(id) {
+        const entry = this.findLedgerEntry(id, "upload");
+        if (!entry) return;
+        try {
+            const url = await this.signedUploadUrl(entry.storage_path);
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Download failed.");
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = objectUrl;
+            link.download = entry.name;
+            document.body.append(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
+        } catch (error) {
+            this.showBanner(errText(error), "error");
+        }
+    },
+
+    async deleteUpload(id) {
+        const entry = this.findLedgerEntry(id, "upload");
+        if (!entry) return;
+        if (!window.confirm(`Delete ${entry.name}? The file is removed from this client.`)) return;
+        const { error } = await supabase.from("invoice_uploads").delete().eq("id", id);
+        if (error) {
+            this.showBanner(errText(error), "error");
+            return;
+        }
+        const removed = await supabase.storage.from(BUCKET).remove([entry.storage_path]);
+        if (removed.error) {
+            this.showBanner(`The invoice was removed from the list, but the file is still stored: ${errText(removed.error)}`, "error");
+        } else {
+            this.showBanner("Uploaded invoice deleted.", "ok");
+        }
+        await this.loadDocuments();
+    },
+
+    enqueueUploads(fileList) {
+        const files = Array.from(fileList || []);
+        if (!files.length) return;
+        if (!this.uploadsReady) {
+            this.showBanner("Apply supabase/migrations/20261113143000_invoice_uploads.sql before uploading.", "error");
+            return;
+        }
+        if (!$("uploadClient").value) {
+            this.showBanner("Choose a client before uploading invoices.", "error");
+            return;
+        }
+        files.forEach((file) => this.uploadQueue.push(file));
+        this.pumpUploads();
+    },
+
+    uploadObject(path, file, mime, token, onProgress) {
+        return new Promise((resolve, reject) => {
+            const typed = new File([file], file.name, { type: mime });
+            const body = new FormData();
+            body.append("cacheControl", "3600");
+            body.append("", typed);
+            const xhr = new XMLHttpRequest();
+            const encoded = path.split("/").map((part) => encodeURIComponent(part)).join("/");
+            xhr.open("POST", `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${encoded}`);
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+            xhr.setRequestHeader("apikey", SUPABASE_PUBLISHABLE_KEY);
+            xhr.setRequestHeader("x-upsert", "false");
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) onProgress(event.loaded / event.total);
+            };
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    onProgress(1);
+                    resolve();
+                    return;
+                }
+                let message = xhr.status ? `Upload failed (${xhr.status}).` : "Upload failed.";
+                try {
+                    const parsed = JSON.parse(xhr.responseText);
+                    message = parsed.message || parsed.error || parsed.msg || message;
+                } catch { /* keep the status message */ }
+                reject(new Error(message));
+            };
+            xhr.onerror = () => reject(new Error("Upload failed. Check your connection and try again."));
+            xhr.send(body);
+        });
+    },
+
+    queueRow(name) {
+        const row = document.createElement("li");
+        row.className = "upload-row";
+        row.innerHTML = `<header><span></span><strong>Waiting…</strong></header><div class="progress"><span></span></div>`;
+        row.querySelector("header span").textContent = name;
+        const strong = row.querySelector("header strong");
+        const fill = row.querySelector(".progress span");
+        $("invoiceUploadQueue").prepend(row);
+        return {
+            progress(ratio) {
+                fill.style.width = `${Math.round(ratio * 100)}%`;
+                strong.textContent = `${Math.round(ratio * 100)}%`;
+            },
+            fail(message) {
+                row.classList.add("error");
+                strong.textContent = message;
+            },
+            done() {
+                strong.textContent = "Uploaded";
+                fill.style.width = "100%";
+            },
+        };
+    },
+
+    async uploadOne(file) {
+        const checked = inspectUpload(file);
+        const row = this.queueRow(file.name || "File");
+        if (!checked.ok) {
+            row.fail(checked.error);
+            return false;
+        }
+        const clientId = $("uploadClient").value;
+        const fileId = crypto.randomUUID();
+        const path = storagePath(this.session.user.id, clientId, fileId, checked.name);
+        try {
+            const { data, error } = await supabase.auth.getSession();
+            if (error || !data.session) throw new Error("Your session expired. Sign in again.");
+            row.progress(0);
+            await this.uploadObject(path, file, checked.mime, data.session.access_token, row.progress);
+            const inserted = await supabase.from("invoice_uploads").insert({
+                id: fileId,
+                client_id: clientId,
+                name: checked.name,
+                storage_path: path,
+                mime_type: checked.mime,
+                size_bytes: checked.size,
+                amount: 0,
+                paid: false,
+                issue_date: saToday(),
+            });
+            if (inserted.error) {
+                await supabase.storage.from(BUCKET).remove([path]);
+                throw inserted.error;
+            }
+            row.done();
+            return true;
+        } catch (error) {
+            row.fail(errText(error));
+            return false;
+        }
+    },
+
+    async pumpUploads() {
+        if (this.uploading) return;
+        this.uploading = true;
+        let ok = 0;
+        let failed = 0;
+        while (this.uploadQueue.length) {
+            const file = this.uploadQueue.shift();
+            if (await this.uploadOne(file)) ok += 1;
+            else failed += 1;
+        }
+        this.uploading = false;
+        if (ok) {
+            $("filterClient").value = $("uploadClient").value;
+            await this.loadDocuments();
+        }
+        if (ok || failed) {
+            this.showBanner(`Uploaded ${ok} file${ok === 1 ? "" : "s"}${failed ? `. ${failed} failed.` : "."}`, failed ? "error" : "ok");
+        }
     },
 
     async submitClient(event) {
@@ -1300,6 +1757,12 @@ const App = {
     },
 
     async onClientListClick(event) {
+        const invoices = event.target.closest("[data-client-invoices]");
+        if (invoices) {
+            this.hideModal("clientsModal");
+            await this.openLedger(invoices.dataset.clientInvoices);
+            return;
+        }
         const edit = event.target.closest("[data-edit-client]");
         const archive = event.target.closest("[data-archive-client]");
         if (edit) {
