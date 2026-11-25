@@ -429,7 +429,8 @@ label {
 }
 
 input[type="text"],
-input[type="search"] {
+input[type="search"],
+input[type="password"] {
   display: block;
   width: 100%;
   min-height: 52px;
@@ -571,6 +572,8 @@ input:focus {
 }
 
 .list-head .host { font-size: 1.25rem; }
+
+.access-form { max-width: 340px; margin: 12px auto 0; text-align: left; }
 
 .count-wrap { text-align: center; margin-top: 8px; }
 

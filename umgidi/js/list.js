@@ -2,9 +2,13 @@
   const ENDPOINT = "https://maofytcvzlapcqegrvpp.supabase.co/rest/v1/rpc/get_umgidi_rsvps";
   const API_KEY = "sb_publishable_V1Og_p-4bcHqcmV8m2EnAA_lwH9A29T";
 
-  const key = new URLSearchParams(window.location.search).get("key");
+  let key = "";
   const board = document.getElementById("board");
   const privateView = document.getElementById("private");
+  const accessForm = document.getElementById("access-form");
+  const accessKeyInput = document.getElementById("access-key");
+  const accessError = document.getElementById("access-error");
+  const accessSubmit = document.getElementById("access-submit");
   const loading = document.getElementById("loading");
   const banner = document.getElementById("banner");
   const countEl = document.getElementById("count");
@@ -15,6 +19,10 @@
   const refreshBtn = document.getElementById("refresh");
   const csvBtn = document.getElementById("csv");
   const updated = document.getElementById("updated");
+
+  if (window.location.search) {
+    window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+  }
 
   const when = new Intl.DateTimeFormat("en-ZA", {
     timeZone: "Africa/Johannesburg",
@@ -29,11 +37,13 @@
   let rows = [];
   let loadingNow = false;
 
-  function showPrivate() {
+  function showPrivate(message) {
     loading.hidden = true;
     board.hidden = true;
     banner.hidden = true;
     privateView.hidden = false;
+    accessError.textContent = message || "";
+    accessError.hidden = !message;
   }
 
   function formatWhen(value) {
@@ -105,6 +115,8 @@
       refreshBtn.disabled = true;
       refreshBtn.textContent = "Refreshing…";
     }
+    accessSubmit.disabled = true;
+    accessSubmit.textContent = "Checking…";
     banner.hidden = true;
 
     try {
@@ -127,7 +139,9 @@
       if (!response.ok) {
         const message = data && data.message ? String(data.message) : "";
         if (response.status === 401 || response.status === 403 || message === "Not allowed") {
-          showPrivate();
+          key = "";
+          accessKeyInput.value = "";
+          showPrivate("That key didn’t work. Check it and try again.");
           return;
         }
         throw new Error("load");
@@ -165,12 +179,30 @@
       loadingNow = false;
       refreshBtn.disabled = false;
       refreshBtn.textContent = "Refresh";
+      accessSubmit.disabled = false;
+      accessSubmit.textContent = "View RSVP list";
     }
   }
 
   function csvCell(value) {
     return '"' + String(value ?? "").replace(/"/g, '""') + '"';
   }
+
+  accessForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const enteredKey = accessKeyInput.value.trim();
+    if (!enteredKey) {
+      accessError.textContent = "Enter the private key to continue.";
+      accessError.hidden = false;
+      accessKeyInput.focus();
+      return;
+    }
+    key = enteredKey;
+    accessError.hidden = true;
+    loading.hidden = false;
+    privateView.hidden = true;
+    load(false);
+  });
 
   csvBtn.addEventListener("click", function () {
     const lines = [[ "No.", "Name", "Surname", "Submitted (Africa/Johannesburg)" ]];
