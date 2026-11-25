@@ -142,10 +142,13 @@ img { max-width: 100%; }
 }
 
 .suit {
-  right: -6px;
+  right: 0;
   bottom: 0;
   width: 112px;
   z-index: 2;
+  /* The cutout ends at mid-calf. Fade that edge into the paper. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
 }
 
 .diamond {
