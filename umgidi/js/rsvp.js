@@ -132,8 +132,8 @@
       "DTSTART;TZID:Africa/Johannesburg:20261212T110000",
       "DTEND;TZID:Africa/Johannesburg:20261212T170000",
       "SUMMARY:Umgidi ka Uyanda Calana",
-      "LOCATION:Ostrich Farm\\, Cape Town\\, Ostrich Ranch\\, Van Schoorsdrif Road\\, Philadelphia",
-      "DESCRIPTION:NGUWO NGUWO NGUWO!!!!\\nUmgidi ka Uyanda Calana\\n12 December 2026\\, from 11:00 AM\\nOstrich Farm\\, Cape Town\\nIsintu / Traditional Attire\\nGift voucher or cash only.\\nThe invitation gives a start time only. This entry runs until 17:00 so it can sit on a calendar.",
+      "LOCATION:Ostrich Farm Cape Town\\, Ostrich Ranch\\, Van Schoorsdrif Road\\, Philadelphia",
+      "DESCRIPTION:NGUWO NGUWO NGUWO!!!!\\nUmgidi ka Uyanda Calana\\n12 December 2026\\, from 11:00 AM\\nOstrich Farm Cape Town\\nIsintu / Traditional Attire\\nGift voucher or cash only.\\nThe invitation gives a start time only. This entry runs until 17:00 so it can sit on a calendar.",
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
