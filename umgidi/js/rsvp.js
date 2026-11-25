@@ -11,7 +11,6 @@
   const thanksName = document.getElementById("thanks-name");
   const thanksTitle = document.getElementById("thanks-title");
   const againBtn = document.getElementById("again");
-  const calendarBtn = document.getElementById("add-cal");
   const mapOpen = document.getElementById("map-open");
   const mapDialog = document.getElementById("map-dialog");
   const mapClose = document.getElementById("map-close");
@@ -108,45 +107,6 @@
     form.reset();
     clearError();
     showForm();
-  });
-
-  calendarBtn.addEventListener("click", function () {
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//Umgidi ka Uyanda Calana//RSVP//EN",
-      "CALSCALE:GREGORIAN",
-      "METHOD:PUBLISH",
-      "BEGIN:VTIMEZONE",
-      "TZID:Africa/Johannesburg",
-      "BEGIN:STANDARD",
-      "DTSTART:19700101T000000",
-      "TZOFFSETFROM:+0200",
-      "TZOFFSETTO:+0200",
-      "TZNAME:SAST",
-      "END:STANDARD",
-      "END:VTIMEZONE",
-      "BEGIN:VEVENT",
-      "UID:umgidi-uyanda-calana-2026-12-12@rsvp",
-      "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""),
-      "DTSTART;TZID:Africa/Johannesburg:20261212T110000",
-      "DTEND;TZID:Africa/Johannesburg:20261212T170000",
-      "SUMMARY:Umgidi ka Uyanda Calana",
-      "LOCATION:Ostrich Farm Cape Town\\, Ostrich Ranch\\, Van Schoorsdrif Road\\, Philadelphia",
-      "DESCRIPTION:NGUWO NGUWO NGUWO!!!!\\nUmgidi ka Uyanda Calana\\n12 December 2026\\, from 11:00 AM\\nOstrich Farm Cape Town\\nIsintu / Traditional Attire\\nGift voucher or cash only.\\nThe invitation gives a start time only. This entry runs until 17:00 so it can sit on a calendar.",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "umgidi-uyanda-calana.ics";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
   });
 
   mapOpen.addEventListener("click", function () {
